@@ -82,24 +82,28 @@ const FaqsCard: React.FC<FaqsCardProps> = ({ faqsList, idx }) => {
 const FaqSection: React.FC = () => {
   const faqsList: Faq[] = [
     {
-      q: "What are some random questions to ask?",
-      a: "That's exactly the reason we created this random question generator. There are hundreds of random questions to choose from so you're able to find the perfect random question.",
+      q: "How is my data secured?",
+      a: "We use industry-standard encryption to protect your data both in transit and at rest.",
     },
     {
-      q: "Do you include common questions?",
-      a: "This generator doesn't include most common questions. The thought is that you can come up with common questions on your own so most of the questions in this generator.",
+      q: "Will you delete my data?",
+      a: "Yes, you can delete your data at any time through your account settings. Once deleted, it cannot be recovered.",
     },
     {
-      q: "Can I use this for 21 questions?",
-      a: "Yes! there are two ways that you can use this question generator depending on what you're after. You can indicate that you want 21 questions generated.",
+      q: "Can I edit my schedule after uploading?",
+      a: "Absolutely, you can make changes to your schedule at any time through the platform.",
     },
     {
-      q: "Are these questions for girls or for boys?",
-      a: "The questions in this generator are gender neutral and can be used to ask either male of females (or any other gender the person identifies with).",
+      q: "How do I get calendar invites?",
+      a: "After uploading your schedule, we generate calendar invites which you can download or sync directly to your calendar.",
     },
     {
-      q: "What do you wish you had more talent doing?",
-      a: "If you've been searching for a way to get random questions, you've landed on the correct webpage. We created the Random Question Generator to ask you as many random questions as your heart desires.",
+      q: "Is my data shared with third parties?",
+      a: "No, we do not share your data with third parties unless you give explicit consent.",
+    },
+    {
+      q: "What file formats can I upload?",
+      a: "You can upload schedules in formats like PDF, DOCX, and plain text.",
     },
   ];
 
@@ -109,7 +113,7 @@ const FaqSection: React.FC = () => {
         <h1 className="text-3xl text-gray-800 font-semibold">
           Frequently Asked Questions
         </h1>
-        <p className="text-gray-600 max-w-lg mx-auto text-l">
+        <p className="text-gray-600 max-w-lg mx-auto text-lg">
           Answered all frequently asked questions, Still confused? feel free to
           contact us.
         </p>
