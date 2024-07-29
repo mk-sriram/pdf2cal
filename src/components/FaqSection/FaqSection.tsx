@@ -87,28 +87,28 @@ const FaqSection: React.FC = () => {
     },
     {
       q: "Will you delete my data?",
-      a: "Yes, you can delete your data at any time through your account settings. Once deleted, it cannot be recovered.",
+      a: "Yes, you can delete your data at any time through your account dashboard. Once deleted, it cannot be recovered.",
     },
     {
       q: "Can I edit my schedule after uploading?",
-      a: "Absolutely, you can make changes to your schedule at any time through the platform.",
+      a: "Absolutely, you can make changes to your schedule at any time through the assistant.",
     },
     {
-      q: "How do I get calendar invites?",
-      a: "After uploading your schedule, we generate calendar invites which you can download or sync directly to your calendar.",
-    },
-    {
-      q: "Is my data shared with third parties?",
-      a: "No, we do not share your data with third parties unless you give explicit consent.",
+      q: "How do I connect my Calendar?",
+      a: "You can connect your calendars directly through your dashboard by logging into your calendar account.",
     },
     {
       q: "What file formats can I upload?",
-      a: "You can upload schedules in formats like PDF, DOCX, and plain text.",
+      a: "You can upload schedules in formats like PDF, DOCX, Images and Plain text.",
     },
   ];
 
   return (
-    <section className="leading-relaxed max-w-screen-xl mt-12 mx-auto px-4 md:px-8 h-[100vh]">
+    
+    <section
+      id="faq"
+      className="leading-relaxed max-w-screen-xl mt-[100px] mx-auto px-4 md:px-8 h-[100vh]"
+    >
       <div className="space-y-3 text-center">
         <h1 className="text-3xl text-gray-800 font-semibold">
           Frequently Asked Questions

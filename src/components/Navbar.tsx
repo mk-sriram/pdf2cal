@@ -1,5 +1,6 @@
 import Image from "next/image";
 import { assets } from "../../public/assets";
+import Link from "next/link";
 const Navbar = () => {
   return (
     <div className="container mx-auto flex justify-center navbar bg-inherit py-[29px] w-[70%]">
@@ -26,11 +27,11 @@ const Navbar = () => {
             className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 h-20 p-2 shadow justify-normal"
           >
             <li>
-              <a>FAQ</a>
+              <a href="#faq">FAQ</a>
             </li>
 
             <li>
-              <a>Demo</a>
+              <a href="#demo">Demo</a>
             </li>
           </ul>
         </div>
@@ -39,23 +40,32 @@ const Navbar = () => {
           alt="Parsyll Logo"
           className="w-11 h-11"
         />
-        <a className="text-xl font-semibold cursor-pointer">Parsyll</a>
+        <Link
+          href="/"
+          className="text-xl text-gray-800 font-semibold cursor-pointer"
+        >
+          Parsyll
+        </Link>
+        
       </div>
       <div className="navbar-center hidden lg:flex sm:flex ">
         <ul className="menu menu-horizontal px-10 flex space-x-7 ">
           <li>
-            <a>FAQ</a>
+            <a href="#faq">FAQ</a>
           </li>
 
           <li>
-            <a>Demo</a>
+            <a href="#demo">Demo</a>
           </li>
         </ul>
       </div>
       <div className="navbar-end ">
-        <a className="btn px-7 rounded-full bg-[#0b99ffd4] from-[#0f55d6b8] to-[#91d9ff] text-white  hover:bg-[#6dc1fc]">
-          Login
-        </a>
+        <Link
+          href="/Signin"
+          className="btn px-7 rounded-full bg-[#0b7dffd4] from-[#0f55d6b8] to-[#91d9ff] text-white  hover:bg-[#6dc1fc]"
+        >
+          Sign in
+        </Link>
       </div>
     </div>
   );
