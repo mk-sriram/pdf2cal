@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { useRouter } from "next/router";
 import React from "react";
 
 const page = () => {
@@ -6,12 +7,19 @@ const page = () => {
   const [password, setPassword] = React.useState("");
   const [error, setError] = React.useState("");
 
+  const router = useRouter();
+
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault();
     setError(""); // Clear any previous errors
 
+    if (!password || password.length < 8) {
+      setError("Password is invalid");
+      return; //error meessage needs to work
+    }
+
     try {
-      const response = await fetch("http://localhost:3000/signup", {
+      const response = await fetch("/api/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -19,11 +27,15 @@ const page = () => {
         body: JSON.stringify({ username, password }),
       });
 
-      if (!response.ok) {
+      if (response.status === 400) {
         // If the response is not ok, handle the error
-        const errorData = await response.json();
-        setError(errorData.message || "Something went wrong!");
+
+        setError("This username is already registered");
         return;
+      }
+      if (response.status === 200) {
+        setError("");
+        router.push("/Signin");
       }
 
       // Handle successful signup (e.g., redirect to login page or show success message)
@@ -211,6 +223,9 @@ const page = () => {
                   </svg>
                 </button> */}
               </div>
+              {error && (
+                <p className="mt-4 text-center text-red-500 text-sm">{error}</p>
+              )}
             </form>
           </div>
         </div>
