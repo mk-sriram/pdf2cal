@@ -12,7 +12,7 @@ const Droparea: React.FC = () => {
       handleFileUpload(selectedFile);
     }
   };
-
+  const handleProcessing = () => {};
   const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
     const selectedFile = event.dataTransfer.files[0];
@@ -59,27 +59,8 @@ const Droparea: React.FC = () => {
       >
         <div className="flex flex-col items-center justify-center pt-5 pb-6">
           {loading ? (
-            <div className="flex flex-col items-center">
-              <svg
-                className="w-8 h-8 mb-4 animate-spin text-blue-500"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8v8l3.94 3.94A7.973 7.973 0 014 12z"
-                ></path>
-              </svg>
+            <div className="flex flex-col items-center space-x-2">
+              <span className="loading loading-spinner loading-md"></span>
               <p className="text-sm text-gray-500">Uploading...</p>
             </div>
           ) : filePreview ? (
@@ -99,10 +80,10 @@ const Droparea: React.FC = () => {
               ) : (
                 <p className="text-sm text-gray-500">Unsupported file type</p>
               )}
-              <div className="flex items-center justify-between w-full px-4">
-                <p className="text-sm text-gray-500">{file?.name}</p>
+              <div className="flex items-center justify-between w-full px-4 bg-[#0b7dffd4] py-1 rounded-xl">
+                <p className="text-sm text-white">{file?.name}</p>
                 <button
-                  className="text-red-500 ml-4"
+                  className="text-white ml-4 hover:scale-[1.03]"
                   onClick={handleRemoveFile}
                 >
                   ✖
@@ -146,7 +127,7 @@ const Droparea: React.FC = () => {
       {file && (
         <button
           className="btn px-7 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-8"
-          onClick={handleRemoveFile}
+          onClick={handleProcessing}
         >
           Process 🪄
         </button>
