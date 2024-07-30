@@ -12,7 +12,36 @@ const Droparea: React.FC = () => {
       handleFileUpload(selectedFile);
     }
   };
-  const handleProcessing = () => {};
+
+  const handleProcessing = async () => {
+    if (!file) return;
+
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      });
+
+      if (response.ok) {
+        console.log("File uploaded successfully");
+        // Handle success
+      } else {
+        console.error("Failed to upload file");
+        // Handle failure
+      }
+    } catch (error) {
+      console.error("An error occurred while uploading the file", error);
+      // Handle error
+    } finally {
+      setLoading(false);
+    }
+  };
+
   const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
     const selectedFile = event.dataTransfer.files[0];
