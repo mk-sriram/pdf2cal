@@ -1,59 +1,68 @@
-import type { NextApiRequest, NextApiResponse } from "next";
-import formidable, { File, Files } from "formidable";
-import fs from "fs";
-import path from "path";
+import { NextRequest, NextResponse } from "next/server";
+import mime from "mime";
+import * as dateFn from "date-fns";
+import { join } from "path";
+import { stat, mkdir, writeFile } from "fs/promises";
 
-// Disable default body parser
 export const config = {
   api: {
     bodyParser: false,
   },
 };
 
-// Helper function to ensure the upload directory exists
-const ensureUploadDirExists = (uploadDir: string) => {
-  if (!fs.existsSync(uploadDir)) {
-    fs.mkdirSync(uploadDir, { recursive: true });
+export async function POST(request: NextRequest) {
+  console.log("API called");
+
+  // Parse the form data and extract the file
+  const formData = await request.formData();
+  const file = formData.get("file") as Blob | null;
+  if (!file) {
+    return NextResponse.json(
+      { error: "File blob is required." },
+      { status: 400 }
+    );
   }
-};
 
-const uploadDir = path.join(process.cwd(), "/public/uploads");
-ensureUploadDirExists(uploadDir);
+  // Convert the file Blob to a Buffer
+  const buffer = Buffer.from(await file.arrayBuffer());
 
-export default async function handler(
-  req: NextApiRequest,
-  res: NextApiResponse
-) {
-  if (req.method === "POST") {
-    const form = formidable({
-      multiples: false, // Single file upload
-      uploadDir: uploadDir, // Directory to save uploaded files
-      keepExtensions: true, // Keep file extension
-    });
+  // Define the directory for file uploads
+  const relativeUploadDir = `/uploads/${dateFn.format(Date.now(), "dd-MM-Y")}`;
+  const uploadDir = join(process.cwd(), "public", relativeUploadDir);
 
-    form.parse(req, (err, fields, files: Files) => {
-      if (err) {
-        console.error("Error parsing the file", err);
-        return res.status(500).json({ error: "Error parsing the file" });
-      }
+  // Check if the directory exists, if not, create it
+  try {
+    await stat(uploadDir);
+  } catch (e: any) {
+    if (e.code === "ENOENT") {
+      await mkdir(uploadDir, { recursive: true });
+    } else {
+      console.error("Error creating directory:", e);
+      return NextResponse.json(
+        { error: "Something went wrong." },
+        { status: 500 }
+      );
+    }
+  }
 
-      // Access the uploaded file details safely
-      const uploadedFile = Array.isArray(files.file)
-        ? files.file[0]
-        : files.file;
-      if (uploadedFile instanceof File) {
-        console.log("Uploaded file:", uploadedFile);
+  // Generate a unique filename with the correct extension
+  try {
+    const uniqueSuffix = `${Date.now()}-${Math.round(Math.random() * 1e9)}`;
+    const originalFileName = (file as File).name;
+    const extension = mime.getExtension(file.type) || "png"; // Default to png if the type is not recognized
+    const filename = `${uniqueSuffix}.${extension}`;
+    const filePath = `${uploadDir}/${filename}`;
 
-        // Respond with success and file details
-        return res
-          .status(200)
-          .json({ message: "File uploaded successfully", file: uploadedFile });
-      } else {
-        console.error("No file uploaded");
-        return res.status(400).json({ error: "No file uploaded" });
-      }
-    });
-  } else {
-    res.status(405).json({ error: "Method not allowed" });
+    // Write the file to the specified path
+    await writeFile(filePath, buffer);
+
+    // Return the file URL
+    return NextResponse.json({ fileUrl: `${relativeUploadDir}/${filename}` });
+  } catch (e) {
+    console.error("Error uploading file:", e);
+    return NextResponse.json(
+      { error: "Something went wrong." },
+      { status: 500 }
+    );
   }
 }

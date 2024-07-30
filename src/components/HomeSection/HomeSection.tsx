@@ -4,6 +4,7 @@ import Typewriter from "typewriter-effect";
 
 const HomeSection = () => {
   return (
+    
     <section className="flex flex-col items-center justify-start h-[35vh] bg-white text-center px-4 md:px-0 py-[50px]">
       <div className="max-w-3xl">
         <div className="flex flex-col items-center mb-4 space-y-[20px]">

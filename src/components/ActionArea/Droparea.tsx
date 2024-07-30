@@ -39,6 +39,7 @@ const Droparea: React.FC = () => {
       // Handle error
     } finally {
       setLoading(false);
+      setFilePreview("");
     }
   };
 
