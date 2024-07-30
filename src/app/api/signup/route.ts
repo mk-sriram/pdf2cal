@@ -4,6 +4,7 @@ import bcrypt from "bcryptjs";
 import { NextResponse } from "next/server";
 
 export const POST = async (request: any) => {
+  console.log("called the route");
   const { email, password } = await request.json();
 
   await connect();
@@ -15,6 +16,7 @@ export const POST = async (request: any) => {
     });
 
   const hashedPassword = await bcrypt.hash(password, 5);
+  console.log("Part of new ");
   const newUser = new User({
     email,
     password: hashedPassword,

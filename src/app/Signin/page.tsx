@@ -7,7 +7,7 @@ const page = () => {
         <div className="max-w-md w-[120%] ">
           <div className="p-8 rounded-2xl bg-white drop-shadow-xl">
             <h2 className="text-gray-800 text-center text-2xl font-bold">
-              Sign up
+              Sign in
             </h2>
             <p className="text-gray-500 text-sm mt-[10px] text-center">
               Not a member?{" "}
@@ -16,7 +16,7 @@ const page = () => {
                 className="text-[#0b7dffd4] hover:underline ml-1 whitespace-nowrap font-semibold"
               >
                 {" "}
-                Sign in
+                Sign up
               </Link>
             </p>
             <form className="mt-10 space-y-4">
