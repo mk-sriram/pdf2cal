@@ -1,6 +1,39 @@
 import Link from "next/link";
+import React from "react";
 
 const page = () => {
+  const [username, setUsername] = React.useState("");
+  const [password, setPassword] = React.useState("");
+  const [error, setError] = React.useState("");
+
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    setError(""); // Clear any previous errors
+
+    try {
+      const response = await fetch("http://localhost:3000/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ username, password }),
+      });
+
+      if (!response.ok) {
+        // If the response is not ok, handle the error
+        const errorData = await response.json();
+        setError(errorData.message || "Something went wrong!");
+        return;
+      }
+
+      // Handle successful signup (e.g., redirect to login page or show success message)
+      console.log("Signup successful");
+      // Redirect or show success message here
+    } catch (err) {
+      console.error("Error during signup:", err);
+      setError("Failed to signup. Please try again later.");
+    }
+  };
   return (
     <div className="flex items-center justify-center ">
       <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4 ">
@@ -19,7 +52,7 @@ const page = () => {
                 Sign in
               </Link>
             </p>
-            <form className="mt-10 space-y-4">
+            <form className="mt-10 space-y-4" onSubmit={handleSubmit}>
               <div>
                 <label className="text-gray-800 text-sm mb-2 block">
                   User name
@@ -31,6 +64,7 @@ const page = () => {
                     required
                     className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                     placeholder="Enter user name"
+                    onChange={(e) => setUsername(e.target.value)}
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -64,6 +98,7 @@ const page = () => {
                     required
                     className="w-full text-gray-800 text-sm border border-gray-300 px-4 py-3 rounded-md outline-blue-600"
                     placeholder="Enter password"
+                    onChange={(e) => setPassword(e.target.value)}
                   />
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -84,6 +119,7 @@ const page = () => {
                 <button
                   type="button"
                   className="w-full py-3 px-4 text-sm tracking-wide rounded-lg text-white bg-[#0b7dffd4] hover:bg-[#6dc1fc] focus:outline-none"
+                  onClick={handleSubmit}
                 >
                   Sign up
                 </button>
