@@ -44,7 +44,7 @@ export async function POST(request: NextRequest) {
         },
       },
       {
-        text: "Please extract calendar events from this file. Format the response as a JSON array of events, where each event has 'title', 'date', 'startTime', and 'endTime' properties.",
+        text: "Please extract calendar events from this file. Format the response as a JSON array of events, where each event has 'title', 'date', 'startTime', and 'endTime' properties. your output should be in plain JSON",
       },
     ];
 
@@ -59,7 +59,6 @@ export async function POST(request: NextRequest) {
     const response = result.response;
     const text = response.text();
     console.log(text);
-   
 
     return NextResponse.json({ text }, { status: 200 });
   } catch (error) {

@@ -1,7 +1,11 @@
 "use client";
 import React, { useState } from "react";
 
-const Droparea: React.FC = () => {
+interface DropareaProps {
+  onFileProcessed: (data: any) => void;
+}
+
+const Droparea: React.FC<DropareaProps> = ({ onFileProcessed }) => {
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [filePreview, setFilePreview] = useState<string | null>(null);
@@ -28,15 +32,13 @@ const Droparea: React.FC = () => {
       });
 
       if (response.ok) {
-        console.log("File uploaded successfully");
-        // Handle success
+        const data = await response.json();
+        onFileProcessed(data); // Pass the data to the parent component
       } else {
         console.error("Failed to upload file");
-        // Handle failure
       }
     } catch (error) {
       console.error("An error occurred while uploading the file", error);
-      // Handle error
     } finally {
       setLoading(false);
       setFilePreview("");
@@ -83,7 +85,7 @@ const Droparea: React.FC = () => {
   return (
     <div className="flex flex-col justify-start items-center w-full h-fit">
       <label
-        className="flex flex-col items-center justify-center w-full h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
+        className="flex flex-col items-center justify-center w-[60%] h-64 border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100"
         onDrop={handleDrop}
         onDragOver={handleDragOver}
       >
