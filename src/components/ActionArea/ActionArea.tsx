@@ -2,15 +2,18 @@
 import React from "react";
 import Droparea from "./Droparea";
 import ChatArea from "./ChatArea";
-
+interface MsgItem {
+  role: string;
+  content: string;
+}
 const ActionArea: React.FC = () => {
   // const [isChatVisible, setIsChatVisible] = React.useState(false);
   // const [jsonData, setJsonData] = React.useState(null);
 
-  // const handleFileProcessed = (data: any) => {
-  //   setJsonData(data);
-  //   setIsChatVisible(true);
-  // };
+  const handleFileProcessed = (data: any) => {
+    // setJsonData(data);
+    // setIsChatVisible(true);
+  };
   const jsonData = [
     {
       summary: "Team Meeting",
@@ -73,7 +76,7 @@ const ActionArea: React.FC = () => {
       },
     },
   ];
-
+  
   return (
     <div className="relative w-full h-full">
       {/* <div
@@ -90,8 +93,8 @@ const ActionArea: React.FC = () => {
       >
         {jsonData && <ChatArea jsonData={jsonData} />}
       </div> */}
-      <ChatArea jsonData={jsonData} />
-      
+      <Droparea onFileProcessed={handleFileProcessed} />
+    
     </div>
   );
 };
