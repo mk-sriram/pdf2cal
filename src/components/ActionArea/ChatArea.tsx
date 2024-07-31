@@ -19,15 +19,14 @@ const ChatBubble: React.FC<{ msgItem: MsgItem }> = ({ msgItem }) => {
   return (
     <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4 `}>
       {!isUser && (
-        <div className="w-9 h-9 rounded-full flex items-center justify-center mr-2 shadow">
+        <div className="w-9 h-9 rounded-full flex items-center justify-center mr-2 shadow bg-white">
           <img
-            src="https://placehold.co/200x/ffa8e4/ffffff.svg?text=ʕ•́ᴥ•̀ʔ&font=Lato"
+            src="/parsylllogotrans.png"
             alt="User Avatar"
-            className="w-8 h-8 rounded-full"
+            className="w-6 h-6 rounded-full"
           />
         </div>
       )}
-
       <div
         className={` flex max-w-96 p-3 gap-3 shadow rounded-3xl px-4 ${bubbleClass}`}
       >
