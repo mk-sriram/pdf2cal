@@ -2,9 +2,6 @@
 import React, { useState } from "react";
 import ChatArea from "./ChatArea"; // Import ChatArea component
 
-interface DropareaProps {
-  onFileProcessed: (data: any) => void;
-}
 interface EventData {
   summary: string;
   description: string;
@@ -39,7 +36,10 @@ const placeholderMessages: MsgItem[] = [
     content: "Thank you! Let me check the status of your order.",
   },
 ];
-const Droparea: React.FC<DropareaProps> = ({ onFileProcessed }) => {
+
+
+const Droparea = () => {
+
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [filePreview, setFilePreview] = useState<string | null>(null);
@@ -55,6 +55,13 @@ const Droparea: React.FC<DropareaProps> = ({ onFileProcessed }) => {
     }
   };
 
+
+  /* 
+  1. drop area process button makes function call to gemini 
+  2. pass response to chat are component ( json data )
+  3. append the json data to the chat component, continue to make calls 
+
+   */
   // const handleProcessing = async () => {
   //   if (!file) return;
 
@@ -223,7 +230,7 @@ const Droparea: React.FC<DropareaProps> = ({ onFileProcessed }) => {
             isExpanded ? "opacity-100 max-h-full" : "opacity-0 max-h-0"
           }`}
         >
-          <ChatArea jsonData={jsonData} chatMessages={placeholderMessages} />
+          <ChatArea jsonData={jsonData} />
         </div>
       )}
       <button

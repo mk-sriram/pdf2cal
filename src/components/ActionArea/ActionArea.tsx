@@ -1,19 +1,12 @@
 "use client";
 import React from "react";
 import Droparea from "./Droparea";
-import ChatArea from "./ChatArea";
-interface MsgItem {
-  role: string;
-  content: string;
-}
-const ActionArea: React.FC = () => {
-  // const [isChatVisible, setIsChatVisible] = React.useState(false);
-  // const [jsonData, setJsonData] = React.useState(null);
 
-  const handleFileProcessed = (data: any) => {
-    // setJsonData(data);
-    // setIsChatVisible(true);
-  };
+
+const ActionArea: React.FC = () => {
+  
+
+  
   const jsonData = [
     {
       summary: "Team Meeting",
@@ -79,21 +72,8 @@ const ActionArea: React.FC = () => {
   
   return (
     <div className="relative w-full h-full">
-      {/* <div
-        className={`transition-all duration-700 ${
-          isChatVisible ? "opacity-0 h-0 overflow-hidden" : "opacity-100 h-full"
-        }`}
-      >
-        
-      </div>
-      <div
-        className={`transition-all duration-700 ${
-          isChatVisible ? "opacity-100 h-full" : "opacity-0 h-0 overflow-hidden"
-        }`}
-      >
-        {jsonData && <ChatArea jsonData={jsonData} />}
-      </div> */}
-      <Droparea onFileProcessed={handleFileProcessed} />
+     
+      <Droparea />
     
     </div>
   );

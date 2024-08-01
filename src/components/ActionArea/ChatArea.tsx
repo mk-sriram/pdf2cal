@@ -1,50 +1,27 @@
 "use client";
 import React, { useState } from "react";
 import { FaArrowUp } from "react-icons/fa";
+import ChatBubble from "./ChatBubble";
+
+//interfaces
+interface Part {
+  type: string;
+  text: string;
+}
 interface MsgItem {
   role: string;
-  content: string;
+  parts: Part[];
 }
-
-const ChatBubble: React.FC<{ msgItem: MsgItem }> = ({ msgItem }) => {
-  const { role, content } = msgItem;
-
-  // Determine if the message is from the user
-  const isUser = role === "user";
-  // Apply different styles based on the role
-  const bubbleClass = isUser
-    ? "bg-[#0b7dffd4] text-white"
-    : "bg-white text-gray-800";
-
-  return (
-    <div className={`flex ${isUser ? "justify-end" : "justify-start"} mb-4 `}>
-      {!isUser && (
-        <div className="w-9 h-9 rounded-full flex items-center justify-center mr-2 shadow bg-white">
-          <img
-            src="/parsylllogotrans.png"
-            alt="User Avatar"
-            className="w-6 h-6 rounded-full"
-          />
-        </div>
-      )}
-      <div
-        className={` flex max-w-96 p-3 gap-3 shadow rounded-3xl px-4 ${bubbleClass}`}
-      >
-        {content}
-      </div>
-    </div>
-  );
-};
-
 interface ChatAreaProps {
   jsonData: any; // Raw JSON data to display
-  chatMessages: MsgItem[]; // Array of chat messages
 }
 
-// Example usage with placeholder data
-
-const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, chatMessages }) => {
-  const [messageList, setMessageList] = React.useState(chatMessages);
+const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
+  const firstMessage = {
+    role: "user",
+    parts: "You are going to talk to me !",
+  };
+  const [messageList, setMessageList] = React.useState([firstMessage]);
   const [chatMessage, setChatMessage] = React.useState("");
   const messagesContainerRef = React.useRef<HTMLDivElement | null>(null);
 
@@ -58,11 +35,36 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, chatMessages }) => {
     }
   }, [messageList]);
 
-  //handleSendingChat messages
-  const handleChatMessage = () => {
+  //Message handlers
+  const handleChatMessage = async () => {
     if (chatMessage.trim()) {
-      setMessageList([...messageList, { role: "user", content: chatMessage }]);
+      const newMessage = { role: "user", parts: chatMessage };
+      setMessageList([...messageList, newMessage]);
       setChatMessage("");
+
+      try {
+        console.log("call made to API ");
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({ messages: [...messageList, newMessage] }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to get response from the chat API");
+        }
+
+        const data = await response.json();
+        setMessageList((prevMessages) => [
+          ...prevMessages,
+          { role: "model", parts: data.reply },
+        ]);
+      } catch (error) {
+        console.error("Error sending message:", error);
+        // Handle error (e.g., show an error message to the user)
+      }
     }
   };
 
@@ -85,7 +87,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, chatMessages }) => {
             ref={messagesContainerRef}
           >
             <div className=" p-4 pb-36 bg-transparent">
-              {chatMessages.map((msg, index) => (
+              {messageList.map((msg, index) => (
                 <ChatBubble key={index} msgItem={msg} />
               ))}
             </div>
@@ -98,7 +100,6 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, chatMessages }) => {
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
               className="flex-1 mx-4 bg-transparent text-gray-800 placeholder-gray-300 outline-none"
-              onKeyDown={handleChatMessage}
             />
 
             {/* Send Button */}

@@ -13,13 +13,16 @@ const initializeGenAI = () => {
 };
 
 export async function POST(request: NextRequest) {
+  console.log("API called");
   try {
+    console.log("API called");
     const { messages } = await request.json();
-
+    console.log("API called");
     // Initialize the model (Gemini-Pro)
     const genAI = initializeGenAI();
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
+    console.log("after gen AI init ");
     // Start a chat session
     const chat = model.startChat({
       history: messages.slice(0, -1),
@@ -28,12 +31,14 @@ export async function POST(request: NextRequest) {
       },
     });
 
+    console.log("after gen AI init ");
     // Send the last message to the chat and get the response
     const result = await chat.sendMessage(
       messages[messages.length - 1].content
     );
-    
+
     const text = result.response.text();
+    console.log("Respnse test: ", text);
     // Return the response
     return NextResponse.json({ reply: text }, { status: 200 });
   } catch (error) {
