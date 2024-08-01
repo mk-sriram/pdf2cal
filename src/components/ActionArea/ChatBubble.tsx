@@ -1,6 +1,10 @@
+interface Part {
+  text: string;
+}
+
 interface MsgItem {
   role: string;
-  parts: string;
+  parts: Part[];
 }
 
 const ChatBubble: React.FC<{ msgItem: MsgItem }> = ({ msgItem }) => {
@@ -27,7 +31,7 @@ const ChatBubble: React.FC<{ msgItem: MsgItem }> = ({ msgItem }) => {
       <div
         className={` flex max-w-96 p-3 gap-3 shadow rounded-3xl px-4 ${bubbleClass}`}
       >
-        {parts}
+        {parts[0].text}
       </div>
     </div>
   );

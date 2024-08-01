@@ -1,6 +1,14 @@
 import { NextRequest, NextResponse } from "next/server";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
+interface Part {
+  text: string;
+}
+
+interface MsgItem {
+  role: string;
+  parts: Part[];
+}
 // Initialize the Google Generative AI client
 const initializeGenAI = () => {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -17,15 +25,21 @@ export async function POST(request: NextRequest) {
   try {
     console.log("API called");
     const { messages } = await request.json();
-    console.log("API called");
+    console.log("Route received object ", messages);
     // Initialize the model (Gemini-Pro)
     const genAI = initializeGenAI();
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     console.log("after gen AI init ");
     // Start a chat session
+
+    const chatHistory = messages.length === 1 ? [] : messages.slice(0, -1);
+    console.log("Chat History: ",
+      chatHistory
+    )
+    // Start a chat session with the chat history
     const chat = model.startChat({
-      history: messages.slice(0, -1),
+      history: chatHistory,
       generationConfig: {
         maxOutputTokens: 100,
       },
@@ -34,7 +48,7 @@ export async function POST(request: NextRequest) {
     console.log("after gen AI init ");
     // Send the last message to the chat and get the response
     const result = await chat.sendMessage(
-      messages[messages.length - 1].content
+      messages[messages.length - 1].parts[0].text
     );
 
     const text = result.response.text();

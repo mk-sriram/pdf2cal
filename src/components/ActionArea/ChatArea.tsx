@@ -5,25 +5,58 @@ import ChatBubble from "./ChatBubble";
 
 //interfaces
 interface Part {
-  type: string;
   text: string;
 }
+
 interface MsgItem {
   role: string;
   parts: Part[];
 }
+
 interface ChatAreaProps {
   jsonData: any; // Raw JSON data to display
 }
 
 const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
-  const firstMessage = {
-    role: "user",
-    parts: "You are going to talk to me !",
-  };
-  const [messageList, setMessageList] = React.useState([firstMessage]);
+  const [messageList, setMessageList] = useState<MsgItem[]>([]);
   const [chatMessage, setChatMessage] = React.useState("");
   const messagesContainerRef = React.useRef<HTMLDivElement | null>(null);
+
+  //initial msg converstaion starter
+  React.useEffect(() => {
+    // Initial API call to get the first message from the bot
+    const fetchInitialMessage = async () => {
+      try {
+        const response = await fetch("/api/chat", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            messages: [
+              {
+                role: "user",
+                parts: [{ text: "You are going to talk to me like a friend." }],
+              },
+            ],
+          }),
+        });
+
+        if (!response.ok) {
+          throw new Error("Failed to get response from the chat API");
+        }
+
+        const data = await response.json();
+        setMessageList([
+          { role: "model", parts: [{ text: data.reply }] }, // Assuming API returns a reply with parts
+        ]);
+      } catch (error) {
+        console.error("Error fetching initial message:", error);
+      }
+    };
+
+    fetchInitialMessage();
+  }, []);
 
   React.useEffect(() => {
     // Scroll to the bottom of the messages container
@@ -37,8 +70,11 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
 
   //Message handlers
   const handleChatMessage = async () => {
+
     if (chatMessage.trim()) {
-      const newMessage = { role: "user", parts: chatMessage };
+
+      const newMessage = { role: "user", parts: [{ text: chatMessage }] };
+      console.log(newMessage); 
       setMessageList([...messageList, newMessage]);
       setChatMessage("");
 
@@ -59,7 +95,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
         const data = await response.json();
         setMessageList((prevMessages) => [
           ...prevMessages,
-          { role: "model", parts: data.reply },
+          { role: "model", parts: [{ text: data.reply }] },
         ]);
       } catch (error) {
         console.error("Error sending message:", error);
@@ -87,8 +123,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
             ref={messagesContainerRef}
           >
             <div className=" p-4 pb-36 bg-transparent">
-              {messageList.map((msg, index) => (
-                <ChatBubble key={index} msgItem={msg} />
+              {messageList.map((item, index) => (
+                <ChatBubble key={index} msgItem={item} />
               ))}
             </div>
           </div>
