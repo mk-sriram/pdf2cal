@@ -211,12 +211,14 @@ const Droparea = () => {
           <ChatArea jsonData={jsonData} />
         </div>
       )}
-      <button
-        className="btn px-7 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-8"
-        onClick={processFile}
-      >
-        Process 🪄
-      </button>
+      {!fileProcessed && (
+        <button
+          className="btn px-7 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-8"
+          onClick={processFile}
+        >
+          Process 🪄
+        </button>
+      )}
     </div>
   );
 };
