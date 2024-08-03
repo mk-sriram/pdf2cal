@@ -2,6 +2,7 @@
 import React, { useState } from "react";
 import { FaArrowUp } from "react-icons/fa";
 import ChatBubble from "./ChatBubble";
+import EventCard from "./EventCard";
 
 //interfaces
 interface Part {
@@ -15,6 +16,13 @@ interface MsgItem {
 
 interface ChatAreaProps {
   jsonData: any; // Raw JSON data to display
+}
+
+interface Event {
+  summary: string;
+  start: string;
+  end: string;
+  description: string;
 }
 
 const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
@@ -178,170 +186,84 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
       await sendMessageToAPI(newMessage);
     }
   };
-  //initial msg converstaion starter
-  // React.useEffect(() => {
-  //   // Initial API call to get the first message from the bot
-  //   const fetchInitialMessage = async () => {
-  //     try {
-  //       const response = await fetch("/api/chat", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({
-  //           messages: [
-  //             {
-  //               role: "user",
-  //               parts: [{ text: "You are going to talk to me like a friend." }],
-  //             },
-  //           ],
-  //         }),
-  //       });
 
-  //       if (!response.ok) {
-  //         throw new Error("Failed to get response from the chat API");
-  //       }
-
-  //       const data = await response.json();
-  //       setMessageList((oldChatHistory) => [
-  //         ...oldChatHistory,
-  //         { role: "model", parts: [{ text: data.reply }] }, // Assuming API returns a reply with parts
-  //       ]);
-  //     } catch (error) {
-  //       console.error("Error fetching initial message:", error);
-  //     }
-  //   };
-
-  //   fetchInitialMessage();
-  // }, []);
-
-  // React.useEffect(() => {
-  //   // Scroll to the bottom of the messages container
-  //   if (messagesContainerRef.current) {
-  //     messagesContainerRef.current.scrollTo({
-  //       top: messagesContainerRef.current.scrollHeight,
-  //       behavior: "smooth",
-  //     });
-  //   }
-  // }, [messageList]);
-
-  // //Message handlers
-  // const handleChatMessage = async () => {
-  //   if (chatMessage.trim()) {
-  //     const newMessage = { role: "user", parts: [{ text: chatMessage }] };
-  //     //console.log(newMessage);
-
-  //     setMessageList((oldChatHistory) => [...oldChatHistory, newMessage]);
-  //     setChatMessage("");
-
-  //     try {
-  //       console.log("call made to API ");
-  //       const response = await fetch("/api/chat", {
-  //         method: "POST",
-  //         headers: {
-  //           "Content-Type": "application/json",
-  //         },
-  //         body: JSON.stringify({ messages: [...messageList, newMessage] }),
-  //       });
-
-  //       if (!response.ok) {
-  //         throw new Error("Failed to get response from the chat API");
-  //       }
-
-  //       // const data = await response.json();
-  //       // setMessageList((prevMessages) => [
-  //       //   ...prevMessages,
-  //       //   { role: "model", parts: [{ text: data.reply }] },
-  //       // ]);
-
-  //       const reader = response.body?.getReader();
-  //       if (!reader) {
-  //         throw new Error("Failed to get reader from response");
-  //       }
-
-  //       let accumulatedText = "";
-  //       setMessageList((prevMessages) => [
-  //         ...prevMessages,
-  //         { role: "model", parts: [{ text: "" }] },
-  //       ]);
-
-  //       while (true) {
-  //         const { done, value } = await reader.read();
-  //         if (done) break;
-
-  //         const chunk = new TextDecoder().decode(value);
-  //         const lines = chunk.split("\n\n");
-  //         for (const line of lines) {
-  //           if (line.startsWith("data: ")) {
-  //             const data = JSON.parse(line.slice(6));
-  //             if (data.done) {
-  //               //setIsLoading(false);
-  //               break;
-  //             }
-  //             accumulatedText += data.text;
-  //             setMessageList((prevMessages) => {
-  //               const newMessages = [...prevMessages];
-  //               newMessages[newMessages.length - 1].parts[0].text =
-  //                 accumulatedText;
-  //               return newMessages;
-  //             });
-  //           }
-  //         }
-  //       }
-  //     } catch (error) {
-  //       console.error("Error sending message:", error);
-  //       // Handle error (e.g., show an error message to the user)
-  //     }
-  //   }
-  // };
+  const sendtoCalendar = (jsonData: any) => {
+    //take the data and send to calendar
+    //depending on the calendar of choise
+  };
 
   return (
     <div className="flex flex-col justify-start items-center w-full h-fit">
-      <div className="flex w-[85%] h-[80vh] mt-8 bg-whitejustify-center items-center space-x-5  border-2 border-gray-300 border-dashed px-4 rounded-2xl">
+      <div className="flex w-[120%] h-[80vh] mt-8 bg-whitejustify-center items-center space-x-5  border-2 border-gray-300 border-dashed px-4 rounded-2xl">
         {/* Left block for JSON data */}
-        <div className="flex w-[60%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
+        <div className="flex w-[80%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
           <div className="overflow-scroll w-full ">
             <div className="h-screen p-4 pb-36">
-              {JSON.stringify(currentJsonData, null, 2)}
+              {/* fix this any type, you loser  */}
+              {currentJsonData.map((event: any, index: any) => (
+                <EventCard
+                  key={index}
+                  summary={event.summary}
+                  start={new Date(event.start.dateTime).toLocaleString(
+                    "en-US",
+                    { timeZone: event.start.timeZone }
+                  )}
+                  end={new Date(event.end.dateTime).toLocaleString("en-US", {
+                    timeZone: event.end.timeZone,
+                  })}
+                  description={event.description}
+                />
+              ))}
             </div>
           </div>
         </div>
 
         {/* Right block for chatbox */}
-        <div className="flex flex-col w-[40%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
-          <div
-            className="overflow-scroll w-full  bg-transparent"
-            ref={messagesContainerRef}
-          >
-            <div className=" p-4 pb-36 bg-transparent">
-              {messageList.slice(1).map((item, index) => (
-                <ChatBubble key={index} msgItem={item} />
-              ))}
+        <div className="flex flex-col items-center w-[40%] h-[95%] space-y-2">
+          <div className="flex flex-col w-[100%] h-[90%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
+            <div
+              className="overflow-scroll w-full h-full bg-transperant"
+              ref={messagesContainerRef}
+            >
+              <div className=" p-4 pb-36  bg-transparent">
+                {messageList.slice(1).map((item, index) => (
+                  <ChatBubble key={index} msgItem={item} />
+                ))}
+              </div>
+            </div>
+
+            <div className=" flex  bg-[#ffffff] rounded-full px-4 py-2 shadow">
+              <input
+                type="text"
+                placeholder="Message Parsyll"
+                value={chatMessage}
+                onChange={(e) => setChatMessage(e.target.value)}
+                className="flex-1 mx-4 bg-transparent text-gray-800 placeholder-gray-300 outline-none"
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    //&& !isLoading
+                    handleChatMessage();
+                  }
+                }}
+              />
+
+              {/* Send Button */}
+              <div
+                onClick={handleChatMessage}
+                className="flex items-center justify-center w-8 h-8 bg-white text-[#0b7dffd4] hover:text-white rounded-full cursor-pointer hover:bg-[#95c6ff]  duration-300 transition-all ease-in-out shadow"
+              >
+                <FaArrowUp />
+              </div>
             </div>
           </div>
 
-          <div className=" flex  bg-[#ffffff] rounded-full px-4 py-2 shadow">
-            <input
-              type="text"
-              placeholder="Message Parsyll"
-              value={chatMessage}
-              onChange={(e) => setChatMessage(e.target.value)}
-              className="flex-1 mx-4 bg-transparent text-gray-800 placeholder-gray-300 outline-none"
-              onKeyDown={(e) => {
-                if (e.key === "Enter") {
-                  //&& !isLoading
-                  handleChatMessage();
-                }
-              }}
-            />
-
-            {/* Send Button */}
-            <div
-              onClick={handleChatMessage}
-              className="flex items-center justify-center w-8 h-8 bg-white text-[#0b7dffd4] hover:text-white rounded-full cursor-pointer hover:bg-[#95c6ff]  duration-300 transition-all ease-in-out shadow"
+          <div className="">
+            <button
+              className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-3"
+              onClick={sendtoCalendar}
             >
-              <FaArrowUp />
-            </div>
+              Send to Calendar 🪄
+            </button>
           </div>
         </div>
       </div>
