@@ -15,7 +15,6 @@ interface MsgItem {
 
 interface ChatAreaProps {
   jsonData: any; // Raw JSON data to display
-  
 }
 
 const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
@@ -25,6 +24,17 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
   const isInitializedRef = React.useRef(false);
   const [currentJsonData, setCurrentJsonData] = useState(jsonData);
 
+  //fixscrolling in chat
+  React.useEffect(() => {
+    if (messagesContainerRef.current) {
+      messagesContainerRef.current.scrollTo({
+        top: messagesContainerRef.current.scrollHeight,
+        behavior: "smooth",
+      });
+    }
+  }, [messageList]);
+
+  //init chat with bot upon loading component
   React.useEffect(() => {
     if (!isInitializedRef.current) {
       initializeChat();
@@ -38,8 +48,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
         {
           text: `I have a JSON google calendar object that I need help editing. Here's the current JSON data:
         ${JSON.stringify(jsonData, null, 2)}
-        Please help me edit this JSON data. Provide clear instructions on how to make changes,
-        and when I request changes, respond with the updated JSON enclosed in triple backticks like this: \`\`\`json ... \`\`\`.
+        I'm going to give instructions on editing this. for the first msg reply "Make changes by talking to the bot!", the user will give further editing instructions
+        and rest say "Made the requested Changes!". finally, after every bot reply add the updated JSON enclosed in triple backticks like this: \`\`\`json ... \`\`\`.
         `,
         },
       ],
@@ -50,15 +60,6 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
     // Send the initial message to the API
     await sendMessageToAPI(initialMessage);
   };
-
-  React.useEffect(() => {
-    if (messagesContainerRef.current) {
-      messagesContainerRef.current.scrollTo({
-        top: messagesContainerRef.current.scrollHeight,
-        behavior: "smooth",
-      });
-    }
-  }, [messageList]);
 
   const sendMessageToAPI = async (message: MsgItem) => {
     //
@@ -75,53 +76,87 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
         throw new Error("Failed to get response from the chat API");
       }
 
-      const reader = response.body?.getReader();
-      if (!reader) {
-        throw new Error("Failed to get reader from response");
-      }
+      try {
+        // Fetch the response text from the server
+        const jsonText = await response.text();
+        const text = JSON.parse(jsonText).reply;
+        console.log(text);
 
-      let accumulatedText = "";
-      setMessageList((prevMessages) => [
-        ...prevMessages,
-        { role: "model", parts: [{ text: "" }], fullText: "" },
-      ]);
+        // Extract the JSON part if it exists
+        const jsonMatch = text.match(/```json\n([\s\S]*?)\n```/);
 
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
+        if (jsonMatch) {
+          // JSON data found; parse it
+          const updatedJson = JSON.parse(jsonMatch[1].trim());
+          setCurrentJsonData(updatedJson); // Update state with the parsed JSON data
 
-        const chunk = new TextDecoder().decode(value);
-        const lines = chunk.split("\n\n");
-        for (const line of lines) {
-          if (line.startsWith("data: ")) {
-            const data = JSON.parse(line.slice(6));
-            if (data.done) {
-              //setIsLoading(false);
-              break;
-            }
-            accumulatedText += data.text;
-            setMessageList((prevMessages) => {
-              const newMessages = [...prevMessages];
-              const lastMessage = newMessages[newMessages.length - 1];
-              lastMessage.parts[0].text = accumulatedText;
-              return newMessages;
-            });
+          // Everything before the JSON data is the bot's reply
+          const botReply = text.substring(0, jsonMatch.index).trim();
 
-            // Check if the response contains updated JSON
-            try {
-              const jsonMatch = accumulatedText.match(
-                /```json\n([\s\S]*?)\n```/
-              );
-              if (jsonMatch) {
-                const updatedJson = JSON.parse(jsonMatch[1]);
-                setCurrentJsonData(updatedJson);
-              }
-            } catch (error) {
-              console.error("Error parsing JSON from response:", error);
-            }
-          }
+          // Update the message list with the bot's reply
+          setMessageList((prevMessages) => [
+            ...prevMessages,
+            { role: "model", parts: [{ text: botReply }] },
+          ]);
+        } else {
+          // If no JSON data is found, treat the entire text as the bot's reply
+          setMessageList((prevMessages) => [
+            ...prevMessages,
+            { role: "model", parts: [{ text: text }] },
+          ]);
+          console.log("No JSON data found in the response.");
         }
+      } catch (error) {
+        console.error("Error parsing JSON from response:", error);
       }
+
+      // const reader = response.body?.getReader();
+      // if (!reader) {
+      //   throw new Error("Failed to get reader from response");
+      // }
+
+      // let accumulatedText = "";
+      // setMessageList((prevMessages) => [
+      //   ...prevMessages,
+      //   { role: "model", parts: [{ text: "" }] },
+      // ]);
+
+      // while (true) {
+      //   const { done, value } = await reader.read();
+      //   if (done) break;
+
+      //   const chunk = new TextDecoder().decode(value);
+      //   const lines = chunk.split("\n\n");
+      //   for (const line of lines) {
+      //     if (line.startsWith("data: ")) {
+      //       const data = JSON.parse(line.slice(6));
+      //       if (data.done) {
+      //         //setIsLoading(false);
+      //         break;
+      //       }
+      //       accumulatedText += data.text;
+      //       setMessageList((prevMessages) => {
+      //         const newMessages = [...prevMessages];
+      //         const lastMessage = newMessages[newMessages.length - 1];
+      //         lastMessage.parts[0].text = accumulatedText;
+      //         return newMessages;
+      //       });
+
+      //       // Check if the response contains updated JSON
+      //       try {
+      //         const jsonMatch = accumulatedText.match(
+      //           /```json\n([\s\S]*?)\n```/
+      //         );
+      //         if (jsonMatch) {
+      //           const updatedJson = JSON.parse(jsonMatch[1].trim());
+      //           setCurrentJsonData(JSON.parse(updatedJson));
+      //         }
+      //       } catch (error) {
+      //         console.error("Error parsing JSON from response:", error);
+      //       }
+      //     }
+      //   }
+      // }
     } catch (error) {
       console.error("Error sending message:", error);
       //setIsLoading(false);
@@ -134,6 +169,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
         role: "user",
         parts: [{ text: chatMessage }],
       };
+      console.log(chatMessage);
       setMessageList((oldChatHistory) => [...oldChatHistory, newMessage]);
       setChatMessage("");
       await sendMessageToAPI(newMessage);
@@ -263,7 +299,6 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
         <div className="flex w-[60%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
           <div className="overflow-scroll w-full ">
             <div className="h-screen p-4 pb-36">
-              
               {JSON.stringify(jsonData, null, 2)}
             </div>
           </div>
@@ -276,7 +311,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
             ref={messagesContainerRef}
           >
             <div className=" p-4 pb-36 bg-transparent">
-              {messageList.map((item, index) => (
+              {messageList.slice(1).map((item, index) => (
                 <ChatBubble key={index} msgItem={item} />
               ))}
             </div>

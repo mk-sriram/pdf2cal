@@ -23,77 +23,58 @@ const initializeGenAI = () => {
 export async function POST(request: NextRequest) {
   console.log("API called");
   try {
-    //console.log("API called");
+    console.log("API called");
     const { messages } = await request.json();
-    //console.log("Route received object ", messages);
-    // Initialize the model (Gemini-Pro)
+
     const genAI = initializeGenAI();
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
-    //console.log("after gen AI init ");
-    // Start a chat session
-
     const chatHistory = messages.length === 1 ? [] : messages.slice(0, -1);
-    //console.log("Chat History: ",chatHistory)
-    // Start a chat session with the chat history
-    //     const chat = model.startChat({
-    //       history: chatHistory,
-    //       generationConfig: {
-    //         maxOutputTokens: 100,
-    //       },
-    //     });
 
-    //     console.log("after gen AI init ");
-    //     // Send the last message to the chat and get the response
-    //     const result = await chat.sendMessage(
-    //       messages[messages.length - 1].parts[0].text
-    //     );
-
-    //     const text = result.response.text();
-    //     console.log("Respnse test: ", text);
-    //     // Return the response
-    //     return NextResponse.json({ reply: text }, { status: 200 });
-    //   } catch (error) {
-    //     console.error("Error in chat API:", error);
-    //     return NextResponse.json(
-    //       { error: "Internal Server Error" },
-    //       { status: 500 }
-    //     );
-    //   }
-    // }
-
+    console.log("chat History Message", chatHistory);
     const lastMessage = messages[messages.length - 1].parts[0].text;
+    console.log("last Message", lastMessage);
 
     const chat = model.startChat({
       history: chatHistory,
       generationConfig: {
-        maxOutputTokens: 100,
+        maxOutputTokens: 500,
       },
     });
 
-    const result = await chat.sendMessageStream(lastMessage);
+    try {
+      const result = await chat.sendMessage(lastMessage);
+      const text = result.response.text();
+      console.log("Respnse test: ", text);
+      // Return the response
+      return NextResponse.json({ reply: text }, { status: 200 });
 
-    // Set up Server-Sent Events (SSE)
-    const stream = new ReadableStream({
-      async start(controller) {
-        for await (const chunk of result.stream) {
-          const chunkText = chunk.text();
-          controller.enqueue(
-            `data: ${JSON.stringify({ text: chunkText })}\n\n`
-          );
-        }
-        controller.enqueue(`data: ${JSON.stringify({ done: true })}\n\n`);
-        controller.close();
-      },
-    });
+      // const result = await chat.sendMessageStream(lastMessage);
+      // console.log(result);
+      // // Set up Server-Sent Events (SSE)
+      // const stream = new ReadableStream({
+      //   async start(controller) {
+      //     for await (const chunk of result.stream) {
+      //       const chunkText = chunk.text();
+      //       controller.enqueue(
+      //         `data: ${JSON.stringify({ text: chunkText })}\n\n`
+      //       );
+      //     }
+      //     controller.enqueue(`data: ${JSON.stringify({ done: true })}\n\n`);
+      //     controller.close();
+      //   },
+      // });
 
-    return new Response(stream, {
-      headers: {
-        "Content-Type": "text/event-stream",
-        "Cache-Control": "no-cache",
-        Connection: "keep-alive",
-      },
-    });
+      // return new Response(stream, {
+      //   headers: {
+      //     "Content-Type": "text/event-stream",
+      //     "Cache-Control": "no-cache",
+      //     Connection: "keep-alive",
+      //   },
+      // });
+    } catch (err) {
+      console.log("couldnt start chat, ", err);
+    }
   } catch (error) {
     console.error("Error in chat API:", error);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {

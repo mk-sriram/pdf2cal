@@ -61,32 +61,10 @@ const Droparea = () => {
    */
 
   const processFile = async () => {
-    // Simulate file processing
-    // setTimeout(() => {
-    //   setJsonData({
-    //     // Simulate processed data
-    //     summary: "Team Meeting",
-    //     description: "Discuss project milestones and tasks.",
-    //     start: {
-    //       dateTime: "2024-08-01T09:00:00-07:00",
-    //       timeZone: "America/Los_Angeles",
-    //     },
-    //     end: {
-    //       dateTime: "2024-08-01T10:00:00-07:00",
-    //       timeZone: "America/Los_Angeles",
-    //     },
-    //   });
-    //   setFileProcessed(true);
-    //   setIsExpanded(true);
-    // }, 1000);
-
     if (!file) return;
-
     setLoading(true);
-
     const formData = new FormData();
     formData.append("file", file);
-
     try {
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -95,8 +73,13 @@ const Droparea = () => {
 
       if (response.ok) {
         const data = await response.json();
-        console.log(data);
-        setJsonData(data); // Pass the data to the parent component
+
+        //console.log("output");
+        const parsedData = JSON.parse(data.text);
+
+        // Log the parsed data to the console
+        //console.log(parsedData[0]);
+        setJsonData(parsedData); // Pass the data to the parent component
         setFileProcessed(true);
         setIsExpanded(true);
       } else {
