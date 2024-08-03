@@ -62,7 +62,7 @@ export async function POST(request: NextRequest) {
 
     const response = result.response;
     const text = response.text();
-    console.log(text);
+    //console.log(text);
 
     return NextResponse.json({ text }, { status: 200 });
   } catch (error) {

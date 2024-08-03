@@ -59,7 +59,7 @@ const Droparea = () => {
   3. append the json data to the chat component, continue to make calls 
 
    */
-  
+
   const processFile = async () => {
     // Simulate file processing
     // setTimeout(() => {
@@ -95,6 +95,7 @@ const Droparea = () => {
 
       if (response.ok) {
         const data = await response.json();
+        console.log(data);
         setJsonData(data); // Pass the data to the parent component
         setFileProcessed(true);
         setIsExpanded(true);
@@ -117,23 +118,19 @@ const Droparea = () => {
   const handleFileUpload = (selectedFile: File) => {
     setFile(selectedFile);
     setLoading(true);
-
+    setLoading(false);
+    if (selectedFile.type.startsWith("image/")) {
+      setFilePreview(URL.createObjectURL(selectedFile));
+    } else if (selectedFile.type === "application/pdf") {
+      const fileReader = new FileReader();
+      fileReader.onload = (e) => {
+        if (e.target && typeof e.target.result === "string") {
+          setFilePreview(e.target.result);
+        }
+      };
+      fileReader.readAsDataURL(selectedFile);
+    }
     // Simulate a file upload and generate a preview
-    setTimeout(() => {
-      setLoading(false);
-      if (selectedFile.type.startsWith("image/")) {
-        setFilePreview(URL.createObjectURL(selectedFile));
-      } else if (selectedFile.type === "application/pdf") {
-        const fileReader = new FileReader();
-        fileReader.onload = (e) => {
-          if (e.target && typeof e.target.result === "string") {
-            setFilePreview(e.target.result);
-          }
-        };
-        fileReader.readAsDataURL(selectedFile);
-      }
-      // Handle other file types if needed
-    }, 2000); // Simulate a 2-second upload time
   };
 
   const handleRemoveFile = () => {
