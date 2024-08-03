@@ -1,13 +1,25 @@
-export const prompt = `"Please extract calendar events from this file. Format the response as a JSON array of events, where each event in this format shown [
-    {
-      summary: <NAMEofEvent>,
-      description: "Description",
-      start: {
-        dateTime: entersta",
-        timeZone: "America/Los_Angeles",
+export const prompt = `"Please extract calendar events from this file using tthis JSON schema : 
+   {
+  "type": "object",
+  "properties": {
+    "summary": { "type": "string" },
+    "description": { "type": "string" },
+    "start": {
+      "type": "object",
+      "properties": {
+        "dateTime": { "type": "string" },
+        "timeZone": { "type": "string" }
       },
-      end: {
-        dateTime: "2024-08-01T10:00:00-07:00",
-        timeZone: "America/Los_Angeles",
+      "required": ["dateTime", "timeZone"]
+    },
+    "end": {
+      "type": "object",
+      "properties": {
+        "dateTime": { "type": "string" },
+        "timeZone": { "type": "string" }
       },
-    },`;
+      "required": ["dateTime", "timeZone"]
+    }
+  },
+  "required": ["summary", "description", "start", "end"]
+}`;

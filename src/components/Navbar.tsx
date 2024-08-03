@@ -44,9 +44,8 @@ const Navbar = () => {
           href="/"
           className="text-xl text-gray-800 font-semibold cursor-pointer"
         >
-          Parsyll
+          Pdf2Cal
         </Link>
-        
       </div>
       <div className="navbar-center hidden lg:flex sm:flex ">
         <ul className="menu menu-horizontal px-10 flex space-x-7 ">

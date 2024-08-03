@@ -5,7 +5,7 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
-  title: "Parsyll",
+  title: "Pdf2Cal",
   description: "Schedules to Calendar made Easy",
 };
 

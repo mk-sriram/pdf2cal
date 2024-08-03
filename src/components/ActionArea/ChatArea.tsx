@@ -15,51 +15,43 @@ interface MsgItem {
 
 interface ChatAreaProps {
   jsonData: any; // Raw JSON data to display
+  
 }
 
 const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
   const [messageList, setMessageList] = useState<MsgItem[]>([]);
   const [chatMessage, setChatMessage] = React.useState("");
   const messagesContainerRef = React.useRef<HTMLDivElement | null>(null);
+  const isInitializedRef = React.useRef(false);
+  const [currentJsonData, setCurrentJsonData] = useState(jsonData);
 
-  //initial msg converstaion starter
   React.useEffect(() => {
-    // Initial API call to get the first message from the bot
-    const fetchInitialMessage = async () => {
-      try {
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            messages: [
-              {
-                role: "user",
-                parts: [{ text: "You are going to talk to me like a friend." }],
-              },
-            ],
-          }),
-        });
+    if (!isInitializedRef.current) {
+      initializeChat();
+    }
+  }, [jsonData]);
 
-        if (!response.ok) {
-          throw new Error("Failed to get response from the chat API");
-        }
-
-        const data = await response.json();
-        setMessageList([
-          { role: "model", parts: [{ text: data.reply }] }, // Assuming API returns a reply with parts
-        ]);
-      } catch (error) {
-        console.error("Error fetching initial message:", error);
-      }
+  const initializeChat = async () => {
+    const initialMessage: MsgItem = {
+      role: "user",
+      parts: [
+        {
+          text: `I have a JSON google calendar object that I need help editing. Here's the current JSON data:
+        ${JSON.stringify(jsonData, null, 2)}
+        Please help me edit this JSON data. Provide clear instructions on how to make changes,
+        and when I request changes, respond with the updated JSON enclosed in triple backticks like this: \`\`\`json ... \`\`\`.
+        `,
+        },
+      ],
     };
+    setMessageList([initialMessage]);
+    isInitializedRef.current = true;
 
-    fetchInitialMessage();
-  }, []);
+    // Send the initial message to the API
+    await sendMessageToAPI(initialMessage);
+  };
 
   React.useEffect(() => {
-    // Scroll to the bottom of the messages container
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({
         top: messagesContainerRef.current.scrollHeight,
@@ -68,41 +60,201 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
     }
   }, [messageList]);
 
-  //Message handlers
-  const handleChatMessage = async () => {
+  const sendMessageToAPI = async (message: MsgItem) => {
+    //
+    try {
+      const response = await fetch("/api/chat", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ messages: [...messageList, message] }),
+      });
 
-    if (chatMessage.trim()) {
-
-      const newMessage = { role: "user", parts: [{ text: chatMessage }] };
-      console.log(newMessage); 
-      setMessageList([...messageList, newMessage]);
-      setChatMessage("");
-
-      try {
-        console.log("call made to API ");
-        const response = await fetch("/api/chat", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({ messages: [...messageList, newMessage] }),
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to get response from the chat API");
-        }
-
-        const data = await response.json();
-        setMessageList((prevMessages) => [
-          ...prevMessages,
-          { role: "model", parts: [{ text: data.reply }] },
-        ]);
-      } catch (error) {
-        console.error("Error sending message:", error);
-        // Handle error (e.g., show an error message to the user)
+      if (!response.ok) {
+        throw new Error("Failed to get response from the chat API");
       }
+
+      const reader = response.body?.getReader();
+      if (!reader) {
+        throw new Error("Failed to get reader from response");
+      }
+
+      let accumulatedText = "";
+      setMessageList((prevMessages) => [
+        ...prevMessages,
+        { role: "model", parts: [{ text: "" }], fullText: "" },
+      ]);
+
+      while (true) {
+        const { done, value } = await reader.read();
+        if (done) break;
+
+        const chunk = new TextDecoder().decode(value);
+        const lines = chunk.split("\n\n");
+        for (const line of lines) {
+          if (line.startsWith("data: ")) {
+            const data = JSON.parse(line.slice(6));
+            if (data.done) {
+              //setIsLoading(false);
+              break;
+            }
+            accumulatedText += data.text;
+            setMessageList((prevMessages) => {
+              const newMessages = [...prevMessages];
+              const lastMessage = newMessages[newMessages.length - 1];
+              lastMessage.parts[0].text = accumulatedText;
+              return newMessages;
+            });
+
+            // Check if the response contains updated JSON
+            try {
+              const jsonMatch = accumulatedText.match(
+                /```json\n([\s\S]*?)\n```/
+              );
+              if (jsonMatch) {
+                const updatedJson = JSON.parse(jsonMatch[1]);
+                setCurrentJsonData(updatedJson);
+              }
+            } catch (error) {
+              console.error("Error parsing JSON from response:", error);
+            }
+          }
+        }
+      }
+    } catch (error) {
+      console.error("Error sending message:", error);
+      //setIsLoading(false);
     }
   };
+
+  const handleChatMessage = async () => {
+    if (chatMessage.trim()) {
+      const newMessage: MsgItem = {
+        role: "user",
+        parts: [{ text: chatMessage }],
+      };
+      setMessageList((oldChatHistory) => [...oldChatHistory, newMessage]);
+      setChatMessage("");
+      await sendMessageToAPI(newMessage);
+    }
+  };
+  //initial msg converstaion starter
+  // React.useEffect(() => {
+  //   // Initial API call to get the first message from the bot
+  //   const fetchInitialMessage = async () => {
+  //     try {
+  //       const response = await fetch("/api/chat", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({
+  //           messages: [
+  //             {
+  //               role: "user",
+  //               parts: [{ text: "You are going to talk to me like a friend." }],
+  //             },
+  //           ],
+  //         }),
+  //       });
+
+  //       if (!response.ok) {
+  //         throw new Error("Failed to get response from the chat API");
+  //       }
+
+  //       const data = await response.json();
+  //       setMessageList((oldChatHistory) => [
+  //         ...oldChatHistory,
+  //         { role: "model", parts: [{ text: data.reply }] }, // Assuming API returns a reply with parts
+  //       ]);
+  //     } catch (error) {
+  //       console.error("Error fetching initial message:", error);
+  //     }
+  //   };
+
+  //   fetchInitialMessage();
+  // }, []);
+
+  // React.useEffect(() => {
+  //   // Scroll to the bottom of the messages container
+  //   if (messagesContainerRef.current) {
+  //     messagesContainerRef.current.scrollTo({
+  //       top: messagesContainerRef.current.scrollHeight,
+  //       behavior: "smooth",
+  //     });
+  //   }
+  // }, [messageList]);
+
+  // //Message handlers
+  // const handleChatMessage = async () => {
+  //   if (chatMessage.trim()) {
+  //     const newMessage = { role: "user", parts: [{ text: chatMessage }] };
+  //     //console.log(newMessage);
+
+  //     setMessageList((oldChatHistory) => [...oldChatHistory, newMessage]);
+  //     setChatMessage("");
+
+  //     try {
+  //       console.log("call made to API ");
+  //       const response = await fetch("/api/chat", {
+  //         method: "POST",
+  //         headers: {
+  //           "Content-Type": "application/json",
+  //         },
+  //         body: JSON.stringify({ messages: [...messageList, newMessage] }),
+  //       });
+
+  //       if (!response.ok) {
+  //         throw new Error("Failed to get response from the chat API");
+  //       }
+
+  //       // const data = await response.json();
+  //       // setMessageList((prevMessages) => [
+  //       //   ...prevMessages,
+  //       //   { role: "model", parts: [{ text: data.reply }] },
+  //       // ]);
+
+  //       const reader = response.body?.getReader();
+  //       if (!reader) {
+  //         throw new Error("Failed to get reader from response");
+  //       }
+
+  //       let accumulatedText = "";
+  //       setMessageList((prevMessages) => [
+  //         ...prevMessages,
+  //         { role: "model", parts: [{ text: "" }] },
+  //       ]);
+
+  //       while (true) {
+  //         const { done, value } = await reader.read();
+  //         if (done) break;
+
+  //         const chunk = new TextDecoder().decode(value);
+  //         const lines = chunk.split("\n\n");
+  //         for (const line of lines) {
+  //           if (line.startsWith("data: ")) {
+  //             const data = JSON.parse(line.slice(6));
+  //             if (data.done) {
+  //               //setIsLoading(false);
+  //               break;
+  //             }
+  //             accumulatedText += data.text;
+  //             setMessageList((prevMessages) => {
+  //               const newMessages = [...prevMessages];
+  //               newMessages[newMessages.length - 1].parts[0].text =
+  //                 accumulatedText;
+  //               return newMessages;
+  //             });
+  //           }
+  //         }
+  //       }
+  //     } catch (error) {
+  //       console.error("Error sending message:", error);
+  //       // Handle error (e.g., show an error message to the user)
+  //     }
+  //   }
+  // };
 
   return (
     <div className="flex flex-col justify-start items-center w-full h-fit">
@@ -136,6 +288,12 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
               value={chatMessage}
               onChange={(e) => setChatMessage(e.target.value)}
               className="flex-1 mx-4 bg-transparent text-gray-800 placeholder-gray-300 outline-none"
+              onKeyDown={(e) => {
+                if (e.key === "Enter") {
+                  //&& !isLoading
+                  handleChatMessage();
+                }
+              }}
             />
 
             {/* Send Button */}

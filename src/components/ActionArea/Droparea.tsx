@@ -18,28 +18,26 @@ interface MsgItem {
   role: string;
   content: string;
 }
-const placeholderMessages: MsgItem[] = [
-  { role: "bot", content: "Hello! How can I assist you today?" },
-  { role: "user", content: "I need help with my order." },
-  { role: "bot", content: "Sure, can you provide your order number?" },
-  { role: "user", content: "It's 123456." },
-  {
-    role: "bot",
-    content: "Thank you! Let me check the status of your order.",
-  },
-  { role: "bot", content: "Hello! How can I assist you today?" },
-  { role: "user", content: "I need help with my order." },
-  { role: "bot", content: "Sure, can you provide your order number?" },
-  { role: "user", content: "It's 123456." },
-  {
-    role: "bot",
-    content: "Thank you! Let me check the status of your order.",
-  },
-];
-
+// const placeholderMessages: MsgItem[] = [
+//   { role: "bot", content: "Hello! How can I assist you today?" },
+//   { role: "user", content: "I need help with my order." },
+//   { role: "bot", content: "Sure, can you provide your order number?" },
+//   { role: "user", content: "It's 123456." },
+//   {
+//     role: "bot",
+//     content: "Thank you! Let me check the status of your order.",
+//   },
+//   { role: "bot", content: "Hello! How can I assist you today?" },
+//   { role: "user", content: "I need help with my order." },
+//   { role: "bot", content: "Sure, can you provide your order number?" },
+//   { role: "user", content: "It's 123456." },
+//   {
+//     role: "bot",
+//     content: "Thank you! Let me check the status of your order.",
+//   },
+// ];
 
 const Droparea = () => {
-
   const [file, setFile] = useState<File | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const [filePreview, setFilePreview] = useState<string | null>(null);
@@ -55,60 +53,60 @@ const Droparea = () => {
     }
   };
 
-
   /* 
   1. drop area process button makes function call to gemini 
   2. pass response to chat are component ( json data )
   3. append the json data to the chat component, continue to make calls 
 
    */
-  // const handleProcessing = async () => {
-  //   if (!file) return;
-
-  //   setLoading(true);
-
-  //   const formData = new FormData();
-  //   formData.append("file", file);
-
-  //   try {
-  //     const response = await fetch("/api/upload", {
-  //       method: "POST",
-  //       body: formData,
-  //     });
-
-  //     if (response.ok) {
-  //       const data = await response.json();
-  //       onFileProcessed(data); // Pass the data to the parent component
-  //     } else {
-  //       console.error("Failed to upload file");
-  //     }
-  //   } catch (error) {
-  //     console.error("An error occurred while uploading the file", error);
-  //   } finally {
-  //     setLoading(false);
-  //     setFilePreview("");
-  //   }
-  // };
-
+  
   const processFile = async () => {
     // Simulate file processing
-    setTimeout(() => {
-      setJsonData({
-        // Simulate processed data
-        summary: "Team Meeting",
-        description: "Discuss project milestones and tasks.",
-        start: {
-          dateTime: "2024-08-01T09:00:00-07:00",
-          timeZone: "America/Los_Angeles",
-        },
-        end: {
-          dateTime: "2024-08-01T10:00:00-07:00",
-          timeZone: "America/Los_Angeles",
-        },
+    // setTimeout(() => {
+    //   setJsonData({
+    //     // Simulate processed data
+    //     summary: "Team Meeting",
+    //     description: "Discuss project milestones and tasks.",
+    //     start: {
+    //       dateTime: "2024-08-01T09:00:00-07:00",
+    //       timeZone: "America/Los_Angeles",
+    //     },
+    //     end: {
+    //       dateTime: "2024-08-01T10:00:00-07:00",
+    //       timeZone: "America/Los_Angeles",
+    //     },
+    //   });
+    //   setFileProcessed(true);
+    //   setIsExpanded(true);
+    // }, 1000);
+
+    if (!file) return;
+
+    setLoading(true);
+
+    const formData = new FormData();
+    formData.append("file", file);
+
+    try {
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
       });
-      setFileProcessed(true);
-      setIsExpanded(true);
-    }, 1000);
+
+      if (response.ok) {
+        const data = await response.json();
+        setJsonData(data); // Pass the data to the parent component
+        setFileProcessed(true);
+        setIsExpanded(true);
+      } else {
+        console.error("Failed to upload file");
+      }
+    } catch (error) {
+      console.error("An error occurred while uploading the file", error);
+    } finally {
+      setLoading(false);
+      setFilePreview("");
+    }
   };
   const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
     event.preventDefault();

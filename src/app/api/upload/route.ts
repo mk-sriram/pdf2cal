@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
-
+import { prompt } from "./prompt";
 // Initialize the Google Generative AI client
 const initializeGenAI = () => {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -44,12 +44,16 @@ export async function POST(request: NextRequest) {
         },
       },
       {
-        text: "Please extract calendar events from this file. Format the response as a JSON array of events, where each event has 'title', 'date', 'startTime', and 'endTime' properties. your output should be in plain JSON",
+        text: prompt,
       },
     ];
 
     // Use the gemini-1.5-flash model
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    const model = genAI.getGenerativeModel({
+      model: "gemini-1.5-flash",
+      // Set the `responseMimeType` to output JSON
+      generationConfig: { responseMimeType: "application/json" },
+    });
 
     // Generate content
     const result = await model.generateContent({
