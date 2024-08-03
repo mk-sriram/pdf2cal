@@ -78,8 +78,11 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
 
       try {
         // Fetch the response text from the server
-        const jsonText = await response.text();
-        const text = JSON.parse(jsonText).reply;
+        const jsonText = await response.json();
+
+        const text = jsonText.reply;
+        //console.log(text.reply)
+
         console.log(text);
 
         // Extract the JSON part if it exists
@@ -299,7 +302,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
         <div className="flex w-[60%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
           <div className="overflow-scroll w-full ">
             <div className="h-screen p-4 pb-36">
-              {JSON.stringify(jsonData, null, 2)}
+              {JSON.stringify(currentJsonData, null, 2)}
             </div>
           </div>
         </div>

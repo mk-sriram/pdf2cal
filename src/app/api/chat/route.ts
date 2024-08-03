@@ -45,7 +45,7 @@ export async function POST(request: NextRequest) {
     try {
       const result = await chat.sendMessage(lastMessage);
       const text = result.response.text();
-      console.log("Respnse test: ", text);
+      //console.log("Respnse test: ", text);
       // Return the response
       return NextResponse.json({ reply: text }, { status: 200 });
 
