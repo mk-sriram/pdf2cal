@@ -1,4 +1,7 @@
-export const prompt = `"Please extract calendar events from this file using tthis JSON schema : 
+export const prompt = `"Please extract calendar events from this file using this JSON schema, 
+Each cell contains information about the lecture name, lecturer (Dr.), and location of the lecture room (LH1 or A10*). The name of the lecture ( not lecturer name )  should be the summary,
+some events end in between others, 8 45, 945 etc, make sure you account for those
+rest of the information as description, extract the date and time from the picture. This is a schedule: 
    {
   "type": "object",
   "properties": {
