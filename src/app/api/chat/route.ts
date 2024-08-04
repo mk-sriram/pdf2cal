@@ -21,9 +21,9 @@ const initializeGenAI = () => {
 };
 
 export async function POST(request: NextRequest) {
-  console.log("API called");
+  //console.log("API called");
   try {
-    console.log("API called");
+    //console.log("API called");
     const { messages } = await request.json();
 
     const genAI = initializeGenAI();
@@ -31,9 +31,9 @@ export async function POST(request: NextRequest) {
 
     const chatHistory = messages.length === 1 ? [] : messages.slice(0, -1);
 
-    console.log("chat History Message", chatHistory);
+    //console.log("chat History Message", chatHistory);
     const lastMessage = messages[messages.length - 1].parts[0].text;
-    console.log("last Message", lastMessage);
+    //console.log("last Message", lastMessage);
 
     const chat = model.startChat({
       history: chatHistory,

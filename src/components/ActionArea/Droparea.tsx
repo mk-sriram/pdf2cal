@@ -100,8 +100,7 @@ const Droparea = () => {
 
   const handleFileUpload = (selectedFile: File) => {
     setFile(selectedFile);
-    setLoading(true);
-    setLoading(false);
+    
     if (selectedFile.type.startsWith("image/")) {
       setFilePreview(URL.createObjectURL(selectedFile));
     } else if (selectedFile.type === "application/pdf") {
