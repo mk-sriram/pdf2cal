@@ -1,15 +1,16 @@
+"use client";
 import Link from "next/link";
+import { SocialLogin } from "@/app/actions";
 
 const page = () => {
   return (
-    <div className="flex items-center justify-center ">
-      <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4 ">
-        <div className="max-w-md w-[120%] ">
-          <div className="p-8 rounded-2xl bg-white drop-shadow-xl">
-            <h2 className="text-gray-800 text-center text-2xl font-bold">
-              Sign in
-            </h2>
-            <p className="text-gray-500 text-sm mt-[10px] text-center">
+    <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4 bg-red-100 w-[100%] ">
+      <div className="max-w-md w-[120%]">
+        <div className="p-8 rounded-2xl bg-white drop-shadow-xl  h-[40%]">
+          <h2 className="text-gray-800 text-center text-2xl font-bold">
+            Sign in
+          </h2>
+          {/* <p className="text-gray-500 text-sm mt-[10px] text-center">
               Not a member?{" "}
               <Link
                 href="/Signup"
@@ -18,9 +19,9 @@ const page = () => {
                 {" "}
                 Sign up
               </Link>
-            </p>
-            <form className="mt-10 space-y-4">
-              <div>
+            </p> */}
+          {/* <form className="mt-10 space-y-4"> */}
+            {/* <div>
                 <label className="text-gray-800 text-sm mb-2 block">
                   User name
                 </label>
@@ -116,12 +117,16 @@ const page = () => {
                   Or continue with
                 </span>
                 <div className="flex-grow border-t border-gray-300"></div>
-              </div>
+              </div> */}
 
-              <div className="space-x-6 flex justify-center mt-8">
+            <div className="space-x-6 flex justify-center mt-8">
+              <form action={SocialLogin}>
+
                 <button
-                  type="button"
                   className="border-none outline-none cursor-pointer hover:scale-[1.06] transition-all ease-in-out duration-300"
+                  type="submit"
+                  name="action"
+                  value="google"
                 >
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -160,45 +165,9 @@ const page = () => {
                     />
                   </svg>
                 </button>
-                {/* <button
-                  type="button"
-                  className="border-none outline-none cursor-pointer hover:scale-[1.06] transition-all ease-in-out duration-300"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32px"
-                    viewBox="0 0 512 512"
-                  >
-                    <path
-                      fill="#1877f2"
-                      d="M512 256c0 127.78-93.62 233.69-216 252.89V330h59.65L367 256h-71v-48.02c0-20.25 9.92-39.98 41.72-39.98H370v-63s-29.3-5-57.31-5c-58.47 0-96.69 35.44-96.69 99.6V256h-65v74h65v178.89C93.62 489.69 0 383.78 0 256 0 114.62 114.62 0 256 0s256 114.62 256 256z"
-                      data-original="#1877f2"
-                    />
-                    <path
-                      fill="#fff"
-                      d="M355.65 330 367 256h-71v-48.021c0-20.245 9.918-39.979 41.719-39.979H370v-63s-29.296-5-57.305-5C254.219 100 216 135.44 216 199.6V256h-65v74h65v178.889c13.034 2.045 26.392 3.111 40 3.111s26.966-1.066 40-3.111V330z"
-                      data-original="#ffffff"
-                    />
-                  </svg>
-                </button>
-                <button
-                  type="button"
-                  className="border-none outline-none cursor-pointer hover:scale-[1.06] transition-all ease-in-out duration-300"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    width="32px"
-                    viewBox="0 0 22.773 22.773"
-                  >
-                    <path
-                      d="M15.769 0h.162c.13 1.606-.483 2.806-1.228 3.675-.731.863-1.732 1.7-3.351 1.573-.108-1.583.506-2.694 1.25-3.561C13.292.879 14.557.16 15.769 0zm4.901 16.716v.045c-.455 1.378-1.104 2.559-1.896 3.655-.723.995-1.609 2.334-3.191 2.334-1.367 0-2.275-.879-3.676-.903-1.482-.024-2.297.735-3.652.926h-.462c-.995-.144-1.798-.932-2.383-1.642-1.725-2.098-3.058-4.808-3.306-8.276v-1.019c.105-2.482 1.311-4.5 2.914-5.478.846-.52 2.009-.963 3.304-.765.555.086 1.122.276 1.619.464.471.181 1.06.502 1.618.485.378-.011.754-.208 1.135-.347 1.116-.403 2.21-.865 3.652-.648 1.733.262 2.963 1.032 3.723 2.22-1.466.933-2.625 2.339-2.427 4.74.176 2.181 1.444 3.457 3.028 4.209z"
-                      data-original="#000000"
-                    ></path>
-                  </svg>
-                </button> */}
-              </div>
-            </form>
-          </div>
+              </form>
+            </div>
+          {/* </form> */}
         </div>
       </div>
     </div>

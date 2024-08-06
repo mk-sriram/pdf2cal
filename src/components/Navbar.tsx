@@ -1,7 +1,11 @@
 import Image from "next/image";
 import { assets } from "../../public/assets";
 import Link from "next/link";
-const Navbar = () => {
+import { auth } from "@/auth";
+const Navbar = async () => {
+  const session = await auth();
+  //const session = true;
+
   return (
     <div className="container mx-auto flex justify-center navbar bg-inherit py-[29px] w-[70%]">
       <div className="navbar-start space-x-2">
@@ -58,13 +62,41 @@ const Navbar = () => {
           </li>
         </ul>
       </div>
+
       <div className="navbar-end ">
-        <Link
-          href="/Signin"
-          className="btn px-7 rounded-full bg-[#0b7dffd4] from-[#0f55d6b8] to-[#91d9ff] text-white  hover:bg-[#6dc1fc]"
-        >
-          Sign in
-        </Link>
+        {!session ? (
+          <Link
+            href="/Signin"
+            className="btn px-7 rounded-full bg-[#0b7dffd4] from-[#0f55d6b8] to-[#91d9ff] text-white  hover:bg-[#6dc1fc]"
+          >
+            Sign in
+          </Link>
+        ) : (
+          <div className="dropdown dropdown-hover dropdown-end">
+            <div
+              tabIndex={0}
+              className="bg-transparent cursor-pointer hover:scale-[1.06] transition-all ease-in-out duration-300"
+            >
+              <div className="avatar">
+                <div className="ring-[#0b7dffd4] ring-offset-base-100 hover:ring-[#6dc1fc] w-11 transition-all ease-in-out duration-300 rounded-full ring ring-offset-[2px] ">
+                  {/* change src, depending on the user pfp */}
+                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                </div>
+              </div>
+            </div>
+            <ul
+              tabIndex={0}
+              className="dropdown-content menu bg-base-100 rounded-box z-[1] w-52 p-2 shadow"
+            >
+              <li>
+                <a>Dashboard</a>
+              </li>
+              <li>
+                <a>Sign Out</a>
+              </li>
+            </ul>
+          </div>
+        )}
       </div>
     </div>
   );
