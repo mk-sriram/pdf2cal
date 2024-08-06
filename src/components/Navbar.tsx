@@ -2,8 +2,10 @@ import Image from "next/image";
 import { assets } from "../../public/assets";
 import Link from "next/link";
 import { auth } from "@/auth";
+import { SignOut } from "@/app/actions";
 const Navbar = async () => {
   const session = await auth();
+
   //const session = true;
 
   return (
@@ -80,7 +82,13 @@ const Navbar = async () => {
               <div className="avatar">
                 <div className="ring-[#0b7dffd4] ring-offset-base-100 hover:ring-[#6dc1fc] w-11 transition-all ease-in-out duration-300 rounded-full ring ring-offset-[2px] ">
                   {/* change src, depending on the user pfp */}
-                  <img src="https://img.daisyui.com/images/stock/photo-1534528741775-53994a69daeb.webp" />
+                  <Image
+                    src={session?.user?.image}
+                    alt={session?.user?.name}
+                    width={72}
+                    height={72}
+                    className="rounded-full"
+                  />
                 </div>
               </div>
             </div>
@@ -92,7 +100,9 @@ const Navbar = async () => {
                 <a>Dashboard</a>
               </li>
               <li>
-                <a>Sign Out</a>
+                <form action={SignOut}>
+                  <button type="submit">Sign out</button>
+                </form>
               </li>
             </ul>
           </div>

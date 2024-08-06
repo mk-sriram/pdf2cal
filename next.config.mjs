@@ -1,4 +1,15 @@
 /** @type {import('next').NextConfig} */
-const nextConfig = {};
+const nextConfig = {
+  images: {
+    remotePatterns: [
+      {
+        protocol: "https",
+        hostname: "lh3.googleusercontent.com",
+        port: "", // Change this if your local server runs on a different port
+        pathname: "/**",
+      },
+    ],
+  },
+};
 
 export default nextConfig;
