@@ -2,19 +2,10 @@
 import Image from "next/image";
 import { assets } from "../../public/assets";
 import Link from "next/link";
-import { auth, EnrichedSession } from "@/lib/auth";
-import { signOut } from "next-auth/react";
 import { useRouter } from "next/router";
-
-import { getSession } from "@/lib/session";
 const Navbar = async () => {
-  const session = await getSession();
-  const handleSignOut = async () => {
-    const data = await signOut();
-  };
-
+  
   //const session = true;
-
   return (
     <div className="container mx-auto flex justify-center navbar bg-inherit py-[29px] w-[70%]">
       <div className="navbar-start space-x-2">

@@ -30,7 +30,6 @@ export const config = {
     async jwt({ token, user, account }) {
       // Initial sign in
       if (account && user) {
-        //if user is already signed in
         return {
           ...token,
           access_token: account.access_token,
@@ -46,8 +45,8 @@ export const config = {
           const response = await fetch("https://oauth2.googleapis.com/token", {
             headers: { "Content-Type": "application/x-www-form-urlencoded" },
             body: new URLSearchParams({
-              clientId: process.env.AUTH_GOOGLE_ID as string,
-              clientSecret: process.env.AUTH_GOOGLE_SECRET as string,
+              client_id: process.env.AUTH_GOOGLE_ID as string, // Type assertion
+              client_secret: process.env.AUTH_GOOGLE_SECRET as string, // Type assertion
               grant_type: "refresh_token",
               refresh_token: token.refresh_token as string, // Type assertion
             }),
@@ -74,7 +73,7 @@ export const config = {
       }
     },
     async session({ session, token }) {
-      //console.log("Incoming session info: ", session);
+      console.log("Incoming session info: ", session);
       // This will be accessible in the client side using useSession hook
       // So becareful what you return here. Don't return sensitive data.
       // The auth() function should return jwt response but instead it returns
