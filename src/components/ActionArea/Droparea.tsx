@@ -228,7 +228,7 @@ const Droparea = () => {
               </span>
               <span
                 className={`slider mx-4 flex h-6 w-[53px] items-center rounded-full p-1 duration-200 ${
-                  isEvent ? "bg-gray-700" : "bg-[#CCCCCE]"
+                  isEvent ? "bg-gray-800" : "bg-[#CCCCCE]"
                 }`}
               >
                 <span

@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "@google/generative-ai": "^0.16.0",
+    "@headlessui/react": "^2.1.2",
+    "@heroicons/react": "^2.1.5",
     "bcrypt": "^5.1.1",
     "bcryptjs": "^2.4.3",
     "date-fns": "^3.6.0",

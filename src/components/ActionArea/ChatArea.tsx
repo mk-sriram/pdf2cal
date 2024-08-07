@@ -3,6 +3,7 @@ import React, { useState } from "react";
 import { FaArrowUp } from "react-icons/fa";
 import ChatBubble from "./ChatBubble";
 import EventList from "./EventList/EventList";
+import CalendarDrop from "./CalendarDrop";
 
 //interfaces
 interface Part {
@@ -71,6 +72,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
 
   const sendMessageToAPI = async (message: MsgItem) => {
     //
+    setLoading(true);
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -171,6 +173,8 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
     } catch (error) {
       console.error("Error sending message:", error);
       //setIsLoading(false);
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -205,14 +209,14 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
               className="overflow-scroll w-full h-full bg-transperant"
               ref={messagesContainerRef}
             >
-              <div className=" p-4 pb-36  bg-transparent">
+              <div className="p-4 pb-36  bg-transparent">
                 {messageList.slice(1).map((item, index) => (
                   <ChatBubble key={index} msgItem={item} />
                 ))}
               </div>
             </div>
 
-            <div className=" flex  bg-[#ffffff] rounded-full px-4 py-2 shadow">
+            <div className="flex  bg-[#ffffff] rounded-full px-4 py-2 shadow">
               <input
                 type="text"
                 placeholder="Append the points to Event name"
@@ -237,8 +241,9 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
             </div>
           </div>
 
-          <div className="">
-            <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-3">
+          <div className="flex flex-col w-full items-center pt-4 mt-4 ">
+            <CalendarDrop />
+            <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]">
               Connect your Calendar!
             </button>
           </div>
