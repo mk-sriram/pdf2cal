@@ -2,9 +2,8 @@
 import Image from "next/image";
 import { assets } from "../../public/assets";
 import Link from "next/link";
-const Navbar = async () => {
-  
-  const session = true;
+
+const Navbar = () => {
   return (
     <div className="container mx-auto flex justify-center navbar bg-inherit py-[29px] w-[70%]">
       <div className="navbar-start space-x-2">
@@ -63,7 +62,13 @@ const Navbar = async () => {
       </div>
 
       <div className="navbar-end ">
-        {!session ? (
+        <Link
+            href="/Signin"
+            className="btn px-7 rounded-full bg-[#0b7dffd4] from-[#0f55d6b8] to-[#91d9ff] text-white  hover:bg-[#6dc1fc]"
+          >
+            Sign in
+          </Link>
+        {/* {!session ? (
           <Link
             href="/Signin"
             className="btn px-7 rounded-full bg-[#0b7dffd4] from-[#0f55d6b8] to-[#91d9ff] text-white  hover:bg-[#6dc1fc]"
@@ -78,10 +83,10 @@ const Navbar = async () => {
             >
               <div className="avatar">
                 <div className="ring-[#0b7dffd4] ring-offset-base-100 hover:ring-[#6dc1fc] w-11 transition-colors ease-in-out duration-300 rounded-full ring ring-offset-[2px] ">
-                  {/* change src, depending on the user pfp */}
+                  {/* change src, depending on the user pfp 
                   <Image
-                    src={ "/defaultpfp.png"}
-                    alt={ "User avatar"}
+                    src={"/defaultpfp.png"}
+                    alt={"User avatar"}
                     width={72}
                     height={72}
                     className="rounded-full"
@@ -97,13 +102,11 @@ const Navbar = async () => {
                 <a>Dashboard</a>
               </li>
               <li>
-                <button type="button">
-                  Sign out
-                </button>
+                <button type="button">Sign out</button>
               </li>
             </ul>
           </div>
-        )}
+        )} */}
       </div>
     </div>
   );

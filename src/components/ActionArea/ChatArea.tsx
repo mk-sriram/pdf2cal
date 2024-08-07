@@ -2,7 +2,7 @@
 import React, { useState } from "react";
 import { FaArrowUp } from "react-icons/fa";
 import ChatBubble from "./ChatBubble";
-import EventCard from "./EventCard";
+import EventList from "./EventList/EventList";
 
 //interfaces
 interface Part {
@@ -31,7 +31,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
   const messagesContainerRef = React.useRef<HTMLDivElement | null>(null);
   const isInitializedRef = React.useRef(false);
   const [currentJsonData, setCurrentJsonData] = useState(jsonData);
-
+  const [loading, setLoading] = useState<boolean>(true);
   //fixscrolling in chat
   React.useEffect(() => {
     if (messagesContainerRef.current) {
@@ -54,7 +54,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
       role: "user",
       parts: [
         {
-          text: `I have a JSON google calendar object that I need help editing. Here's the current JSON data:
+          text: `I have a JSON google calendar object that I need help editing. Here's the current JSON data and DO not change the structure of JSON in any case:
         ${JSON.stringify(jsonData, null, 2)}
         I'm going to give instructions on editing this. for the first msg reply "Make changes by talking to the bot!", the user will give further editing instructions
         and rest say "Made the requested Changes!". finally, after every bot reply add the updated JSON enclosed in triple backticks like this: \`\`\`json ... \`\`\`.
@@ -194,32 +194,12 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
 
   return (
     <div className="flex flex-col justify-start items-center w-full h-fit">
-      <div className="flex w-[110%] h-[80vh] mt-8 bg-whitejustify-center items-center space-x-5  border-2 border-gray-300 border-dashed px-4 rounded-2xl">
+      <div className="flex w-[120%] h-[80vh] mt-8 bg-whitejustify-center items-center space-x-5  border-2 border-gray-300 border-dashed px-4 rounded-2xl">
         {/* Left block for JSON data */}
-        <div className="flex w-[80%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
-          <div className="overflow-scroll w-full ">
-            <div className="h-screen p-4 pb-36">
-              {/* fix this any type, you loser  */}
-              {currentJsonData.map((event: any, index: any) => (
-                <EventCard
-                  key={index}
-                  summary={event.summary}
-                  start={new Date(event.start.dateTime).toLocaleString(
-                    "en-US",
-                    { timeZone: event.start.timeZone }
-                  )}
-                  end={new Date(event.end.dateTime).toLocaleString("en-US", {
-                    timeZone: event.end.timeZone,
-                  })}
-                  description={event.description}
-                />
-              ))}
-            </div>
-          </div>
-        </div>
+        <EventList jsonData={currentJsonData} loading={loading} />
 
         {/* Right block for chatbox */}
-        <div className="flex flex-col items-center w-[40%] h-[95%] space-y-2">
+        <div className="flex flex-col items-center w-[50%] h-[95%] space-y-2">
           <div className="flex flex-col w-[100%] h-[90%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
             <div
               className="overflow-scroll w-full h-full bg-transperant"

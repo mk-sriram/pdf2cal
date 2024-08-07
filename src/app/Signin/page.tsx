@@ -1,6 +1,6 @@
 "use client";
 import Link from "next/link";
-import { SocialSignIn } from "@/app/actions";
+
 const page = () => {
   return (
     <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4 bg-red-100 w-[100%] ">
@@ -120,7 +120,7 @@ const page = () => {
 
           <div className="space-x-6 flex justify-center mt-8">
             <form
-           
+            
             >
               <button
                 className="border-none outline-none cursor-pointer hover:scale-[1.06] transition-all ease-in-out duration-300"
