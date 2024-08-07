@@ -100,7 +100,7 @@ const Droparea = () => {
 
   const handleFileUpload = (selectedFile: File) => {
     setFile(selectedFile);
-    
+
     if (selectedFile.type.startsWith("image/")) {
       setFilePreview(URL.createObjectURL(selectedFile));
     } else if (selectedFile.type === "application/pdf") {
@@ -137,8 +137,7 @@ const Droparea = () => {
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
             {loading ? (
               <div className="flex flex-col items-center space-x-2">
-                <span className="loading loading-spinner loading-md"></span>
-                <p className="text-sm text-gray-500">Uploading...</p>
+                <span className="loading loading-spinner loading-lg"></span>
               </div>
             ) : filePreview ? (
               <div className="flex flex-col items-center">
@@ -211,12 +210,14 @@ const Droparea = () => {
         </div>
       )}
       {!fileProcessed && (
-        <button
-          className="btn px-7 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-8"
-          onClick={processFile}
-        >
-          Process 🪄
-        </button>
+        <div className="flex flex-row">
+          <button
+            className="btn px-7 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-8"
+            onClick={processFile}
+          >
+            Process 🪄
+          </button>
+        </div>
       )}
     </div>
   );

@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import { FaArrowUp } from "react-icons/fa";
 import ChatBubble from "./ChatBubble";
 import EventCard from "./EventCard";
-import CalendarArea from "./Calendar/CalendarArea";
 
 //interfaces
 interface Part {
@@ -258,7 +257,11 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
             </div>
           </div>
 
-          <div className="">{<CalendarArea calendarobj={jsonData} />}</div>
+          <div className="">
+            <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-3">
+              Connect your Calendar!
+            </button>
+          </div>
         </div>
       </div>
     </div>

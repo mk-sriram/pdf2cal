@@ -4,6 +4,7 @@ import Footer from "@/components/Footer/Footer";
 import HomeSection from "@/components/HomeSection/HomeSection";
 import Navbar from "@/components/Navbar";
 import Link from "next/link";
+import { SessionProvider } from "next-auth/react";
 const page = () => {
   return (
     <>
@@ -11,7 +12,7 @@ const page = () => {
       <HomeSection />
       <ActionArea />
       <FaqSection />
-      <Footer/>
+      <Footer />
     </>
   );
 };

@@ -1,10 +1,17 @@
+"use client";
 import Image from "next/image";
 import { assets } from "../../public/assets";
 import Link from "next/link";
-import { auth } from "@/auth";
-import { SignOut } from "@/app/actions";
+import { auth, EnrichedSession } from "@/lib/auth";
+import { signOut } from "next-auth/react";
+import { useRouter } from "next/router";
+
+import { getSession } from "@/lib/session";
 const Navbar = async () => {
-  const session = await auth();
+  const session = await getSession();
+  const handleSignOut = async () => {
+    const data = await signOut();
+  };
 
   //const session = true;
 
@@ -77,14 +84,14 @@ const Navbar = async () => {
           <div className="dropdown dropdown-hover dropdown-end">
             <div
               tabIndex={0}
-              className="bg-transparent cursor-pointer hover:scale-[1.06] transition-all ease-in-out duration-300"
+              className="bg-transparent cursor-pointer hover:scale-[1.06] transition-scale ease-in-out duration-300"
             >
               <div className="avatar">
-                <div className="ring-[#0b7dffd4] ring-offset-base-100 hover:ring-[#6dc1fc] w-11 transition-all ease-in-out duration-300 rounded-full ring ring-offset-[2px] ">
+                <div className="ring-[#0b7dffd4] ring-offset-base-100 hover:ring-[#6dc1fc] w-11 transition-colors ease-in-out duration-300 rounded-full ring ring-offset-[2px] ">
                   {/* change src, depending on the user pfp */}
                   <Image
-                    src={session?.user?.image}
-                    alt={session?.user?.name}
+                    src={session?.user?.image ?? "/defaultpfp.png"}
+                    alt={session?.user?.name ?? "User avatar"}
                     width={72}
                     height={72}
                     className="rounded-full"
@@ -100,9 +107,9 @@ const Navbar = async () => {
                 <a>Dashboard</a>
               </li>
               <li>
-                <form action={SignOut}>
-                  <button type="submit">Sign out</button>
-                </form>
+                <button type="button" onClick={handleSignOut}>
+                  Sign out
+                </button>
               </li>
             </ul>
           </div>
