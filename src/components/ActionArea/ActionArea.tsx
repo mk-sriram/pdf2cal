@@ -2,7 +2,11 @@
 import React from "react";
 import Droparea from "./Droparea";
 
+
 const ActionArea: React.FC = () => {
+  
+
+  
   const jsonData = [
     {
       summary: "Team Meeting",
@@ -65,10 +69,12 @@ const ActionArea: React.FC = () => {
       },
     },
   ];
-
+  
   return (
     <div className="relative w-full h-full">
+     
       <Droparea />
+    
     </div>
   );
 };

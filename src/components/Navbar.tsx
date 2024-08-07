@@ -2,10 +2,9 @@
 import Image from "next/image";
 import { assets } from "../../public/assets";
 import Link from "next/link";
-import { useRouter } from "next/router";
 const Navbar = async () => {
   
-  //const session = true;
+  const session = true;
   return (
     <div className="container mx-auto flex justify-center navbar bg-inherit py-[29px] w-[70%]">
       <div className="navbar-start space-x-2">
@@ -81,8 +80,8 @@ const Navbar = async () => {
                 <div className="ring-[#0b7dffd4] ring-offset-base-100 hover:ring-[#6dc1fc] w-11 transition-colors ease-in-out duration-300 rounded-full ring ring-offset-[2px] ">
                   {/* change src, depending on the user pfp */}
                   <Image
-                    src={session?.user?.image ?? "/defaultpfp.png"}
-                    alt={session?.user?.name ?? "User avatar"}
+                    src={ "/defaultpfp.png"}
+                    alt={ "User avatar"}
                     width={72}
                     height={72}
                     className="rounded-full"
@@ -98,7 +97,7 @@ const Navbar = async () => {
                 <a>Dashboard</a>
               </li>
               <li>
-                <button type="button" onClick={handleSignOut}>
+                <button type="button">
                   Sign out
                 </button>
               </li>

@@ -4,6 +4,9 @@ import Google from "next-auth/providers/google";
 import type { NextAuthConfig, Session } from "next-auth";
 
 export const config = {
+  theme: {
+    logo: "https://next-auth.js.org/img/logo/logo-sm.png",
+  },
   providers: [
     Google({
       authorization: {
