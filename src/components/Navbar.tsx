@@ -1,12 +1,12 @@
-"use server";
+"use client";
 import Image from "next/image";
 import { assets } from "../../public/assets";
-import { createClient } from "@/utils/supabase/server";
+import { createClient } from "@/utils/supabase/client";
 import Link from "next/link";
 
-const Navbar = async () => {
-  const supabase = createClient();
-  const user = await supabase.auth.getUser();
+
+const Navbar = () => {
+ 
   return (
     <div className="container mx-auto flex justify-center navbar bg-inherit py-[29px] w-[70%]">
       <div className="navbar-start space-x-2">
@@ -82,8 +82,8 @@ const Navbar = async () => {
                 <div className="ring-[#0b7dffd4] ring-offset-base-100 hover:ring-[#6dc1fc] w-11 transition-colors ease-in-out duration-300 rounded-full ring ring-offset-[2px] ">
                   {/* change src, depending on the user pfp */}
                   <Image
-                    src={user.data.user?.user_metadata?.avatar_url ?? "/defaultpfp.png"}
-                    alt={user.data.user?.user_metadata?.name ?? "User avatar"}
+                    src={user?.user_metadata?.avatar_url ?? "/defaultpfp.png"}
+                    alt={user?.user_metadata?.name ?? "User avatar"}
                     width={72}
                     height={72}
                     className="rounded-full"
@@ -99,7 +99,9 @@ const Navbar = async () => {
                 <a>Dashboard</a>
               </li>
               <li>
-                <button type="button">Sign out</button>
+                <button type="button" >
+                  Sign out
+                </button>
               </li>
             </ul>
           </div>
