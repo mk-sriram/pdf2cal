@@ -1,12 +1,27 @@
 "use client";
 import Image from "next/image";
 import { assets } from "../../public/assets";
-import { createClient } from "@/utils/supabase/client";
-import Link from "next/link";
 
+import Link from "next/link";
+import useAuth from "@/utils/supabase/useAuth";
+import { createClient } from "@/utils/supabase/client";
+import { useState } from "react";
 
 const Navbar = () => {
- 
+  
+  const data = useAuth();
+  const session = data.session;
+  //console.log(data)
+  //console.log( data.session?.user?.user_metadata )
+  const handleSignOut = async () => {
+    console.log("SIGNING OUT ");
+    const supabase = createClient();
+    try {
+      supabase.auth.signOut();
+    } catch (err) {
+      console.log(err);
+    }
+  };
   return (
     <div className="container mx-auto flex justify-center navbar bg-inherit py-[29px] w-[70%]">
       <div className="navbar-start space-x-2">
@@ -65,7 +80,7 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-end ">
-        {!user ? (
+        {!session ? (
           <Link
             href="/Signin"
             className="btn px-7 rounded-full bg-[#0b7dffd4] from-[#0f55d6b8] to-[#91d9ff] text-white  hover:bg-[#6dc1fc]"
@@ -82,8 +97,11 @@ const Navbar = () => {
                 <div className="ring-[#0b7dffd4] ring-offset-base-100 hover:ring-[#6dc1fc] w-11 transition-colors ease-in-out duration-300 rounded-full ring ring-offset-[2px] ">
                   {/* change src, depending on the user pfp */}
                   <Image
-                    src={user?.user_metadata?.avatar_url ?? "/defaultpfp.png"}
-                    alt={user?.user_metadata?.name ?? "User avatar"}
+                    src={
+                      session?.user?.user_metadata.avatar_url ??
+                      "/defaultpfp.png"
+                    }
+                    alt={session?.user?.user_metadata.name ?? "User avatar"}
                     width={72}
                     height={72}
                     className="rounded-full"
@@ -99,7 +117,7 @@ const Navbar = () => {
                 <a>Dashboard</a>
               </li>
               <li>
-                <button type="button" >
+                <button type="button" onClick={handleSignOut}>
                   Sign out
                 </button>
               </li>
