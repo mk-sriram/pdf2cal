@@ -1,7 +1,11 @@
 import { createClient } from "@/utils/supabase/server";
-import { NextResponse } from "next/server";
 
-export async function getProviderTokens() {
+interface ProviderTokens {
+  provider_token: string | null;
+  provider_refresh_token: string | null;
+}
+
+export async function getProviderTokens(): Promise<ProviderTokens> {
   const supabase = createClient();
 
   // Retrieve the session
@@ -10,9 +14,7 @@ export async function getProviderTokens() {
   } = await supabase.auth.getSession();
 
   if (!session) {
-    return new NextResponse("Unauthorized", {
-      status: 401,
-    });
+    throw new Error("Unauthorized: No active session found.");
   }
 
   // Fetch provider tokens for the user
@@ -24,13 +26,12 @@ export async function getProviderTokens() {
 
   if (providerTokenError) {
     console.error("Error fetching provider tokens:", providerTokenError);
-    return new NextResponse("Failed to retrieve tokens", {
-      status: 500,
-    });
+    throw new Error("Failed to retrieve tokens.");
   }
 
-  const provider_token = providerTokenData?.provider_token;
-  const provider_refresh_token = providerTokenData?.provider_refresh_token;
+  const provider_token = providerTokenData?.provider_token || null;
+  const provider_refresh_token =
+    providerTokenData?.provider_refresh_token || null;
 
   return { provider_token, provider_refresh_token };
 }
