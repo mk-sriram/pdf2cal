@@ -6,6 +6,7 @@ import EventList from "./EventList/EventList";
 import CalendarDrop from "./CalendarDrop";
 import useAuth from "@/utils/supabase/useAuth";
 import TasksListDrop from "./TasksListDrop";
+import TaskList from "./TaskList/TaskList";
 
 //interfaces
 interface Part {
@@ -35,11 +36,12 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
   const messagesContainerRef = React.useRef<HTMLDivElement | null>(null);
   const isInitializedRef = React.useRef(false);
   const [currentJsonData, setCurrentJsonData] = useState(jsonData);
-  const [pageloading, setLoading] = useState<boolean>(true);
+  const [pageloading, setPageLoading] = useState<boolean>(true);
   //fixscrolling in chat
   //Session check
   console.log("Chatarea; ", isEvent);
   const { user, loading } = useAuth();
+
   React.useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({
@@ -78,7 +80,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
 
   const sendMessageToAPI = async (message: MsgItem) => {
     //
-    setLoading(true);
+    setPageLoading(true);
     try {
       const response = await fetch("/api/chat", {
         method: "POST",
@@ -132,7 +134,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
       console.error("Error sending message:", error);
       //setIsLoading(false);
     } finally {
-      setLoading(false);
+      setPageLoading(false);
     }
   };
 
@@ -160,7 +162,12 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
     <div className="flex flex-col justify-start items-center w-full h-fit">
       <div className="flex w-[70rem] h-[80vh] mt-8 bg-whitejustify-center items-center space-x-5  border-2 border-gray-300 border-dashed px-4 rounded-2xl">
         {/* Left block for JSON data */}
-        <EventList jsonData={currentJsonData} loading={pageloading} />
+
+        {!isEvent ? (
+          <TaskList jsonData={currentJsonData} loading={pageloading} />
+        ) : (
+          <EventList jsonData={currentJsonData} loading={pageloading} />
+        )}
 
         {/* Right block for chatbox */}
         <div className="flex flex-col items-center w-[50%] h-[75vh] space-y-2">
