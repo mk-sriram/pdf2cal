@@ -7,7 +7,7 @@ import CalendarDrop from "./CalendarDrop";
 import useAuth from "@/utils/supabase/useAuth";
 import TasksListDrop from "./TasksListDrop";
 import TaskList from "./TaskList/TaskList";
-
+import SuccessModal from "./SuccessModal"
 //interfaces
 interface Part {
   text: string;
@@ -62,8 +62,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
 
   //loading states
   const [pageloading, setPageLoading] = useState<boolean>(true);
-  
-  //state variables for SelectedItems 
+  const [loadingModal, setloadModal] = useState<boolean>(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
+
+  const handleSuccess = () => {
+    // Trigger the modal to open
+    setIsSuccessModalOpen(true);
+  };
+
+  //state variables for SelectedItems
   const [selectedTask, setSelectedTask] = useState<TaskList | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<Calendar | null>(null);
   //fixscrolling in chat
@@ -186,7 +193,6 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
   };
 
   const sendtoTasks = async () => {
-
     try {
       // Create the request payload
       const payload = {
@@ -210,6 +216,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
 
         setCurrentJsonData([]);
         setMessageList([]);
+        handleSuccess();
       } else {
         const errorData = await response.json();
         console.error("Error:", errorData.message);
@@ -221,6 +228,12 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
 
   return (
     <div className="flex flex-col justify-start items-center w-full h-fit">
+      {isSuccessModalOpen && (
+        <SuccessModal
+          isOpen={isSuccessModalOpen}
+          setIsOpen={setIsSuccessModalOpen}
+        />
+      )}
       <div className="flex w-[70rem] h-[80vh] mt-8 bg-whitejustify-center items-center space-x-5  border-2 border-gray-300 border-dashed px-4 rounded-2xl">
         {/* Left block for JSON data */}
 

@@ -10,10 +10,10 @@ export async function getProviderTokens(): Promise<ProviderTokens> {
 
   // Retrieve the session
   const {
-    data: { session },
-  } = await supabase.auth.getSession();
+    data: { user },
+  } = await supabase.auth.getUser();
 
-  if (!session) {
+  if (!user) {
     throw new Error("Unauthorized: No active session found.");
   }
 
@@ -21,7 +21,7 @@ export async function getProviderTokens(): Promise<ProviderTokens> {
   const { data: providerTokenData, error: providerTokenError } = await supabase
     .from("provider_tokens")
     .select("provider_token, provider_refresh_token")
-    .eq("user_id", session.user.id)
+    .eq("user_id", user.id)
     .maybeSingle();
 
   if (providerTokenError) {
