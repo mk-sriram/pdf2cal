@@ -137,7 +137,7 @@ const Droparea = () => {
                   <img
                     src={filePreview}
                     alt="File Preview"
-                    className="w-32 h-32 object-cover mb-4"
+                    className=" h-40 object-cover mb-4"
                   />
                 ) : file?.type === "application/pdf" ? (
                   <iframe
