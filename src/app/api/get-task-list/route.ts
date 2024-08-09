@@ -51,10 +51,10 @@ export async function GET(request: NextRequest) {
 
       // Format the task lists into the desired structure
       const formattedTaskLists = taskLists.map((tasklist, index) => ({
-        id: index + 1,
+        id: tasklist.id,
         name: tasklist.title || "Untitled",
       }));
-      console.log(formattedTaskLists);
+      //console.log(formattedTaskLists);
       // Return the formatted task lists
       return NextResponse.json({ formattedTaskLists });
     } catch (taskError) {

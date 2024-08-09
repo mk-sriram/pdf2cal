@@ -10,7 +10,7 @@ import {
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
 interface TaskList {
-  id: number;
+  id: string;
   name: string;
 }
 interface TasksListDropProps {

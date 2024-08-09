@@ -36,8 +36,20 @@ interface Calendar {
   name: string;
 }
 
+interface Task {
+  title: string; // The title of the task. This is the only required field when creating a task.
+  due?: string; // The due date/time of the task in RFC 3339 format. This can be useful if you want to set a deadline for the task.
+  notes?: string; // Any additional notes or details about the task.
+  status?: "needsAction"; // The status of the task, e.g., 'needsAction' for pending tasks or 'completed' for finished tasks. Defaults to 'needsAction'.
+  links?: Array<{
+    type: string; // The type of the link, such as 'related' or 'attachment'.
+    description?: string; // A brief description of what the link is or why it's relevant.
+    link: string; // The URL of the resource being linked to.
+  }>;
+}
+
 interface TaskList {
-  id: number;
+  id: string;
   name: string;
 }
 
@@ -47,7 +59,11 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
   const messagesContainerRef = React.useRef<HTMLDivElement | null>(null);
   const isInitializedRef = React.useRef(false);
   const [currentJsonData, setCurrentJsonData] = useState(jsonData);
+
+  //loading states
   const [pageloading, setPageLoading] = useState<boolean>(true);
+  
+  //state variables for SelectedItems 
   const [selectedTask, setSelectedTask] = useState<TaskList | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<Calendar | null>(null);
   //fixscrolling in chat
@@ -114,7 +130,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
         const text = jsonText.reply;
         //console.log(text.reply)
 
-        console.log(text);
+        //console.log(text);
 
         // Extract the JSON part if it exists
         const jsonMatch = text.match(/```json\n([\s\S]*?)\n```/);
@@ -157,19 +173,51 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
         role: "user",
         parts: [{ text: chatMessage }],
       };
-      console.log(chatMessage);
+      //console.log(chatMessage);
       setMessageList((oldChatHistory) => [...oldChatHistory, newMessage]);
       setChatMessage("");
       await sendMessageToAPI(newMessage);
     }
   };
 
-  const sendtoCalendar = (jsonData: any, calendarid: any) => {
+  const sendtoCalendar = (jsonData: Event[], calendarid: number) => {
     //take the data and send to calendar
     //depending on the calendar of choise
   };
 
-  const sendtoTasks = (jsonData: any, taskid: any) => {};
+  const sendtoTasks = async () => {
+
+    try {
+      // Create the request payload
+      const payload = {
+        taskListId: selectedTask?.id, // ID of the task list where the task should be inserted
+        taskData: currentJsonData, // JSON data representing the task to be inserted
+      };
+      console.log(payload);
+      // Send a POST request to the backend endpoint
+      const response = await fetch("/api/post-tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
+
+      console.log(response);
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Success:", data.message);
+
+        setCurrentJsonData([]);
+        setMessageList([]);
+      } else {
+        const errorData = await response.json();
+        console.error("Error:", errorData.message);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    }
+  };
 
   return (
     <div className="flex flex-col justify-start items-center w-full h-fit">
@@ -231,7 +279,10 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
                 {!isEvent ? (
                   <>
                     <TasksListDrop setSelectedTask={setSelectedTask} />
-                    <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]">
+                    <button
+                      className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]"
+                      onClick={sendtoTasks}
+                    >
                       Send Tasks!
                     </button>
                   </>

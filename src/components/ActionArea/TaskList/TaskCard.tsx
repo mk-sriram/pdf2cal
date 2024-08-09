@@ -43,7 +43,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
         className="dropdown-content menu bg-white rounded-lg shadow-md z-50 w-full p-4"
       >
         <div className="flex flex-col w-full">
-          {notes && <div className="text-gray-700 mb-2">Notes: {notes}</div>}
+          {notes && <div className="text-gray-700 mb-2"> {notes}</div>}
           {links && links.length > 0 && (
             <div className="text-gray-700">
               <div className="font-semibold mb-1">Links:</div>
