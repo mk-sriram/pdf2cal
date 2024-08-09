@@ -2,7 +2,6 @@
 
 import { useState, useEffect } from "react";
 import {
-  Label,
   Listbox,
   ListboxButton,
   ListboxOption,
@@ -10,37 +9,36 @@ import {
 } from "@headlessui/react";
 import { CheckIcon, ChevronUpDownIcon } from "@heroicons/react/20/solid";
 
-interface Calendar {
+interface TaskList {
   id: number;
-  color: string;
   name: string;
 }
-interface CalendarListDropProps {
-  setSelectedEvent: React.Dispatch<React.SetStateAction<Calendar | null>>;
+interface TasksListDropProps {
+  selectedTask: TaskList | null;
+  setSelectedTask: React.Dispatch<React.SetStateAction<TaskList | null>>;
 }
-const CalendarDrop: React.FC<CalendarListDropProps> = ({
-  setSelectedEvent,
+const TasksListDrop: React.FC<TasksListDropProps> = ({
+  selectedTask,
+  setSelectedTask,
 }) => {
-  const [selected, setSelected] = useState<Calendar | null>(null);
-  const [calendarNames, setCalendarNames] = useState<Calendar[]>([]);
+  const [taskLists, setTaskLists] = useState<TaskList[]>([]);
 
   useEffect(() => {
-    const fetchCalendars = async () => {
+    const fetchTaskLists = async () => {
       try {
-        const response = await fetch("/api/get-calendar-list");
+        const response = await fetch("/api/get-task-list");
         const data = await response.json();
-        setCalendarNames(data.calendars);
-        setSelected(data.calendars[0]);
-        setSelectedEvent(selected);
+        setTaskLists(data.formattedTaskLists);
+        setSelectedTask(data.formattedTaskLists[0]);
       } catch (error) {
-        console.error("Error fetching calendars", error);
+        console.error("Error fetching task lists", error);
       }
     };
 
-    fetchCalendars();
+    fetchTaskLists();
   }, []);
 
-  if (!selected) {
+  if (!selectedTask) {
     return (
       <div className="relative mt-2 w-[50%] animate-pulse">
         <div className="relative w-full cursor-default rounded-md bg-gray-200 py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-[#0b7dffd4] sm:text-sm sm:leading-6">
@@ -52,24 +50,12 @@ const CalendarDrop: React.FC<CalendarListDropProps> = ({
     ); // Show a loading state while fetching data
   }
 
-  
-  const handleSelectionChange = (Calendar: Calendar) => {
-    setSelected(Calendar);
-    setSelectedEvent(Calendar); // Update the parent component with the new selection
-  };
   return (
-    <Listbox value={selected} onChange={handleSelectionChange}>
-      {/* <Label className="block text-sm font-medium leading-6 text-gray-800">
-        Choose Calendar
-      </Label> */}
+    <Listbox value={selectedTask} onChange={setSelectedTask}>
       <div className="relative mt-2 w-[50%]">
         <ListboxButton className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-[#0b7dffd4] sm:text-sm sm:leading-6">
           <span className="flex items-center">
-            <span
-              className="inline-block w-3 h-3 rounded-full"
-              style={{ backgroundColor: selected.color }}
-            ></span>
-            <span className="ml-3 block truncate">{selected.name}</span>
+            <span className="ml-3 block truncate">{selectedTask.name}</span>
           </span>
           <span className="pointer-events-none absolute inset-y-0 right-0 ml-3 flex items-center pr-2">
             <ChevronUpDownIcon
@@ -83,23 +69,19 @@ const CalendarDrop: React.FC<CalendarListDropProps> = ({
           transition
           className="absolute z-10 mt-1 max-h-56 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none data-[closed]:data-[leave]:opacity-0 data-[leave]:transition data-[leave]:duration-100 data-[leave]:ease-in sm:text-sm"
         >
-          {calendarNames.map((calendar) => (
+          {taskLists.map((taskList) => (
             <ListboxOption
-              key={calendar.id}
-              value={calendar}
+              key={taskList.id}
+              value={taskList}
               className="group relative cursor-default select-none py-2 pl-3 pr-9 text-gray-900 data-[focus]:bg-[#0b7dffd4] data-[focus]:text-white"
             >
               <div className="flex items-center">
-                <span
-                  className="inline-block w-3 h-3 rounded-full"
-                  style={{ backgroundColor: calendar.color }}
-                ></span>
-                <span className="ml-3 block truncate font-normal group-data-[selected]:font-semibold">
-                  {calendar.name}
+                <span className="ml-3 block truncate font-normal group-data-[selectedTask]:font-semibold">
+                  {taskList.name}
                 </span>
               </div>
 
-              <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-[#0b7dffd4] group-data-[focus]:text-white [.group:not([data-selected])_&]:hidden">
+              <span className="absolute inset-y-0 right-0 flex items-center pr-4 text-[#0b7dffd4] group-data-[focus]:text-white [.group:not([data-selectedTask])_&]:hidden">
                 <CheckIcon aria-hidden="true" className="h-5 w-5" />
               </span>
             </ListboxOption>
@@ -110,4 +92,4 @@ const CalendarDrop: React.FC<CalendarListDropProps> = ({
   );
 };
 
-export default CalendarDrop;
+export default TasksListDrop;

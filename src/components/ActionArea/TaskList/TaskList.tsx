@@ -20,7 +20,7 @@ interface TaskListProps {
 
 const TaskList: React.FC<TaskListProps> = ({ jsonData, loading }) => {
   return (
-    <div className="flex w-[70%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
+    <div className="flex flex-row w-[70%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100 relative">
       <div className="overflow-scroll w-full">
         <div className="h-screen p-4 pb-36">
           {loading ? (
@@ -41,6 +41,7 @@ const TaskList: React.FC<TaskListProps> = ({ jsonData, loading }) => {
             jsonData.map((task: Task, index: number) => (
               <TaskCard
                 key={index}
+                taskNumber={index + 1}
                 title={task.title}
                 due={task.due}
                 notes={task.notes}

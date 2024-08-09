@@ -13,8 +13,10 @@ interface TaskList {
   id: number;
   name: string;
 }
-
-export default function TasksListDrop() {
+interface TasksListDropProps {
+  setSelectedTask: React.Dispatch<React.SetStateAction<TaskList | null>>;
+}
+const TasksListDrop: React.FC<TasksListDropProps> = ({ setSelectedTask }) => {
   const [selected, setSelected] = useState<TaskList | null>(null);
   const [taskLists, setTaskLists] = useState<TaskList[]>([]);
 
@@ -44,9 +46,12 @@ export default function TasksListDrop() {
       </div>
     ); // Show a loading state while fetching data
   }
-
+  const handleSelectionChange = (task: TaskList) => {
+    setSelected(task);
+    setSelectedTask(task); // Update the parent component with the new selection
+  };
   return (
-    <Listbox value={selected} onChange={setSelected}>
+    <Listbox value={selected} onChange={handleSelectionChange}>
       <div className="relative mt-2 w-[50%]">
         <ListboxButton className="relative w-full cursor-default rounded-md bg-white py-1.5 pl-3 pr-10 text-left text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 focus:outline-none focus:ring-2 focus:ring-[#0b7dffd4] sm:text-sm sm:leading-6">
           <span className="flex items-center">
@@ -85,4 +90,6 @@ export default function TasksListDrop() {
       </div>
     </Listbox>
   );
-}
+};
+
+export default TasksListDrop;

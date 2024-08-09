@@ -21,3 +21,10 @@
   color: transparent;
 
 }
+
+.custom-dropdown-bottom {
+  bottom: auto;
+  top: 100%; /* Positions the dropdown below its parent */
+  left: 2px; /* Moves dropdown 2px to the right */
+  transform-origin: top; /* Sets the origin of transformation to the top */
+}

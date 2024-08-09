@@ -56,7 +56,7 @@ Task Identification:
 Information Extraction:
 - Title: Extract the main title or label for the task. This should be a concise summary of the task. Maximum length allowed: 1024 characters.
 - Due Date: Identify any due dates or deadlines mentioned for the task. Format this in a standard date/time format if possible. RFC 3339 timestamp.
-- Notes: Extract any additional details, instructions, or context related to the task.
+- Notes: Extract any additional details, instructions, points or context related to the task.
 - Status: Set the status to "needsAction" by default unless explicitly stated otherwise.
 - Links: Extract any URLs, documents, or resources mentioned in relation to the task. Categorize them appropriately as 'related' or 'attachment'.
 

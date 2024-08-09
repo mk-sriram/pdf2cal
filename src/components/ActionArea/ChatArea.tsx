@@ -30,6 +30,17 @@ interface Event {
   description: string;
 }
 
+interface Calendar {
+  id: number;
+  color: string;
+  name: string;
+}
+
+interface TaskList {
+  id: number;
+  name: string;
+}
+
 const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
   const [messageList, setMessageList] = useState<MsgItem[]>([]);
   const [chatMessage, setChatMessage] = React.useState("");
@@ -37,9 +48,11 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
   const isInitializedRef = React.useRef(false);
   const [currentJsonData, setCurrentJsonData] = useState(jsonData);
   const [pageloading, setPageLoading] = useState<boolean>(true);
+  const [selectedTask, setSelectedTask] = useState<TaskList | null>(null);
+  const [selectedEvent, setSelectedEvent] = useState<Calendar | null>(null);
   //fixscrolling in chat
   //Session check
-  console.log("Chatarea; ", isEvent);
+  //console.log(selectedTask?.name);
   const { user, loading } = useAuth();
 
   React.useEffect(() => {
@@ -217,14 +230,14 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
               <>
                 {!isEvent ? (
                   <>
-                    <TasksListDrop />
+                    <TasksListDrop setSelectedTask={setSelectedTask} />
                     <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]">
                       Send Tasks!
                     </button>
                   </>
                 ) : (
                   <>
-                    <CalendarDrop />
+                    <CalendarDrop setSelectedEvent={setSelectedEvent} />
                     <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]">
                       Send to Calendar!
                     </button>
