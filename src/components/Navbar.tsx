@@ -8,16 +8,14 @@ import { createClient } from "@/utils/supabase/client";
 import { useState } from "react";
 
 const Navbar = () => {
-  
-  const data = useAuth();
-  const session = data.session;
-  //console.log(data)
+  const { user, loading } = useAuth();
+  //console.log(user);
   //console.log( data.session?.user?.user_metadata )
   const handleSignOut = async () => {
-    console.log("SIGNING OUT ");
+    //console.log("SIGNING OUT ");
     const supabase = createClient();
     try {
-      supabase.auth.signOut();
+      await supabase.auth.signOut();
     } catch (err) {
       console.log(err);
     }
@@ -80,10 +78,10 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-end ">
-        {!session ? (
+        {!user ? (
           <Link
             href="/Signin"
-            className="btn px-7 rounded-full bg-[#0b7dffd4] from-[#0f55d6b8] to-[#91d9ff] text-white  hover:bg-[#6dc1fc]"
+            className="btn px-7 rounded-full bg-[#0b7dffd4] from-[#0f55d6b8] to-[#91d9ff] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01]"
           >
             Sign in
           </Link>
@@ -91,17 +89,14 @@ const Navbar = () => {
           <div className="dropdown dropdown-hover dropdown-end">
             <div
               tabIndex={0}
-              className="bg-transparent cursor-pointer hover:scale-[1.06] transition-scale ease-in-out duration-300"
+              className="bg-transparent cursor-pointer hover:scale-[1.06] transition-scale ease-in-out duration-300 "
             >
               <div className="avatar">
                 <div className="ring-[#0b7dffd4] ring-offset-base-100 hover:ring-[#6dc1fc] w-11 transition-colors ease-in-out duration-300 rounded-full ring ring-offset-[2px] ">
                   {/* change src, depending on the user pfp */}
                   <Image
-                    src={
-                      session?.user?.user_metadata.avatar_url ??
-                      "/defaultpfp.png"
-                    }
-                    alt={session?.user?.user_metadata.name ?? "User avatar"}
+                    src={user?.user_metadata.avatar_url ?? "/defaultpfp.png"}
+                    alt={user?.user_metadata.name ?? "User avatar"}
                     width={72}
                     height={72}
                     className="rounded-full"

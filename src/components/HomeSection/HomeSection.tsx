@@ -4,7 +4,7 @@ import Typewriter from "typewriter-effect";
 
 const HomeSection = () => {
   return (
-    <section className="flex flex-col items-center justify-start h-[30vh] bg-white text-center px-4 md:px-0 pt-[50px]">
+    <section className="flex flex-col items-center justify-start h-[30vh] bg-white text-center px-4 md:px-0 pt-[50px] mb-[40px]">
       <div className="max-w-3xl">
         <div className="flex flex-col items-center mb-4 space-y-[20px]">
           <span className="text-5xl font-bold  text-gray-800">Convert</span>

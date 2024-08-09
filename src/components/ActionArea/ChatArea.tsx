@@ -4,6 +4,7 @@ import { FaArrowUp } from "react-icons/fa";
 import ChatBubble from "./ChatBubble";
 import EventList from "./EventList/EventList";
 import CalendarDrop from "./CalendarDrop";
+import useAuth from "@/utils/supabase/useAuth";
 
 //interfaces
 interface Part {
@@ -32,8 +33,10 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
   const messagesContainerRef = React.useRef<HTMLDivElement | null>(null);
   const isInitializedRef = React.useRef(false);
   const [currentJsonData, setCurrentJsonData] = useState(jsonData);
-  const [loading, setLoading] = useState<boolean>(true);
+  const [pageloading, setLoading] = useState<boolean>(true);
   //fixscrolling in chat
+  //Session check
+  const { user, loading } = useAuth();
   React.useEffect(() => {
     if (messagesContainerRef.current) {
       messagesContainerRef.current.scrollTo({
@@ -198,13 +201,13 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
 
   return (
     <div className="flex flex-col justify-start items-center w-full h-fit">
-      <div className="flex w-[120%] h-[80vh] mt-8 bg-whitejustify-center items-center space-x-5  border-2 border-gray-300 border-dashed px-4 rounded-2xl">
+      <div className="flex w-[70rem] h-[80vh] mt-8 bg-whitejustify-center items-center space-x-5  border-2 border-gray-300 border-dashed px-4 rounded-2xl">
         {/* Left block for JSON data */}
-        <EventList jsonData={currentJsonData} loading={loading} />
+        <EventList jsonData={currentJsonData} loading={pageloading} />
 
         {/* Right block for chatbox */}
-        <div className="flex flex-col items-center w-[50%] h-[95%] space-y-2">
-          <div className="flex flex-col w-[100%] h-[90%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
+        <div className="flex flex-col items-center w-[50%] h-[75vh] space-y-2">
+          <div className="flex flex-col w-[100%] h-[90%] p-4 justify-center shadow-lg rounded-2xl bg-gray-100">
             <div
               className="overflow-scroll w-full h-full bg-transperant"
               ref={messagesContainerRef}
@@ -242,10 +245,19 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
           </div>
 
           <div className="flex flex-col w-full items-center pt-4 mt-4 ">
-            <CalendarDrop />
-            <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]">
-              Connect your Calendar!
-            </button>
+            {!user ? (
+              <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]">
+                Connect your Calendar!
+              </button>
+            ) : (
+              <>
+                {" "}
+                <CalendarDrop />
+                <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]">
+                  Send to Calendar!
+                </button>
+              </>
+            )}
           </div>
         </div>
       </div>

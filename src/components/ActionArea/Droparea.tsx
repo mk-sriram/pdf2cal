@@ -18,24 +18,6 @@ interface MsgItem {
   role: string;
   content: string;
 }
-// const placeholderMessages: MsgItem[] = [
-//   { role: "bot", content: "Hello! How can I assist you today?" },
-//   { role: "user", content: "I need help with my order." },
-//   { role: "bot", content: "Sure, can you provide your order number?" },
-//   { role: "user", content: "It's 123456." },
-//   {
-//     role: "bot",
-//     content: "Thank you! Let me check the status of your order.",
-//   },
-//   { role: "bot", content: "Hello! How can I assist you today?" },
-//   { role: "user", content: "I need help with my order." },
-//   { role: "bot", content: "Sure, can you provide your order number?" },
-//   { role: "user", content: "It's 123456." },
-//   {
-//     role: "bot",
-//     content: "Thank you! Let me check the status of your order.",
-//   },
-// ];
 
 const Droparea = () => {
   const [file, setFile] = useState<File | null>(null);
@@ -45,9 +27,10 @@ const Droparea = () => {
   const [isExpanded, setIsExpanded] = useState(false);
   const [fileProcessed, setFileProcessed] = useState(false);
   const [jsonData, setJsonData] = useState<EventData | null>(null);
-  const [isEvent, setIsEvent] = useState(false);
+  const [isEvent, setIsEvent] = useState(true);
 
   const handleCheckboxChange = () => {
+    console.log(isEvent);
     setIsEvent(!isEvent);
   };
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -242,7 +225,7 @@ const Droparea = () => {
               </span>
             </label>
             <button
-              className="btn px-7 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5"
+              className="btn px-7 rounded-full bg-[#0b7dffd4] text-white transition-all transform active:scale-[0.98] hover:scale-[1.009] mt-5"
               onClick={processFile}
             >
               Process 🪄
