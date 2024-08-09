@@ -6,7 +6,12 @@ import {
 } from "@headlessui/react";
 import { CheckIcon } from "@heroicons/react/24/solid";
 
-export default function SuccessModal({ isOpen, setIsOpen }) {
+interface SuccessModalProps {
+  isOpen: boolean;
+  setIsOpen: React.Dispatch<React.SetStateAction<boolean | null>>;
+}
+
+const SuccessModal: React.FC<SuccessModalProps> = ({ isOpen, setIsOpen }) => {
   return (
     <Dialog
       open={isOpen}
@@ -65,4 +70,5 @@ export default function SuccessModal({ isOpen, setIsOpen }) {
       </div>
     </Dialog>
   );
-}
+};
+export default SuccessModal; 

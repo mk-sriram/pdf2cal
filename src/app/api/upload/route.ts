@@ -5,11 +5,12 @@ import { eventPrompt, taskPrompt } from "./prompt";
 const initializeGenAI = () => {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
-    throw new Error("GEMINI_API_KEY is not set in environment variables");
     console.log("Gemini init didn't work ");
+    throw new Error("GEMINI_API_KEY is not set in environment variables");
+    
   }
   return new GoogleGenerativeAI(apiKey);
-  console.log("Gemi init worked work ");
+  
 };
 
 export async function POST(request: NextRequest) {
@@ -19,7 +20,7 @@ export async function POST(request: NextRequest) {
     const formData = await request.formData();
     const file = formData.get("file") as Blob | null;
     const isEvent = formData.get("isEvent") === "true";
-    console.log("api/upload; ", isEvent)
+    //console.log("api/upload; ", isEvent)
     if (!file) {
       return NextResponse.json({ error: "File is required." }, { status: 400 });
     }

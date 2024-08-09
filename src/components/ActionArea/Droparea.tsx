@@ -1,7 +1,8 @@
 "use client";
 import React, { useState } from "react";
 import ChatArea from "./ChatArea"; // Import ChatArea component
-
+import useAuth from "@/utils/supabase/useAuth";
+import { useRouter } from "next/navigation";
 interface EventData {
   summary: string;
   description: string;
@@ -20,8 +21,10 @@ interface MsgItem {
 }
 
 const Droparea = () => {
+  const { user, loading } = useAuth();
+  const router = useRouter();
   const [file, setFile] = useState<File | null>(null);
-  const [loading, setLoading] = useState<boolean>(false);
+  const [isloading, setLoading] = useState<boolean>(false);
   const [filePreview, setFilePreview] = useState<string | null>(null);
 
   const [isExpanded, setIsExpanded] = useState(false);
@@ -119,12 +122,12 @@ const Droparea = () => {
         <label
           className={`flex flex-col items-center justify-center transition-all duration-2000 ease-in-out ${
             isExpanded ? "w-full h-screen" : "w-[60%] h-64"
-          }  border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-gray-50 hover:bg-gray-100`}
+          }  border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-[#fbfbfb] hover:shadow-[inset_0px_0px_20px_4px_#f3f3f3]`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
         >
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
-            {loading ? (
+            {isloading ? (
               <div className="flex flex-col items-center space-x-2">
                 <span className="loading loading-spinner loading-lg"></span>
               </div>
@@ -202,23 +205,23 @@ const Droparea = () => {
       {!fileProcessed && (
         <>
           <div className="flex flex-col mt-4">
-            <label className="themeSwitcherTwo relative inline-flex cursor-pointer select-none items-center">
+            <label className="themeSwitcherTwo relative inline-flex cursor-pointer select-none items-center ">
               <input
                 type="checkbox"
                 checked={isEvent}
                 onChange={handleCheckboxChange}
-                className="sr-only"
+                className="sr-only "
               />
               <span className="label flex items-center text-sm font-medium  text-gray-800">
                 Tasks
               </span>
               <span
-                className={`slider mx-4 flex h-6 w-[53px] items-center rounded-full p-1 duration-200 ${
-                  isEvent ? "bg-gray-800" : "bg-[#CCCCCE]"
+                className={`slider mx-4 flex h-6 w-[53px] items-center rounded-full p-1 duration-200 shadow-[inset_0px_0px_6px_1px_#edf2f7,0px_0px_1px_1px_#cbd5e0] ${
+                  isEvent ? "bg-white" : "bg-white"
                 }`}
               >
                 <span
-                  className={`dot h-4 w-4 rounded-full bg-white duration-200 ${
+                  className={`dot h-4 w-4 rounded-full bg-gray-800 duration-200 ${
                     isEvent ? "translate-x-[28px]" : ""
                   }`}
                 ></span>
@@ -227,12 +230,24 @@ const Droparea = () => {
                 Events
               </span>
             </label>
-            <button
-              className="btn px-7 rounded-full bg-[#0b7dffd4] text-white transition-all transform active:scale-[0.98] hover:scale-[1.009] mt-5"
-              onClick={processFile}
-            >
-              Process 🪄
-            </button>
+
+            {!user ? (
+              <button
+                className="btn px-4 rounded-full bg-[#0b7dffd4] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01] mt-5"
+                onClick={() => {
+                  router.push("/Signin");
+                }}
+              >
+                Login to Send!
+              </button>
+            ) : (
+              <button
+                className="btn px-7 rounded-full bg-[#0b7dffd4] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01] mt-5"
+                onClick={processFile}
+              >
+                Process 🪄
+              </button>
+            )}
           </div>
         </>
       )}

@@ -27,6 +27,7 @@ const TasksListDrop: React.FC<TasksListDropProps> = ({ setSelectedTask }) => {
         const data = await response.json();
         setTaskLists(data.formattedTaskLists);
         setSelected(data.formattedTaskLists[0]);
+        setSelectedTask(data.formattedTaskLists[0]);
       } catch (error) {
         console.error("Error fetching task lists", error);
       }

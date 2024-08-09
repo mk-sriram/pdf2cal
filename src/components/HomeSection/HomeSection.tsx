@@ -10,7 +10,7 @@ const HomeSection = () => {
           <span className="text-6xl font-bold custom-gradient ">
             <Typewriter
               options={{
-                strings: ["Class Schedules", "Appointments", "Event Timings"],
+                strings: ["Class Schedules", "Appointments", "Event Details"],
                 autoStart: true,
                 loop: true,
                 deleteSpeed: 35,
@@ -19,7 +19,10 @@ const HomeSection = () => {
             />
           </span>
           <span className="text-5xl font-bold  text-gray-800">
-           to Calendar Events
+            to Google Calendar
+            
+              
+            
           </span>
           <span className="text-3xl font-medium  text-gray-600 pt-[10px]">
             ✨ in Seconds ✨

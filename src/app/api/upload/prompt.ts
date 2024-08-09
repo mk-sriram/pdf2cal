@@ -34,7 +34,7 @@ You are an Assistant tasked with extracting and categorizing tasks from an image
 JSON Schema:
 {
   "title": "The title of the task. This is the only REQUIRED field when creating a task. ",
-  "due": "The due date/time of the task. This can be useful if you want to set a deadline for the task.",
+  "due": "The due date/time of the task. deadline for the task. SHOULD be in  RFC 3339 timestamp always",
   "notes": "Any additional notes or details about the task",
   "status": "The status of the task, e.g, 'needsAction' for pending tasks or 'completed' for finished tasks. (Set to 'needsAction' by default as all tasks should be not completed.)",
   "links": [
@@ -47,7 +47,6 @@ JSON Schema:
 }
 
 Guidelines for Task Parsing:
-
 Task Identification:
 - Assignments: Identify tasks related to educational work or projects. Examples include homework, essays, or group projects.
 - General Tasks: Identify routine or specific tasks that need to be completed, such as grocery shopping or calling someone.
@@ -55,7 +54,7 @@ Task Identification:
 
 Information Extraction:
 - Title: Extract the main title or label for the task. This should be a concise summary of the task. Maximum length allowed: 1024 characters.
-- Due Date: Identify any due dates or deadlines mentioned for the task. Format this in a standard date/time format if possible. RFC 3339 timestamp.
+- Due Date: Identify any due dates or deadlines mentioned for the task. Format this in RFC 3339 timestamp always.
 - Notes: Extract any additional details, instructions, points or context related to the task.
 - Status: Set the status to "needsAction" by default unless explicitly stated otherwise.
 - Links: Extract any URLs, documents, or resources mentioned in relation to the task. Categorize them appropriately as 'related' or 'attachment'.
@@ -63,13 +62,10 @@ Information Extraction:
 Contextual Understanding:
 - Understand the context of each task based on the surrounding text or details provided. If a task is ambiguous, infer the most likely category based on the content.
 - If a task is a recurring event (e.g., a weekly meeting or annual birthday), ensure the JSON reflects this by appropriately noting it in the "notes" or other relevant fields.
-
 Output:
 - For each task identified, output a JSON object following the schema provided. Ensure all fields are populated correctly based on the extracted information.
 - If any information is missing or unclear, leave that field empty or mark it as "unspecified" in the "notes" section.
-
 Example Output:
-
 {
   "title": "John's Birthday",
   "due": "2024-12-15T00:00:00Z",
@@ -84,5 +80,11 @@ Example Output:
   ]
 }
 
-Please proceed by extracting and converting the tasks from the provided image or text according to these guidelines.
+Please proceed by extracting and converting the tasks from the provided content according to these guidelines and return data ONLY in provided JSON format.
+`;
+
+export const chatTaskPrompt = `I have a JSON object representing Google Tasks that I need help editing. Here's the current JSON schema: { "title": "The title of the task. This is the only REQUIRED field when creating a task.", "due": "The due date/time of the task. Always in RFC 3339 timestamp format.", "notes": "Any additional notes or details about the task.", "status": "Set to 'needsAction' by default as all tasks should be incomplete.", "links": [{ "type": "The type of the link, such as 'email' or 'attachment'.", "description": "A brief description of what the link is or why it's relevant.", "link": "The URL of the resource being linked to." }] }
+Instructions: 1. Do not change the structure of the JSON. 2. Always format dates in RFC 3339 timestamp format, regardless of how they are provided. 3. Only modify the JSON according to the user's instructions.
+Interaction Flow: - For the first message after receiving the JSON schema, reply with: "Make changes by talking to the bot!". - After the user provides further editing instructions, process them and reply with: "Made the requested changes!". - After making the changes, for every bot reply add the updated JSON enclosed in triple backticks like this: \`\`\`json ... \`\`\`.
+Ensure that the output always adheres to the provided JSON structure and date format. 
 `;

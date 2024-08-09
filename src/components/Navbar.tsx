@@ -85,7 +85,7 @@ const Navbar = () => {
         {!user ? (
           <Link
             href="/Signin"
-            className="btn px-7 rounded-full bg-[#0b7dffd4] from-[#0f55d6b8] to-[#91d9ff] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01]"
+            className="btn px-7 rounded-full bg-[#0b7dffd4] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01]"
           >
             Sign in
           </Link>

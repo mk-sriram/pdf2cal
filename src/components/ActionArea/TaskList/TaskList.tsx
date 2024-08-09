@@ -20,9 +20,9 @@ interface TaskListProps {
 
 const TaskList: React.FC<TaskListProps> = ({ jsonData, loading }) => {
   return (
-    <div className="flex flex-row w-[70%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100 relative">
-      <div className="overflow-scroll w-full">
-        <div className="h-screen p-4 pb-36">
+    <div className="flex flex-col w-[70%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100 relative">
+      <div className="overflow-scroll w-full ">
+        <div className="flex flex-col h-screen p-4 pb-36 ">
           {loading ? (
             <div className="animate-pulse">
               {/* Add the number of skeleton loaders equal to the number of task cards you expect */}

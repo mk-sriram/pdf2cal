@@ -4,38 +4,34 @@ import { FaArrowUp } from "react-icons/fa";
 import ChatBubble from "./ChatBubble";
 import EventList from "./EventList/EventList";
 import CalendarDrop from "./CalendarDrop";
-import useAuth from "@/utils/supabase/useAuth";
 import TasksListDrop from "./TasksListDrop";
 import TaskList from "./TaskList/TaskList";
-import SuccessModal from "./SuccessModal"
+import SuccessModal from "./SuccessModal";
+import { useRouter } from "next/navigation";
+
 //interfaces
 interface Part {
   text: string;
 }
-
 interface MsgItem {
   role: string;
   parts: Part[];
 }
-
 interface ChatAreaProps {
   jsonData: any; // Raw JSON data to display
   isEvent: boolean;
 }
-
 interface Event {
   summary: string;
   start: string;
   end: string;
   description: string;
 }
-
 interface Calendar {
   id: number;
   color: string;
   name: string;
 }
-
 interface Task {
   title: string; // The title of the task. This is the only required field when creating a task.
   due?: string; // The due date/time of the task in RFC 3339 format. This can be useful if you want to set a deadline for the task.
@@ -47,36 +43,30 @@ interface Task {
     link: string; // The URL of the resource being linked to.
   }>;
 }
-
 interface TaskList {
   id: string;
   name: string;
 }
 
 const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
-  const [messageList, setMessageList] = useState<MsgItem[]>([]);
-  const [chatMessage, setChatMessage] = React.useState("");
   const messagesContainerRef = React.useRef<HTMLDivElement | null>(null);
   const isInitializedRef = React.useRef(false);
-  const [currentJsonData, setCurrentJsonData] = useState(jsonData);
 
+  const [messageList, setMessageList] = useState<MsgItem[]>([]);
+  const [chatMessage, setChatMessage] = React.useState("");
+  const [currentJsonData, setCurrentJsonData] = useState(jsonData);
   //loading states
   const [pageloading, setPageLoading] = useState<boolean>(true);
   const [loadingModal, setloadModal] = useState<boolean>(false);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean>(false);
-
-  const handleSuccess = () => {
-    // Trigger the modal to open
-    setIsSuccessModalOpen(true);
-  };
-
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean | null>(
+    false
+  );
   //state variables for SelectedItems
   const [selectedTask, setSelectedTask] = useState<TaskList | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<Calendar | null>(null);
-  //fixscrolling in chat
-  //Session check
-  //console.log(selectedTask?.name);
-  const { user, loading } = useAuth();
+
+  //routing
+  const router = useRouter();
 
   React.useEffect(() => {
     if (messagesContainerRef.current) {
@@ -99,8 +89,17 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
       role: "user",
       parts: [
         {
-          text: `I have a JSON google calendar object that I need help editing. Here's the current JSON data and DO not change the structure of JSON in any case:
-        ${JSON.stringify(jsonData, null, 2)}
+          text: `
+          
+          I have a JSON object representing Google Tasks that I need help editing. Here's the current JSON Data  ${JSON.stringify(
+            jsonData,
+            null,
+            2
+          )}
+          and JSON schema: { "title": "The title of the task. This is the only REQUIRED field when creating a task.", "due": "The due date/time of the task. Always in RFC 3339 timestamp format.", "notes": "Any additional notes or details about the task.", "status": "Set to 'needsAction' by default as all tasks should be incomplete.", "links": [{ "type": "The type of the link, such as 'email' or 'attachment'.", "description": "A brief description of what the link is or why it's relevant.", "link": "The URL of the resource being linked to." }] }
+Instructions: 1. Do not change the structure of the JSON and Always follow the SCHEMA. 2. Always format dates in RFC 3339 timestamp format, regardless of how they are provided. 3. Only modify the JSON according to the user's instructions.
+Interaction Flow: - For the first message after receiving the JSON schema, reply with: "Make changes by talking to the bot!". - After the user provides further editing instructions, process them and reply with: "Made the requested changes!". - After making the changes, for every bot reply add the updated JSON enclosed in triple backticks like this: \`\`\`json ... \`\`\`.
+Ensure that the output always adheres to the provided JSON structure and date format. 
         I'm going to give instructions on editing this. for the first msg reply "Make changes by talking to the bot!", the user will give further editing instructions
         and rest say "Made the requested Changes!". finally, after every bot reply add the updated JSON enclosed in triple backticks like this: \`\`\`json ... \`\`\`.
         `,
@@ -187,12 +186,18 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
     }
   };
 
+  //Sending to Calendar functions
   const sendtoCalendar = (jsonData: Event[], calendarid: number) => {
     //take the data and send to calendar
     //depending on the calendar of choise
   };
+  const handleSuccess = () => {
+    // Trigger the modal to open
+    setIsSuccessModalOpen(true);
+  };
 
   const sendtoTasks = async () => {
+    setloadModal(true);
     try {
       // Create the request payload
       const payload = {
@@ -216,13 +221,17 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
 
         setCurrentJsonData([]);
         setMessageList([]);
+        setloadModal(false);
         handleSuccess();
       } else {
         const errorData = await response.json();
         console.error("Error:", errorData.message);
+        setloadModal(false);
       }
     } catch (error) {
       console.error("An error occurred:", error);
+    } finally {
+      setloadModal(false);
     }
   };
 
@@ -283,30 +292,27 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
           </div>
 
           <div className="flex flex-col w-full items-center pt-4 mt-4 ">
-            {!user ? (
-              <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]">
-                Login to Send!
-              </button>
+            {!isEvent ? (
+              <>
+                <TasksListDrop setSelectedTask={setSelectedTask} />
+                <button
+                  className="btn px-4  rounded-full w-[15rem] bg-[#0b7dffd4] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01] mt-5 pr-8 space-x-1"
+                  onClick={sendtoTasks}
+                >
+                  {loadingModal ? (
+                    <span className="loading loading-spinner loading-md"></span>
+                  ) : (
+                    ""
+                  )}
+                  Send Tasks!
+                </button>
+              </>
             ) : (
               <>
-                {!isEvent ? (
-                  <>
-                    <TasksListDrop setSelectedTask={setSelectedTask} />
-                    <button
-                      className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]"
-                      onClick={sendtoTasks}
-                    >
-                      Send Tasks!
-                    </button>
-                  </>
-                ) : (
-                  <>
-                    <CalendarDrop setSelectedEvent={setSelectedEvent} />
-                    <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]">
-                      Send to Calendar!
-                    </button>
-                  </>
-                )}
+                <CalendarDrop setSelectedEvent={setSelectedEvent} />
+                <button className="btn px-4 rounded-full bg-[#0b7dffd4] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01] mt-5">
+                  Send to Calendar!
+                </button>
               </>
             )}
           </div>

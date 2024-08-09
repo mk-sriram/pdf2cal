@@ -29,7 +29,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
       <div
         tabIndex={0}
         role="button"
-        className="flex flex-row space-between w-[100%] p-4 mb-4 bg-white rounded-xl shadow-md space-x-4 hover:bg-gray-50 hover:scale-[1.009] transition-all ease-in-out duration-200"
+        className="flex flex-row  justify-between w-[90%] p-4 mb-4 bg-white rounded-xl shadow-md space-x-4 hover:bg-gray-50 hover:scale-[1.009] transition-all ease-in-out duration-200"
       >
         <div className="font-semibold text-lg">{`${taskNumber}. ${title}`}</div>
         {due && (
