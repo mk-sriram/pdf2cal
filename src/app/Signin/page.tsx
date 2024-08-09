@@ -12,7 +12,7 @@ const page = () => {
       provider: "google",
       options: {
         scopes:
-          "https://www.googleapis.com/auth/calendar",
+          "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/tasks",
         queryParams: {
           access_type: "offline",
           prompt: "consent",

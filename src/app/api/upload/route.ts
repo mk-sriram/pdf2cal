@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
-import { prompt } from "./prompt";
+import { eventPrompt, taskPrompt } from "./prompt";
 // Initialize the Google Generative AI client
 const initializeGenAI = () => {
   const apiKey = process.env.GEMINI_API_KEY;
@@ -18,7 +18,8 @@ export async function POST(request: NextRequest) {
     const genAI = initializeGenAI();
     const formData = await request.formData();
     const file = formData.get("file") as Blob | null;
-
+    const isEvent = formData.get("isEvent") === "true";
+    console.log("api/upload; ", isEvent)
     if (!file) {
       return NextResponse.json({ error: "File is required." }, { status: 400 });
     }
@@ -36,17 +37,30 @@ export async function POST(request: NextRequest) {
     const base64File = buffer.toString("base64");
 
     // Create a parts array for Gemini API
-    const parts = [
-      {
-        inlineData: {
-          mimeType: file.type,
-          data: base64File,
-        },
-      },
-      {
-        text: prompt,
-      },
-    ];
+
+    const parts = isEvent
+      ? [
+          {
+            inlineData: {
+              mimeType: file.type,
+              data: base64File,
+            },
+          },
+          {
+            text: eventPrompt,
+          },
+        ]
+      : [
+          {
+            inlineData: {
+              mimeType: file.type,
+              data: base64File,
+            },
+          },
+          {
+            text: eventPrompt,
+          },
+        ];
 
     // Use the gemini-1.5-flash model
     const model = genAI.getGenerativeModel({
@@ -62,7 +76,7 @@ export async function POST(request: NextRequest) {
 
     const response = result.response;
     const text = response.text();
-    console.log(text)
+    console.log(text);
 
     return NextResponse.json({ text }, { status: 200 });
   } catch (error) {

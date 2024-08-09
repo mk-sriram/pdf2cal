@@ -5,6 +5,7 @@ import ChatBubble from "./ChatBubble";
 import EventList from "./EventList/EventList";
 import CalendarDrop from "./CalendarDrop";
 import useAuth from "@/utils/supabase/useAuth";
+import TasksListDrop from "./TasksListDrop";
 
 //interfaces
 interface Part {
@@ -18,6 +19,7 @@ interface MsgItem {
 
 interface ChatAreaProps {
   jsonData: any; // Raw JSON data to display
+  isEvent: boolean;
 }
 
 interface Event {
@@ -27,7 +29,7 @@ interface Event {
   description: string;
 }
 
-const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
+const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
   const [messageList, setMessageList] = useState<MsgItem[]>([]);
   const [chatMessage, setChatMessage] = React.useState("");
   const messagesContainerRef = React.useRef<HTMLDivElement | null>(null);
@@ -36,6 +38,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
   const [pageloading, setLoading] = useState<boolean>(true);
   //fixscrolling in chat
   //Session check
+  console.log("Chatarea; ", isEvent);
   const { user, loading } = useAuth();
   React.useEffect(() => {
     if (messagesContainerRef.current) {
@@ -125,54 +128,6 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
       } catch (error) {
         console.error("Error parsing JSON from response:", error);
       }
-
-      // const reader = response.body?.getReader();
-      // if (!reader) {
-      //   throw new Error("Failed to get reader from response");
-      // }
-
-      // let accumulatedText = "";
-      // setMessageList((prevMessages) => [
-      //   ...prevMessages,
-      //   { role: "model", parts: [{ text: "" }] },
-      // ]);
-
-      // while (true) {
-      //   const { done, value } = await reader.read();
-      //   if (done) break;
-
-      //   const chunk = new TextDecoder().decode(value);
-      //   const lines = chunk.split("\n\n");
-      //   for (const line of lines) {
-      //     if (line.startsWith("data: ")) {
-      //       const data = JSON.parse(line.slice(6));
-      //       if (data.done) {
-      //         //setIsLoading(false);
-      //         break;
-      //       }
-      //       accumulatedText += data.text;
-      //       setMessageList((prevMessages) => {
-      //         const newMessages = [...prevMessages];
-      //         const lastMessage = newMessages[newMessages.length - 1];
-      //         lastMessage.parts[0].text = accumulatedText;
-      //         return newMessages;
-      //       });
-
-      //       // Check if the response contains updated JSON
-      //       try {
-      //         const jsonMatch = accumulatedText.match(
-      //           /```json\n([\s\S]*?)\n```/
-      //         );
-      //         if (jsonMatch) {
-      //           const updatedJson = JSON.parse(jsonMatch[1].trim());
-      //           setCurrentJsonData(JSON.parse(updatedJson));
-      //         }
-      //       } catch (error) {
-      //         console.error("Error parsing JSON from response:", error);
-      //       }
-      //     }
-      //   }
-      // }
     } catch (error) {
       console.error("Error sending message:", error);
       //setIsLoading(false);
@@ -194,10 +149,12 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
     }
   };
 
-  const sendtoCalendar = (jsonData: any) => {
+  const sendtoCalendar = (jsonData: any, calendarid: any) => {
     //take the data and send to calendar
     //depending on the calendar of choise
   };
+
+  const sendtoTasks = (jsonData: any, taskid: any) => {};
 
   return (
     <div className="flex flex-col justify-start items-center w-full h-fit">
@@ -247,15 +204,25 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData }) => {
           <div className="flex flex-col w-full items-center pt-4 mt-4 ">
             {!user ? (
               <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]">
-                Connect your Calendar!
+                Login to Send!
               </button>
             ) : (
               <>
-                {" "}
-                <CalendarDrop />
-                <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]">
-                  Send to Calendar!
-                </button>
+                {!isEvent ? (
+                  <>
+                    <TasksListDrop />
+                    <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]">
+                      Send Tasks!
+                    </button>
+                  </>
+                ) : (
+                  <>
+                    <CalendarDrop />
+                    <button className="btn px-4 rounded-full outline-[#0b7dffd4] text-grey-800 hover:bg-[#6dc1fc] mt-5 w-[90%]">
+                      Send to Calendar!
+                    </button>
+                  </>
+                )}
               </>
             )}
           </div>

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import { google } from "googleapis";
-import { createClient } from "@/utils/supabase/server";
 import { getProviderTokens } from "@/utils/supabase/getProviderTokens";
 
 interface ProviderTokens {
@@ -11,7 +10,8 @@ interface ProviderTokens {
 export async function GET(request: NextRequest) {
   try {
     //retriving providerToken from db
-    const { provider_token, provider_refresh_token } = await getProviderTokens();
+    const { provider_token, provider_refresh_token } =
+      await getProviderTokens();
     //console.log("acess toekn, refresh token ", accessToken, refreshToken);
     //check for tokens
     if (!provider_token || !provider_refresh_token) {
@@ -31,16 +31,16 @@ export async function GET(request: NextRequest) {
       refresh_token: provider_refresh_token,
     });
 
-
-    //Calendar API call. 
+    //Calendar API call.
     try {
       const calendar = google.calendar({ version: "v3", auth: oauth2Client });
       const calendarList = await calendar.calendarList.list();
       const calendars = calendarList.data?.items?.map((calendar, index) => ({
         id: index + 1,
+        color: calendar.backgroundColor,
         name: calendar.summary,
       }));
-      //console.log("calendars: ", calendars);
+      console.log("calendars: ", calendars);
       return NextResponse.json({ calendars });
     } catch (error) {
       if (error instanceof Error) {
@@ -56,7 +56,7 @@ export async function GET(request: NextRequest) {
       }
     }
   } catch (error) {
-    console.error("An error occurred:", error);
+    console.error("An error occurred with retriving provider tokens :", error);
   }
 
   //console.log("provider Token data: ", providerTokenData);

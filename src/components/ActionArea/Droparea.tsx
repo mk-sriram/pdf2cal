@@ -30,8 +30,8 @@ const Droparea = () => {
   const [isEvent, setIsEvent] = useState(true);
 
   const handleCheckboxChange = () => {
-    console.log(isEvent);
     setIsEvent(!isEvent);
+    console.log(!isEvent);
   };
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const selectedFile = event.target.files?.[0];
@@ -52,6 +52,8 @@ const Droparea = () => {
     setLoading(true);
     const formData = new FormData();
     formData.append("file", file);
+    console.log("Droparea; ", isEvent);
+    formData.append("isEvent", isEvent.toString());
     try {
       const response = await fetch("/api/upload", {
         method: "POST",
@@ -193,7 +195,8 @@ const Droparea = () => {
             isExpanded ? "opacity-100 max-h-full" : "opacity-0 max-h-0"
           }`}
         >
-          <ChatArea jsonData={jsonData} />
+          {/* passing isEvent to Chatarea to conditionally render */}
+          <ChatArea jsonData={jsonData} isEvent={isEvent} />
         </div>
       )}
       {!fileProcessed && (

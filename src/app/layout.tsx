@@ -6,7 +6,7 @@ import Navbar from "@/components/Navbar";
 const inter = Inter({ subsets: ["latin"] });
 export const metadata: Metadata = {
   title: "Pdf2Cal",
-  description: "Schedules to Calendar made Easy",
+  description: "Schedule to Calendar made Easy",
 };
 
 export default async function RootLayout({

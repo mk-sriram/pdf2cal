@@ -45,33 +45,8 @@ export async function POST(request: NextRequest) {
     try {
       const result = await chat.sendMessage(lastMessage);
       const text = result.response.text();
-      //console.log("Respnse test: ", text);
-      // Return the response
       return NextResponse.json({ reply: text }, { status: 200 });
 
-      // const result = await chat.sendMessageStream(lastMessage);
-      // console.log(result);
-      // // Set up Server-Sent Events (SSE)
-      // const stream = new ReadableStream({
-      //   async start(controller) {
-      //     for await (const chunk of result.stream) {
-      //       const chunkText = chunk.text();
-      //       controller.enqueue(
-      //         `data: ${JSON.stringify({ text: chunkText })}\n\n`
-      //       );
-      //     }
-      //     controller.enqueue(`data: ${JSON.stringify({ done: true })}\n\n`);
-      //     controller.close();
-      //   },
-      // });
-
-      // return new Response(stream, {
-      //   headers: {
-      //     "Content-Type": "text/event-stream",
-      //     "Cache-Control": "no-cache",
-      //     Connection: "keep-alive",
-      //   },
-      // });
     } catch (err) {
       console.log("couldnt start chat, ", err);
     }

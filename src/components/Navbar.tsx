@@ -60,6 +60,10 @@ const Navbar = () => {
         />
         <Link
           href="/"
+          onClick={(e) => {
+            e.preventDefault(); // Prevent the default navigation
+            window.location.href = "/"; // Force a full page reload
+          }}
           className="text-xl text-gray-800 font-semibold cursor-pointer"
         >
           Pdf2Cal
