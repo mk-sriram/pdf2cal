@@ -58,7 +58,7 @@ export async function POST(request: NextRequest) {
             },
           },
           {
-            text: eventPrompt,
+            text: taskPrompt,
           },
         ];
 

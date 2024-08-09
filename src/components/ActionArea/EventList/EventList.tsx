@@ -1,4 +1,11 @@
-import EventCard from "../EventCard";
+import EventCard from "./EventCard";
+
+interface Event {
+  summary: string;
+  start: string;
+  end: string;
+  description: string;
+}
 
 interface EventListProps {
   jsonData: Event[];
