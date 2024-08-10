@@ -85,6 +85,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
   }, [jsonData]);
 
   const initializeChat = async () => {
+    const currentYear = new Date().getFullYear();
     const initialMessage: MsgItem = {
       role: "user",
       parts: [
@@ -96,7 +97,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
             null,
             2
           )}
-          and JSON schema: { "title": "The title of the task. This is the only REQUIRED field when creating a task.", "due": "The due date/time of the task. Always in RFC 3339 timestamp format.", "notes": "Any additional notes or details about the task.", "status": "Set to 'needsAction' by default as all tasks should be incomplete.", "links": [{ "type": "The type of the link, such as 'email' or 'attachment'.", "description": "A brief description of what the link is or why it's relevant.", "link": "The URL of the resource being linked to." }] }
+          and JSON schema: { "title": "The title of the task. This is the only REQUIRED field when creating a task.", "due": "The due date/time of the task. Always in RFC 3339 timestamp format. also if year is not available, you should use ${currentYear} for year", "notes": "Any additional notes or details about the task.", "status": "Set to 'needsAction' by default as all tasks should be incomplete.", "links": [{ "type": "The type of the link, such as 'email' or 'attachment'.", "description": "A brief description of what the link is or why it's relevant.", "link": "The URL of the resource being linked to." }] }
 Instructions: 1. Do not change the structure of the JSON and Always follow the SCHEMA. 2. Always format dates in RFC 3339 timestamp format, regardless of how they are provided. 3. Only modify the JSON according to the user's instructions.
 Interaction Flow: - For the first message after receiving the JSON schema, reply with: "Make changes by talking to the bot!". - After the user provides further editing instructions, process them and reply with: "Made the requested changes!". - After making the changes, for every bot reply add the updated JSON enclosed in triple backticks like this: \`\`\`json ... \`\`\`.
 Ensure that the output always adheres to the provided JSON structure and date format. 
