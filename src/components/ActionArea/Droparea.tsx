@@ -34,6 +34,29 @@ const Droparea = () => {
   const [jsonData, setJsonData] = useState<EventData | null>(null);
   const [isEvent, setIsEvent] = useState(true);
   const [progress, setProgress] = useState<number>(0);
+
+  React.useEffect(() => {
+    const handlePaste = (event: ClipboardEvent) => {
+      const items = event.clipboardData?.items;
+      if (items) {
+        for (let i = 0; i < items.length; i++) {
+          const item = items[i];
+          if (item.type.startsWith("image/")) {
+            const blob = item.getAsFile();
+            if (blob) {
+              handleFileUpload(blob);
+            }
+          }
+        }
+      }
+    };
+
+    window.addEventListener("paste", handlePaste);
+
+    return () => {
+      window.removeEventListener("paste", handlePaste);
+    };
+  }, []);
   const handleCheckboxChange = () => {
     setIsEvent(!isEvent);
     console.log(!isEvent);
