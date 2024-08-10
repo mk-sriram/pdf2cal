@@ -28,12 +28,12 @@ const TaskList: React.FC<TaskListProps> = ({ jsonData, loading }) => {
               {/* Add the number of skeleton loaders equal to the number of task cards you expect */}
               {[...Array(4)].map((_, index) => (
                 <div
-                  key={index}
-                  className="p-4 mb-4 bg-gray-300 rounded-lg w-[400px]"
+                  tabIndex={index}
+                  role="button"
+                  className="flex flex-row justify-between w-[90%] p-4 mb-4 bg-gray-200 rounded-xl shadow-md space-x-4 animate-pulse"
                 >
-                  <div className="h-6 mb-2 bg-gray-400 rounded w-1/2 "></div>
-                  <div className="h-6 mb-2 bg-gray-400 rounded w-1/4"></div>
-                  <div className="h-6 mb-2 bg-gray-400 rounded w-3/4"></div>
+                  <div className="font-semibold text-lg w-3/5 bg-gray-300 h-6 rounded-md"></div>
+                  <div className="flex items-center text-md text-gray-200 w-1/4 bg-gray-300 h-6 rounded-md"></div>
                 </div>
               ))}
             </div>

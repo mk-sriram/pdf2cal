@@ -3,6 +3,8 @@ import React, { useState } from "react";
 import ChatArea from "./ChatArea"; // Import ChatArea component
 import useAuth from "@/utils/supabase/useAuth";
 import { useRouter } from "next/navigation";
+import axios from "axios";
+
 interface EventData {
   summary: string;
   description: string;
@@ -31,7 +33,7 @@ const Droparea = () => {
   const [fileProcessed, setFileProcessed] = useState(false);
   const [jsonData, setJsonData] = useState<EventData | null>(null);
   const [isEvent, setIsEvent] = useState(true);
-
+  const [progress, setProgress] = useState<number>(0);
   const handleCheckboxChange = () => {
     setIsEvent(!isEvent);
     console.log(!isEvent);
@@ -53,25 +55,30 @@ const Droparea = () => {
   const processFile = async () => {
     if (!file) return;
     setLoading(true);
+    setProgress(0); // Reset progress to 0 before starting
+
     const formData = new FormData();
     formData.append("file", file);
-    console.log("Droparea; ", isEvent);
     formData.append("isEvent", isEvent.toString());
+
     try {
-      const response = await fetch("/api/upload", {
-        method: "POST",
-        body: formData,
+      const response = await axios.post("/api/upload", formData, {
+        onUploadProgress: (progressEvent) => {
+          if (progressEvent.total) {
+            const percentCompleted = Math.round(
+              (progressEvent.loaded * 100) / progressEvent.total
+            );
+            setProgress(percentCompleted);
+          } else {
+            setProgress((prevProgress) => Math.min(prevProgress + 10, 95));
+          }
+        },
       });
 
-      if (response.ok) {
-        const data = await response.json();
-
-        //console.log("output");
+      if (response.status === 200) {
+        const data = response.data;
         const parsedData = JSON.parse(data.text);
-
-        // Log the parsed data to the console
-        //console.log(parsedData[0]);
-        setJsonData(parsedData); // Pass the data to the parent component
+        setJsonData(parsedData);
         setFileProcessed(true);
         setIsExpanded(true);
       } else {
@@ -81,9 +88,11 @@ const Droparea = () => {
       console.error("An error occurred while uploading the file", error);
     } finally {
       setLoading(false);
+      setProgress(100); // Ensure progress bar reaches 100% when done
       setFilePreview("");
     }
   };
+
   const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
     const selectedFile = event.dataTransfer.files[0];
@@ -129,7 +138,11 @@ const Droparea = () => {
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
             {isloading ? (
               <div className="flex flex-col items-center space-x-2">
-                <span className="loading loading-spinner loading-lg"></span>
+                <progress
+                  className="progress progress-[#0b7dffd4] w-70"
+                  value={progress}
+                  max="100"
+                ></progress>
               </div>
             ) : filePreview ? (
               <div className="flex flex-col items-center">
@@ -161,7 +174,7 @@ const Droparea = () => {
             ) : (
               <>
                 <svg
-                  className="w-8 h-8 mb-4 text-[#0f55d6b8]"
+                  className="w-8 h-8 mb-4 text-[#0b7dffd4]"
                   aria-hidden="true"
                   xmlns="http://www.w3.org/2000/svg"
                   fill="none"
@@ -176,7 +189,7 @@ const Droparea = () => {
                   />
                 </svg>
                 <p className="mb-2 text-sm text-gray-500">
-                  <span className="font-semibold text-[#0f55d6b8]">
+                  <span className="font-semibold text-[#0b7dffd4]">
                     Click to upload
                   </span>{" "}
                   or drag and drop

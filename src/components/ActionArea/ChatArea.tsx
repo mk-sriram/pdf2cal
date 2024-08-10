@@ -254,8 +254,8 @@ Ensure that the output always adheres to the provided JSON structure and date fo
         )}
 
         {/* Right block for chatbox */}
-        <div className="flex flex-col items-center w-[50%] h-[75vh] space-y-2">
-          <div className="flex flex-col w-[100%] h-[90%] p-4 justify-center shadow-lg rounded-2xl bg-gray-100">
+        <div className="flex flex-col w-[50%] h-full mt-8  space-y-2 ">
+          <div className="flex flex-col w-[100%] h-[74%] p-4 justify-center shadow-lg rounded-2xl bg-gray-100">
             <div
               className="overflow-scroll w-full h-full bg-transperant"
               ref={messagesContainerRef}
