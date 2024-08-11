@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
-import { getEventPrompt, taskPrompt } from "./prompt";
+import { getEventPrompt, getTaskPromp } from "./prompt";
 
 // Initialize the Google Generative AI client
 const initializeGenAI = () => {
@@ -42,7 +42,7 @@ export async function POST(request: NextRequest) {
       promptText  = await getEventPrompt();
      
     } else {
-      promptText = taskPrompt;
+      promptText = getTaskPromp();
     }
 
     // Create parts array for Gemini API

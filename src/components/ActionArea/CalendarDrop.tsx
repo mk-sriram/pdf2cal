@@ -31,7 +31,7 @@ const CalendarDrop: React.FC<CalendarListDropProps> = ({
         const data = await response.json();
         setCalendarNames(data.calendars);
         setSelected(data.calendars[0]);
-        setSelectedEvent(selected);
+        setSelectedEvent(data.calendars[0]);
       } catch (error) {
         console.error("Error fetching calendars", error);
       }

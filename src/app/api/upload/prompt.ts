@@ -93,6 +93,7 @@ For example:
 3. "On the 1st and 15th of every month" -> RRULE:FREQ=MONTHLY;BYMONTHDAY=1,15
 Process:
 1. **Parse the Content**: Identify the times, titles, and details within each block.
+
 2. **Generate JSON**: For each identified event, generate a JSON object in the specified format.
 
 Requirements:
@@ -102,23 +103,26 @@ Requirements:
 `;
 };
 
-export const taskPrompt = `
+export const getTaskPromp = () => {
+  const currentYear = new Date().getFullYear();
+
+  return `
 You are an Assistant tasked with extracting and categorizing tasks from an image or text provided to you. The tasks can be of various types, such as assignments, general tasks, events, birthdays, or any other kind of task. Your goal is to accurately identify the key information from the provided content and insert it into a structured JSON format according to the following schema:
 
 JSON Schema:
-{
-  "title": "The title of the task. This is the only REQUIRED field when creating a task. ",
-  "due": "The due date/time of the task. deadline for the task. SHOULD be in  RFC 3339 timestamp always",
-  "notes": "Any additional notes or details about the task",
-  "status": "The status of the task, e.g, 'needsAction' for pending tasks or 'completed' for finished tasks. (Set to 'needsAction' by default as all tasks should be not completed.)",
-  "links": [
-    {
-      "type": "The type of the link, such as 'email' or 'attachment'",
-      "description": "A brief description of what the link is or why it's relevant",
-      "link": "The URL of the resource being linked to"
-    }
-  ]
-}
+{ 
+    "title": "The title of the task. This is the only REQUIRED field when creating a task.",
+    "due": "The due date/time of the task. Always in RFC 3339 timestamp format. also if year is not available, you should use ${currentYear} for year",
+    "notes": "Any additional notes or details about the task.",
+    "status": "Set to 'needsAction' by default as all tasks should be incomplete.",
+    "links": [
+      { 
+        "type": "The type of the link, such as 'email' or 'attachment'.",
+        "description": "A brief description of what the link is or why it's relevant.",
+        "link": "The URL of the resource being linked to."
+      }
+    ]
+  }
 
 Guidelines for Task Parsing:
 Task Identification:
@@ -156,3 +160,4 @@ Example Output:
 
 Please proceed by extracting and converting the tasks from the provided content according to these guidelines and return data ONLY in provided JSON format.
 `;
+};

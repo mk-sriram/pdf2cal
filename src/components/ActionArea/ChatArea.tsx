@@ -50,18 +50,16 @@ interface TaskList {
 }
 
 const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
+  //console.log(jsonData)
   const messagesContainerRef = React.useRef<HTMLDivElement | null>(null);
   const isInitializedRef = React.useRef(false);
-
   const [messageList, setMessageList] = useState<MsgItem[]>([]);
   const [chatMessage, setChatMessage] = React.useState("");
   const [currentJsonData, setCurrentJsonData] = useState(jsonData);
   //loading states
   const [pageloading, setPageLoading] = useState<boolean>(true);
   const [loadingModal, setloadModal] = useState<boolean>(false);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean | null>(
-    false
-  );
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean | null>(false);
   //state variables for SelectedItems
   const [selectedTask, setSelectedTask] = useState<TaskList | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<Calendar | null>(null);
@@ -189,15 +187,45 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
   };
 
   //Sending to Calendar functions
-  const sendtoCalendar = (jsonData: Event[], calendarid: number) => {
-    //take the data and send to calendar
-    //depending on the calendar of choise
-  };
-  const handleSuccess = () => {
-    // Trigger the modal to open
-    setIsSuccessModalOpen(true);
-  };
+  const sendtoCalendar = async (jsonData: Event[], calendarid: number) => {
+    setloadModal(true);
+    try {
+      // Create the request payload
+      const payload = {
+        calendarListId: selectedEvent?.id, // ID of the task list where the task should be inserted
+        taskData: currentJsonData, // JSON data representing the task to be inserted
+      };
+      console.log(payload);
+      // Send a POST request to the backend endpoint
+      const response = await fetch("/api/post-tasks", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(payload),
+      });
 
+      console.log(response);
+      if (response.ok) {
+        const data = await response.json();
+        console.log("Success:", data.message);
+
+        setCurrentJsonData([]);
+        setMessageList([]);
+        setloadModal(false);
+        setIsSuccessModalOpen(true);
+      } else {
+        const errorData = await response.json();
+        console.error("Error:", errorData.message);
+        setloadModal(false);
+      }
+    } catch (error) {
+      console.error("An error occurred:", error);
+    } finally {
+      setloadModal(false);
+    }
+  };
+ 
   const sendtoTasks = async () => {
     setloadModal(true);
     try {
@@ -224,7 +252,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
         setCurrentJsonData([]);
         setMessageList([]);
         setloadModal(false);
-        handleSuccess();
+        setIsSuccessModalOpen(true);
       } else {
         const errorData = await response.json();
         console.error("Error:", errorData.message);
@@ -237,6 +265,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
     }
   };
 
+  //console.log(selectedEvent);
   return (
     <div className="flex flex-col justify-start items-center w-full h-fit">
       {isSuccessModalOpen && (

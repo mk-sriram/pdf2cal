@@ -27,7 +27,7 @@ const EventList: React.FC<EventListProps> = ({ jsonData, loading }) => {
   return (
     <div className="flex w-[70%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
       <div className="overflow-scroll w-full ">
-        <div className="h-screen p-4 pb-36 ">
+        <div className="flex flex-col h-screen p-4 pb-36 ">
           {/* fix this any type, you loser  */}
           {loading ? (
             <div className="animate-pulse ">

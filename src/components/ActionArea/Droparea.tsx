@@ -100,7 +100,7 @@ const Droparea = () => {
           }
         },
       });
-
+      //console.log(response);
       if (response.status === 200) {
         const data = response.data;
         const parsedData = JSON.parse(data.text);
@@ -116,6 +116,7 @@ const Droparea = () => {
       setLoading(false);
       setProgress(100); // Ensure progress bar reaches 100% when done
       setFilePreview("");
+      setFileProcessed(true);
     }
   };
 
@@ -150,7 +151,7 @@ const Droparea = () => {
   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
   };
-  //console.log(fileProcessed);
+  console.log(fileProcessed);
   return (
     <div className="flex flex-col justify-start items-center w-full h-fit">
       {!fileProcessed ? (
@@ -238,7 +239,7 @@ const Droparea = () => {
           }`}
         >
           {/* passing isEvent to Chatarea to conditionally render */}
-          <ChatArea jsonData={jsonData} isEvent={isEvent} />
+          {jsonData && <ChatArea jsonData={jsonData} isEvent={isEvent} />}
         </div>
       )}
       {!fileProcessed && (

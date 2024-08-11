@@ -44,7 +44,7 @@ export const getChatEventPrompt = () => {
 
 If user requests in the chat for recurrence, abide by these:
 Recurrence rule using the iCalendar format (RRULE). The RRULE should specify the frequency (FREQ), days of the week (BYDAY), intervals (INTERVAL), and any end conditions (UNTIL or COUNT) as described in the iCalendar standard.
-
+If you see events that are identical and seem to repeat, use the recurrence to just have one instance of it. If an event happens more than once in a week  ( same event name ) then use recurrence. 
 For example:
 1. "Every other Thursday until the end of the year" -> RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TH;UNTIL=20231231T235959Z
 2. "Daily stand-up for 10 days" - RRULE:FREQ=DAILY;COUNT=10
