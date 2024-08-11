@@ -8,6 +8,7 @@ import TasksListDrop from "./TasksListDrop";
 import TaskList from "./TaskList/TaskList";
 import SuccessModal from "./SuccessModal";
 import { useRouter } from "next/navigation";
+import { getChatEventPrompt, getChatTaskPrompt } from "./ChatPrompts";
 
 //interfaces
 interface Part {
@@ -86,7 +87,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
 
   const initializeChat = async () => {
     const chatPrompt = isEvent ? getChatEventPrompt() : getChatTaskPrompt();
-
+    console.log("chatPrompt :", chatPrompt)
     const initialMessage: MsgItem = {
       role: "user",
       parts: [
@@ -100,6 +101,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
             2
           )}
         ${chatPrompt}
+
         I'm going to give instructions on editing this. For the first message reply "Make changes by talking to the bot!", the user will give further editing instructions
         and for the rest say "Made the requested Changes!". Finally, after every bot reply, add the updated JSON enclosed in triple backticks like this: \`\`\`json ... \`\`\`.
         `,

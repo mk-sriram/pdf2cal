@@ -1,7 +1,7 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
 import { getEventPrompt, taskPrompt } from "./prompt";
-import { getUserTimeZone } from "./helper";
+
 // Initialize the Google Generative AI client
 const initializeGenAI = () => {
   const apiKey = process.env.GEMINI_API_KEY;

@@ -3,8 +3,7 @@ import { getUserTimeZone } from "./helper";
 export const getEventPrompt = async () => {
   const timeZone = await getUserTimeZone();
 
-  return `
-You are tasked with extracting event information from content given. These schedules contain various events with details such as titles, descriptions, start times, and end times. Your goal is to accurately identify and extract these details and format them into JSON objects according to a specific schema.
+  return `You are tasked with extracting event information from content given. These schedules contain various events with details such as titles, descriptions, start times, and end times. Your goal is to accurately identify and extract these details and format them into JSON objects according to a specific schema.
 Instructions:
 1. Identify and Extract Event Details:
    - summary: The name of the event, typically found within the event block.
@@ -19,25 +18,59 @@ Instructions:
    - Ensure each event is represented as a JSON object following this schema:
      \`\`\`json
      {
-       "summary": "Title of the event",
-       "description": "Description of the event. Can contain HTML. Optional",
-       "start": {
-         "dateTime": "The start time in RFC3339 format",
-         "timeZone": "The time zone for the start time"
-       },
-       "end": {
-         "dateTime": "The end time in RFC3339 format",
-         "timeZone": "The time zone for the end time"
-       },
-       "recurrence": [
-         "RRULE:FREQ=WEEKLY;BYDAY=MO,WE,FR;UNTIL=20231231T235959Z Optional"
-       ]
-     }
+  "type": "object",
+  "properties": {
+    "summary": {
+      "type": "string",
+      "description": "Title of the event"
+    },
+    "description": {
+      "type": "string",
+      "description": "Description of the event. Can contain HTML. Optional"
+    },
+    "start": {
+      "type": "object",
+      "properties": {
+        "dateTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time, as a combined date-time value (formatted according to RFC3339). A time zone offset is required unless a time zone is explicitly specified in timeZone"
+        },
+        "timeZone": {
+          "type": "string",
+          "description": "use ${timeZone} as Timezone. (Formatted as an IANA Time Zone Database name, e.g., 'Europe/Zurich'). For recurring events, this field is required and specifies the time zone in which the recurrence is expanded. For single events, this field is optional and indicates a custom time zone for the event start/end"
+        }
+      },
+      "required": ["dateTime"]
+    },
+    "end": {
+      "type": "object",
+      "properties": {
+        "dateTime": {
+          "type": "string",
+          "format": "date-time",
+          "description": "The time, as a combined date-time value (formatted according to RFC3339). A time zone offset is required unless a time zone is explicitly specified in timeZone"
+        },
+        "timeZone": {
+          "type": "string",
+          "description": "use ${timeZone} as Timezone.. (Formatted as an IANA Time Zone Database name, e.g., 'Europe/Zurich'). For recurring events, this field is required and specifies the time zone in which the recurrence is expanded. For single events, this field is optional and indicates a custom time zone for the event start/end"
+        }
+      },
+      "required": ["dateTime"]
+    },
+    "recurrence": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of RRULE, EXRULE, RDATE, and EXDATE lines for a recurring event, as specified in RFC5545. Note that DTSTART and DTEND lines are not allowed in this field; event start and end times are specified in the start and end fields. This field is omitted for single events or instances of recurring events"
+    }
+  },
+  "required": ["summary", "start", "end"]
      \`\`\`
-
 Example Extraction:
-- **User Input**: An image schedule where a "Pharmacology Lecture" is listed from 9:00 AM to 10:00 AM on August 19th.
-- **LLM Output**:
+- User Input: An image schedule where a "Pharmacology Lecture" is listed from 9:00 AM to 10:00 AM on August 19th.
+- LLM Output:
   \`\`\`json
   {
     "summary": "Pharmacology Lecture",
@@ -53,7 +86,6 @@ Example Extraction:
     "recurrence": []
   }
   \`\`\`
-
 Recurrence rule using the iCalendar format (RRULE). The RRULE should specify the frequency (FREQ), days of the week (BYDAY), intervals (INTERVAL), and any end conditions (UNTIL or COUNT) as described in the iCalendar standard.
 For example:
 1. "Every other Thursday until the end of the year" -> RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TH;UNTIL=20231231T235959Z
@@ -124,65 +156,3 @@ Example Output:
 
 Please proceed by extracting and converting the tasks from the provided content according to these guidelines and return data ONLY in provided JSON format.
 `;
-
-
-//Chat PROMPTS 
-export const getChatTaskPrompt = () => {
-  const currentYear = new Date().getFullYear();
-
-  return `JSON schema: { 
-    "title": "The title of the task. This is the only REQUIRED field when creating a task.",
-    "due": "The due date/time of the task. Always in RFC 3339 timestamp format. also if year is not available, you should use ${currentYear} for year",
-    "notes": "Any additional notes or details about the task.",
-    "status": "Set to 'needsAction' by default as all tasks should be incomplete.",
-    "links": [
-      { 
-        "type": "The type of the link, such as 'email' or 'attachment'.",
-        "description": "A brief description of what the link is or why it's relevant.",
-        "link": "The URL of the resource being linked to."
-      }
-    ]
-  }
-Instructions:
-1. Do not change the structure of the JSON and Always follow the SCHEMA.
-2. Always format dates in RFC 3339 timestamp format, regardless of how they are provided.
-3. Only modify the JSON according to the user's instructions.
-
-Ensure that the output always adheres to the provided JSON structure and date format.`;
-};
-
-
-export const getChatEventPrompt = () => {
-  return `JSON schema: { 
-    {
-       "summary": "Title of the event",
-       "description": "Description of the event. Can contain HTML. Optional",
-       "start": {
-         "dateTime": "The start time in RFC3339 format",
-         "timeZone": "The time zone for the start time"
-       },
-       "end": {
-         "dateTime": "The end time in RFC3339 format",
-         "timeZone": "The time zone for the end time"
-       },
-       "recurrence": [
-         recurrence as per icalendar rules Optional"
-       ]
-     }
-  }
-
-If user requests in the chat for recurrence, abide by these:
-Recurrence rule using the iCalendar format (RRULE). The RRULE should specify the frequency (FREQ), days of the week (BYDAY), intervals (INTERVAL), and any end conditions (UNTIL or COUNT) as described in the iCalendar standard.
-
-For example:
-1. "Every other Thursday until the end of the year" -> RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TH;UNTIL=20231231T235959Z
-2. "Daily stand-up for 10 days" - RRULE:FREQ=DAILY;COUNT=10
-3. "On the 1st and 15th of every month" -> RRULE:FREQ=MONTHLY;BYMONTHDAY=1,15
-
-Instructions:
-1. Do not change the structure of the JSON and Always follow the SCHEMA.
-2. Always format dates in RFC 3339 timestamp format, regardless of how they are provided.
-3. Only modify the JSON according to the user's instructions.
-
-Ensure that the output always adheres to the provided JSON structure and date format.`; 
-}

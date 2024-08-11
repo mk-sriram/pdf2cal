@@ -1,10 +1,20 @@
 import EventCard from "./EventCard";
 
 interface Event {
-  summary: string;
-  start: string;
-  end: string;
-  description: string;
+  summary: string; // Title of the event
+  description?: string; // Optional description of the event
+
+  start: {
+    dateTime: string; // The start time in RFC3339 format
+    timeZone: string; // Optional time zone for the start time
+  };
+
+  end: {
+    dateTime: string; // The end time in RFC3339 format
+    timeZone: string; // Optional time zone for the end time
+  };
+
+  recurrence?: string[]; // Optional array of recurrence rules in RRULE format
 }
 
 interface EventListProps {
@@ -13,6 +23,7 @@ interface EventListProps {
 }
 
 const EventList: React.FC<EventListProps> = ({ jsonData, loading }) => {
+  
   return (
     <div className="flex w-[70%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
       <div className="overflow-scroll w-full ">
@@ -37,13 +48,10 @@ const EventList: React.FC<EventListProps> = ({ jsonData, loading }) => {
               <EventCard
                 key={index}
                 summary={event.summary}
-                start={new Date(event.start.dateTime).toLocaleString("en-US", {
-                  timeZone: event.start.timeZone,
-                })}
-                end={new Date(event.end.dateTime).toLocaleString("en-US", {
-                  timeZone: event.end.timeZone,
-                })}
+                start={event.start} // Pass the entire start object
+                end={event.end} // Pass the entire end object
                 description={event.description}
+                recurrence={event.recurrence} // Pass recurrence if it exists
               />
             ))
           )}

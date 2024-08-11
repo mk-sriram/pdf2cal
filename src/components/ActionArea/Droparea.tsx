@@ -6,16 +6,20 @@ import { useRouter } from "next/navigation";
 import axios from "axios";
 
 interface EventData {
-  summary: string;
-  description: string;
+  summary: string; // Title of the event
+  description?: string; // Optional description of the event
+
   start: {
-    dateTime: string;
-    timeZone: string;
+    dateTime: string; // The start time in RFC3339 format
+    timeZone: string; // Optional time zone for the start time
   };
+
   end: {
-    dateTime: string;
-    timeZone: string;
+    dateTime: string; // The end time in RFC3339 format
+    timeZone: string; // Optional time zone for the end time
   };
+
+  recurrence?: string[]; // Optional array of recurrence rules in RRULE format
 }
 interface MsgItem {
   role: string;
@@ -28,7 +32,6 @@ const Droparea = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isloading, setLoading] = useState<boolean>(false);
   const [filePreview, setFilePreview] = useState<string | null>(null);
-
   const [isExpanded, setIsExpanded] = useState(false);
   const [fileProcessed, setFileProcessed] = useState(false);
   const [jsonData, setJsonData] = useState<EventData | null>(null);
@@ -147,7 +150,7 @@ const Droparea = () => {
   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
   };
-
+  //console.log(fileProcessed);
   return (
     <div className="flex flex-col justify-start items-center w-full h-fit">
       {!fileProcessed ? (
