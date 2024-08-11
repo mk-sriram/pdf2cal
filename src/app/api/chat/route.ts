@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     const chat = model.startChat({
       history: chatHistory,
       generationConfig: {
-        maxOutputTokens: 1500,
+        maxOutputTokens: 2100,
       },
     });
 
@@ -46,7 +46,6 @@ export async function POST(request: NextRequest) {
       const result = await chat.sendMessage(lastMessage);
       const text = result.response.text();
       return NextResponse.json({ reply: text }, { status: 200 });
-
     } catch (err) {
       console.log("couldnt start chat, ", err);
     }

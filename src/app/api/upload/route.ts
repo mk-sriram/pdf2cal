@@ -1,6 +1,6 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
-import { eventPrompt, taskPrompt } from "./prompt";
+import { getEventPrompt, taskPrompt } from "./prompt";
 import { getUserTimeZone } from "./helper";
 // Initialize the Google Generative AI client
 const initializeGenAI = () => {
@@ -39,8 +39,8 @@ export async function POST(request: NextRequest) {
     let promptText: string;
 
     if (isEvent) {
-      const timeZone = await getUserTimeZone();
-      promptText = eventPrompt + `. Make sure the TimeZone is ${timeZone}`;
+      promptText  = await getEventPrompt();
+     
     } else {
       promptText = taskPrompt;
     }

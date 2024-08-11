@@ -85,24 +85,23 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
   }, [jsonData]);
 
   const initializeChat = async () => {
-    const currentYear = new Date().getFullYear();
+    const chatPrompt = isEvent ? getChatEventPrompt() : getChatTaskPrompt();
+
     const initialMessage: MsgItem = {
       role: "user",
       parts: [
         {
           text: `
-          
-          I have a JSON object representing Google Tasks that I need help editing. Here's the current JSON Data  ${JSON.stringify(
+        I have a JSON object representing ${
+          isEvent ? "Google Calendar Events" : "Google Tasks"
+        } that I need help editing. Here's the current JSON Data ${JSON.stringify(
             jsonData,
             null,
             2
           )}
-          and JSON schema: { "title": "The title of the task. This is the only REQUIRED field when creating a task.", "due": "The due date/time of the task. Always in RFC 3339 timestamp format. also if year is not available, you should use ${currentYear} for year", "notes": "Any additional notes or details about the task.", "status": "Set to 'needsAction' by default as all tasks should be incomplete.", "links": [{ "type": "The type of the link, such as 'email' or 'attachment'.", "description": "A brief description of what the link is or why it's relevant.", "link": "The URL of the resource being linked to." }] }
-Instructions: 1. Do not change the structure of the JSON and Always follow the SCHEMA. 2. Always format dates in RFC 3339 timestamp format, regardless of how they are provided. 3. Only modify the JSON according to the user's instructions.
-Interaction Flow: - For the first message after receiving the JSON schema, reply with: "Make changes by talking to the bot!". - After the user provides further editing instructions, process them and reply with: "Made the requested changes!". - After making the changes, for every bot reply add the updated JSON enclosed in triple backticks like this: \`\`\`json ... \`\`\`.
-Ensure that the output always adheres to the provided JSON structure and date format. 
-        I'm going to give instructions on editing this. for the first msg reply "Make changes by talking to the bot!", the user will give further editing instructions
-        and rest say "Made the requested Changes!". finally, after every bot reply add the updated JSON enclosed in triple backticks like this: \`\`\`json ... \`\`\`.
+        ${chatPrompt}
+        I'm going to give instructions on editing this. For the first message reply "Make changes by talking to the bot!", the user will give further editing instructions
+        and for the rest say "Made the requested Changes!". Finally, after every bot reply, add the updated JSON enclosed in triple backticks like this: \`\`\`json ... \`\`\`.
         `,
         },
       ],
