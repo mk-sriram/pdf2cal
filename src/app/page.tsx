@@ -7,8 +7,12 @@ const page = () => {
   return (
     <>
       <Navbar />
-      <HomeSection />
-      <ActionArea />
+      <div className="float-in  ">
+        <HomeSection />
+      </div>
+      <div className="float-in float-in-action">
+        <ActionArea />
+      </div>
       <FaqSection />
       <Footer />
     </>

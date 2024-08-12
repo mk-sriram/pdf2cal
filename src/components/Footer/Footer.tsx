@@ -45,7 +45,7 @@ const Footer = () => {
         </div>
       </nav>
       <aside>
-        <p>Copyright © {new Date().getFullYear()} - Parsyll</p>
+        <p>Copyright © {new Date().getFullYear()} - PDF2Cal</p>
       </aside>
     </footer>
   );

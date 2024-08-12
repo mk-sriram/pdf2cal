@@ -10,16 +10,14 @@
   left: 0;
   width: 100%;
   height: 10rem; /* Adjust height as needed */
-  
-  background: linear-gradient(to top,#ffffff ,#ffffff, #ffffff00);
-}
 
+  background: linear-gradient(to top, #ffffff, #ffffff, #ffffff00);
+}
 
 .custom-gradient {
   background: linear-gradient(55deg, #145bde, #51a5ff);
   background-clip: text;
   color: transparent;
-
 }
 
 .custom-dropdown-bottom {
@@ -27,4 +25,24 @@
   top: 100%; /* Positions the dropdown below its parent */
   left: 2px; /* Moves dropdown 2px to the right */
   transform-origin: top; /* Sets the origin of transformation to the top */
+}
+
+@keyframes floatIn {
+  from {
+    opacity: 0;
+    transform: translateY(45px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.float-in {
+  animation: floatIn 1s ease-out forwards;
+}
+
+
+.float-in-action {
+  animation-delay: 0.2s; /* ActionArea floats in slightly later */
 }
