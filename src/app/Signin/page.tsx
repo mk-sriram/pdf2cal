@@ -1,5 +1,4 @@
 "use client";
-import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/utils/supabase/client";
 const page = () => {
@@ -17,7 +16,7 @@ const page = () => {
           access_type: "offline",
           prompt: "consent",
         },
-        redirectTo: `${location.origin}/api/auth/callback`,
+        redirectTo: `https://pdf2cal.vercel.app/api/auth/callback`,
       },
     });
   };
