@@ -16,9 +16,10 @@ interface Task {
 interface TaskListProps {
   jsonData: Task[];
   loading: boolean;
+  onDeleteTask: (index: number) => void;
 }
 
-const TaskList: React.FC<TaskListProps> = ({ jsonData, loading }) => {
+const TaskList: React.FC<TaskListProps> = ({ jsonData, loading, onDeleteTask }) => {
   return (
     <div className="flex flex-col w-[70%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100 relative">
       <div className="overflow-scroll w-full ">
@@ -28,7 +29,7 @@ const TaskList: React.FC<TaskListProps> = ({ jsonData, loading }) => {
               {/* Add the number of skeleton loaders equal to the number of task cards you expect */}
               {[...Array(4)].map((_, index) => (
                 <div
-                  tabIndex={index}
+                  key={index}
                   role="button"
                   className="flex flex-row justify-between w-[90%] p-4 mb-4 bg-gray-200 rounded-xl shadow-md space-x-4 animate-pulse"
                 >
@@ -47,6 +48,7 @@ const TaskList: React.FC<TaskListProps> = ({ jsonData, loading }) => {
                 notes={task.notes}
                 status={task.status}
                 links={task.links}
+                onDelete={() => onDeleteTask(index)}
               />
             ))
           )}

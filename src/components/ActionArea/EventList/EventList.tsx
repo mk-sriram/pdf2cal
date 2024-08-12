@@ -20,9 +20,10 @@ interface Event {
 interface EventListProps {
   jsonData: Event[];
   loading: boolean;
+  onDeleteTask: (index: number) => void;
 }
 
-const EventList: React.FC<EventListProps> = ({ jsonData, loading }) => {
+const EventList: React.FC<EventListProps> = ({ jsonData, loading, onDeleteTask}) => {
   
   return (
     <div className="flex w-[70%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
@@ -52,6 +53,7 @@ const EventList: React.FC<EventListProps> = ({ jsonData, loading }) => {
                 end={event.end} // Pass the entire end object
                 description={event.description}
                 recurrence={event.recurrence} // Pass recurrence if it exists
+                onDelete={() => onDeleteTask(index)}
               />
             ))
           )}

@@ -24,10 +24,18 @@ interface ChatAreaProps {
 }
 interface Event {
   summary: string;
-  start: string;
-  end: string;
-  description: string;
+  description?: string;
+  start: {
+    dateTime: string;
+    timeZone?: string;
+  };
+  end: {
+    dateTime: string;
+    timeZone?: string;
+  };
+  recurrence?: string[] | null;
 }
+
 interface Calendar {
   id: string;
   color: string;
@@ -175,6 +183,13 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
     }
   };
 
+  const handleDeleteItem = (index: number) => {
+    setCurrentJsonData((prevData: Task[] | Event[]) => {
+      const newData = [...prevData];
+      newData.splice(index, 1);
+      return newData;
+    });
+  };
   const handleChatMessage = async () => {
     if (chatMessage.trim()) {
       const newMessage: MsgItem = {
@@ -280,9 +295,17 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
         {/* Left block for JSON data */}
 
         {!isEvent ? (
-          <TaskList jsonData={currentJsonData} loading={pageloading} />
+          <TaskList
+            jsonData={currentJsonData}
+            loading={pageloading}
+            onDeleteTask={handleDeleteItem}
+          />
         ) : (
-          <EventList jsonData={currentJsonData} loading={pageloading} />
+          <EventList
+            jsonData={currentJsonData}
+            loading={pageloading}
+            onDeleteTask={handleDeleteItem}
+          />
         )}
 
         {/* Right block for chatbox */}
