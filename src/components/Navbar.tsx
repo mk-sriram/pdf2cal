@@ -6,18 +6,10 @@ import useAuth from "@/utils/supabase/useAuth";
 import { createClient } from "@/utils/supabase/client";
 
 const Navbar = () => {
-  const { user, loading } = useAuth();
+  const { user, loading, handleSignOut } = useAuth();
   //console.log(user);
   //console.log( data.session?.user?.user_metadata )
-  const handleSignOut = async () => {
-    //console.log("SIGNING OUT ");
-    const supabase = createClient();
-    try {
-      await supabase.auth.signOut();
-    } catch (err) {
-      console.log(err);
-    }
-  };
+  
   return (
     <div className="container mx-auto flex justify-center navbar bg-inherit py-[29px] w-[70%]">
       <div className="navbar-start space-x-2">

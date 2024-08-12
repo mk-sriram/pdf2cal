@@ -30,16 +30,16 @@ export async function GET(request: Request) {
 
         if (session && session.provider_token) {
           // Store provider_token and provider_refresh_token in the database
-          const { data, error } = await supabase.from("provider_tokens").upsert(
-            {
+          const { data, error } = await supabase
+            .from("provider_tokens")
+            .upsert({
               user_id: session.user.id,
               provider: session.user.app_metadata?.provider, // This will be inserted/updated
               provider_token: session.provider_token,
               provider_refresh_token: session.provider_refresh_token || null,
               updated_at: new Date().toISOString(),
-            },
-            { onConflict: "user_id" } // Only conflict on user_id
-          );
+            })
+            .select();
 
           if (error) {
             console.error("Error storing provider tokens:", error);

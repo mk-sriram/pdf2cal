@@ -6,10 +6,6 @@ export const getEventPrompt = async () => {
   return `You are tasked with extracting event information from content given. These schedules contain various events with details such as titles, descriptions, start times, and end times. Your goal is to accurately identify and extract these details and format them into JSON objects according to a specific schema.
 Instructions:
 1. Identify and Extract Event Details:
-   - summary: The name of the event, typically found within the event block.
-   - description: Additional details about the event. This can include instructor names, locations, or specific notes.
-   - start.dateTime: The time when the event begins. This is determined by the time indicated to the left of the event block.
-   - end.dateTime: The time when the event ends. This is determined by the time indicated below or adjacent to the event block.
    - start.timeZone,end.timeZone: Use time zone ${timeZone} unless otherwise specified in the schedule.
 2.Handle Events Divided Between Two Times:
    - For events that are split across two different times (e.g., lines between 8:00 and 8:30), calculate the average time and use this as the end time for the first event and the start time for the subsequent event.
@@ -26,7 +22,7 @@ Instructions:
     },
     "description": {
       "type": "string",
-      "description": "Description of the event. Can contain HTML. Optional"
+      "description": "Additional details about the event. This can include instructor names, locations, or specific notes."
     },
     "start": {
       "type": "object",
@@ -34,7 +30,7 @@ Instructions:
         "dateTime": {
           "type": "string",
           "format": "date-time.you should use ${currentYear} for year unless specified",
-          "description": "The time, as a combined date-time value (formatted according to RFC3339). A time zone offset is required unless a time zone is explicitly specified in timeZone"
+          "description": "The time when the event begins. This is determined by the time indicated to the left of the event block.The time, as a combined date-time value (formatted according to RFC3339). A time zone offset is required unless a time zone is explicitly specified in timeZone"
         },
         "timeZone": {
           "type": "string",
@@ -49,7 +45,7 @@ Instructions:
         "dateTime": {
           "type": "string",
           "format": "date-time. you should use ${currentYear} for year unless specified",
-          "description": "The time, as a combined date-time value (formatted according to RFC3339). A time zone offset is required unless a time zone is explicitly specified in timeZone"
+          "description": "he time when the event ends. This is determined by the time indicated below or adjacent to the event block.The time, as a combined date-time value (formatted according to RFC3339). A time zone offset is required unless a time zone is explicitly specified in timeZone"
         },
         "timeZone": {
           "type": "string",
@@ -91,9 +87,10 @@ For example:
 1. "Every other Thursday until the end of the year" -> RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TH;UNTIL=20231231T235959Z
 2. "Daily stand-up for 10 days" - RRULE:FREQ=DAILY;COUNT=10
 3. "On the 1st and 15th of every month" -> RRULE:FREQ=MONTHLY;BYMONTHDAY=1,15
+if there are two or more instances of the same event (having the same name, time, and details) but occurring on different dates, recognize these as part of the same recurring event. Instead of creating multiple separate entries, merge them into a single JSON object representing the event, with a recurrence rule that includes all relevant days of the week.
+For example, if 'EECS 215 - 002 Lecture' occurs at the same time on both Monday and Tuesday each week, the LLM should consolidate these into a single event object with a recurrence pattern that repeats weekly on both Monday and Tuesday, until September 22, 2024.
 Process:
 1. **Parse the Content**: Identify the times, titles, and details within each block.
-
 2. **Generate JSON**: For each identified event, generate a JSON object in the specified format.
 
 Requirements:

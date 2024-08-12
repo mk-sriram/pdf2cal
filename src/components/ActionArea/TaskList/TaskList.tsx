@@ -25,13 +25,13 @@ const TaskList: React.FC<TaskListProps> = ({ jsonData, loading, onDeleteTask }) 
       <div className="overflow-scroll w-full ">
         <div className="flex flex-col h-screen p-4 pb-36 ">
           {loading ? (
-            <div className="animate-pulse">
+            <div className="animate-pulse w-[25rem]">
               {/* Add the number of skeleton loaders equal to the number of task cards you expect */}
               {[...Array(4)].map((_, index) => (
                 <div
                   key={index}
                   role="button"
-                  className="flex flex-row justify-between w-[90%] p-4 mb-4 bg-gray-200 rounded-xl shadow-md space-x-4 animate-pulse"
+                  className="flex flex-row justify-between w-[35rem] p-4 mb-4 bg-gray-200 rounded-xl shadow-md space-x-4 animate-pulse"
                 >
                   <div className="font-semibold text-lg w-3/5 bg-gray-300 h-6 rounded-md"></div>
                   <div className="flex items-center text-md text-gray-200 w-1/4 bg-gray-300 h-6 rounded-md"></div>

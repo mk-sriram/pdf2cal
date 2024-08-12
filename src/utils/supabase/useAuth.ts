@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/utils/supabase/client";
 import { User } from "@supabase/supabase-js";
 
@@ -6,9 +6,9 @@ const useAuth = () => {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    const supabase = createClient();
+  const supabase = createClient();
 
+  useEffect(() => {
     const getSession = async () => {
       try {
         const {
@@ -25,7 +25,6 @@ const useAuth = () => {
     getSession();
 
     // Listen for auth state changes
-
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
@@ -38,7 +37,33 @@ const useAuth = () => {
     };
   }, []);
 
-  return { user, loading };
+  const handleSignOut = useCallback(async () => {
+    try {
+      if (user) {
+        // Delete the provider tokens from the database
+        const { error: deleteError } = await supabase
+          .from("provider_tokens")
+          .delete()
+          .match({
+            user_id: user.id,
+            provider: user.app_metadata?.provider,
+          });
+
+        if (deleteError) {
+          console.error("Error deleting provider tokens:", deleteError);
+        } else {
+          console.log("Provider tokens deleted successfully.");
+        }
+      }
+
+      // Sign out the user
+      await supabase.auth.signOut();
+    } catch (err) {
+      console.error("Error during sign out:", err);
+    }
+  }, [user]);
+
+  return { user, loading, handleSignOut };
 };
 
 export default useAuth;

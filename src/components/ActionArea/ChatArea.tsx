@@ -323,6 +323,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
             </div>
 
             <div className="flex  bg-[#ffffff] rounded-full px-4 py-2 shadow">
+            
               <input
                 type="text"
                 placeholder="Append the points to Event name"

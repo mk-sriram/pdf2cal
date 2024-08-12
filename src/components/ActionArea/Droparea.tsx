@@ -96,7 +96,7 @@ const Droparea = () => {
             );
             setProgress(percentCompleted);
           } else {
-            setProgress((prevProgress) => Math.min(prevProgress + 10, 95));
+            setProgress((prevProgress) => Math.min(prevProgress + 2, 95));
           }
         },
       });

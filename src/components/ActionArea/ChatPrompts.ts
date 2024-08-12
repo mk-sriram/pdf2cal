@@ -41,19 +41,17 @@ export const getChatEventPrompt = () => {
        ]
      }
   }
-
-If user requests in the chat for recurrence, abide by these:
-Recurrence rule using the iCalendar format (RRULE). The RRULE should specify the frequency (FREQ), days of the week (BYDAY), intervals (INTERVAL), and any end conditions (UNTIL or COUNT) as described in the iCalendar standard.
-If you see events that are identical and seem to repeat, use the recurrence to just have one instance of it. If an event happens more than once in a week  ( same event name ) then use recurrence. 
+  
+If user requests in the chat for recurrence, abide by these rules:
+Recurrence rule using the iCalendar format (RRULE). The RRULE should specify the frequency (FREQ), days of the week (BYDAY), intervals (INTERVAL), and any end conditions (UNTIL or COUNT) as described in the iCalendar standard. 
 For example:
 1. "Every other Thursday until the end of the year" -> RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TH;UNTIL=20231231T235959Z
 2. "Daily stand-up for 10 days" - RRULE:FREQ=DAILY;COUNT=10
-3. "On the 1st and 15th of every month" -> RRULE:FREQ=MONTHLY;BYMONTHDAY=1,15
-
-Instructions:
+If multiple identical events (same name, time, details) occur on different dates but share the same time, merge them into a single event. Create a recurrence rule that includes all relevant days of the week (using BYDAY) corresponding to the provided dates.
+When events like 'EECS 215 - 002 Lecture' repeat on different days but are otherwise identical, consolidate them into a single recurring event and ensure that the recurrence rule includes all relevant days (e.g., both Monday and Tuesday).
+Instructions
 1. Do not change the structure of the JSON and Always follow the SCHEMA.
 2. Always format dates in RFC 3339 timestamp format, regardless of how they are provided.
 3. Only modify the JSON according to the user's instructions.
-
 Ensure that the output always adheres to the provided JSON structure and date format.`;
 };
