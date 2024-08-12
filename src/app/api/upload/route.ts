@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
 import { getEventPrompt, getTaskPromp } from "./prompt";
@@ -39,8 +40,7 @@ export async function POST(request: NextRequest) {
     let promptText: string;
 
     if (isEvent) {
-      promptText  = await getEventPrompt();
-     
+      promptText = await getEventPrompt();
     } else {
       promptText = getTaskPromp();
     }
