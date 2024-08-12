@@ -291,7 +291,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
           setIsOpen={setIsSuccessModalOpen}
         />
       )}
-      <div className="flex w-[70rem] h-[80vh] mt-8 bg-whitejustify-center items-center space-x-5  border-2 border-gray-300 border-dashed px-4 rounded-2xl">
+      <div className="flex xl:w-[120%] lg:w-[100%] sm:w-[95%] h-[80vh] mt-8 bg-white justify-center items-center space-x-5  border-2 border-gray-300 border-dashed px-4 rounded-2xl">
         {/* Left block for JSON data */}
 
         {!isEvent ? (
