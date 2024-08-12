@@ -5,7 +5,7 @@ import Droparea from "./Droparea";
 
 const ActionArea: React.FC = () => {
   return (
-    <div className="relative w-full h-full">
+    <div className="flex relative w-full h-full  justify-center">
       <Droparea />
     </div>
   );

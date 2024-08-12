@@ -153,7 +153,7 @@ const Droparea = () => {
   };
   //console.log(fileProcessed);
   return (
-    <div className="flex flex-col justify-start items-center w-full h-fit">
+    <div className="flex flex-col justify-center items-center w-[90rem] h-fit bg-red-200">
       {!fileProcessed ? (
         <label
           className={`flex flex-col items-center justify-center transition-all duration-2000 ease-in-out ${

@@ -3,13 +3,12 @@ import Image from "next/image";
 import { assets } from "../../public/assets";
 import Link from "next/link";
 import useAuth from "@/utils/supabase/useAuth";
-import { createClient } from "@/utils/supabase/client";
 
 const Navbar = () => {
   const { user, loading, handleSignOut } = useAuth();
   //console.log(user);
   //console.log( data.session?.user?.user_metadata )
-  
+
   return (
     <div className="container mx-auto flex justify-center navbar bg-inherit py-[29px] w-[70%]">
       <div className="navbar-start space-x-2">
@@ -44,9 +43,10 @@ const Navbar = () => {
           </ul>
         </div>
         <Image
-          src={assets.parsyllLogo}
+          src="/parsylllogotrans.png"
           alt="Parsyll Logo"
-          className="w-11 h-11"
+          width={44}
+          height={44}
         />
         <Link
           href="/"
@@ -56,7 +56,7 @@ const Navbar = () => {
           }}
           className="text-xl text-gray-800 font-semibold cursor-pointer"
         >
-          Pdf2Cal
+          PDF2Cal
         </Link>
       </div>
       <div className="navbar-center hidden lg:flex sm:flex ">

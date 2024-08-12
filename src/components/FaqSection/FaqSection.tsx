@@ -107,7 +107,7 @@ const FaqSection: React.FC = () => {
     
     <section
       id="faq"
-      className="leading-relaxed max-w-screen-xl mt-[100px] mx-auto px-4 md:px-8 h-[100vh]"
+      className=" leading-relaxed max-w-screen-xl mt-[10rem] mx-auto px-4 md:px-8 h-[90vh] justify-center "
     >
       <div className="space-y-3 text-center">
         <h1 className="text-3xl text-gray-800 font-semibold">
