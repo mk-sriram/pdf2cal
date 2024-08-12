@@ -151,13 +151,13 @@ const Droparea = () => {
   const handleDragOver = (event: React.DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
   };
-  console.log(fileProcessed);
+  //console.log(fileProcessed);
   return (
     <div className="flex flex-col justify-start items-center w-full h-fit">
       {!fileProcessed ? (
         <label
           className={`flex flex-col items-center justify-center transition-all duration-2000 ease-in-out ${
-            isExpanded ? "w-full h-screen" : "w-[60%] h-64"
+            isExpanded ? "w-full h-screen" : "w-[50%] h-64"
           }  border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-[#fbfbfb] hover:shadow-[inset_0px_0px_20px_4px_#f3f3f3]`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
@@ -166,7 +166,7 @@ const Droparea = () => {
             {isloading ? (
               <div className="flex flex-col items-center space-x-2">
                 <progress
-                  className="progress progress-[#0b7dffd4] w-70"
+                  className="progress progress-primary w-80  [&::-webkit-progress-value]:bg-[#0b7dffd4] [&::-moz-progress-bar]:bg-[#0b7dffd4]"
                   value={progress}
                   max="100"
                 ></progress>
@@ -245,6 +245,8 @@ const Droparea = () => {
       {!fileProcessed && (
         <>
           <div className="flex flex-col mt-4">
+            
+
             <label className="themeSwitcherTwo relative inline-flex cursor-pointer select-none items-center ">
               <input
                 type="checkbox"

@@ -2,7 +2,7 @@ import { getUserTimeZone } from "./helper";
 
 export const getEventPrompt = async () => {
   const timeZone = await getUserTimeZone();
-
+  const currentYear = new Date().getFullYear();
   return `You are tasked with extracting event information from content given. These schedules contain various events with details such as titles, descriptions, start times, and end times. Your goal is to accurately identify and extract these details and format them into JSON objects according to a specific schema.
 Instructions:
 1. Identify and Extract Event Details:
@@ -33,7 +33,7 @@ Instructions:
       "properties": {
         "dateTime": {
           "type": "string",
-          "format": "date-time",
+          "format": "date-time.you should use ${currentYear} for year unless specified",
           "description": "The time, as a combined date-time value (formatted according to RFC3339). A time zone offset is required unless a time zone is explicitly specified in timeZone"
         },
         "timeZone": {
@@ -48,7 +48,7 @@ Instructions:
       "properties": {
         "dateTime": {
           "type": "string",
-          "format": "date-time",
+          "format": "date-time. you should use ${currentYear} for year unless specified",
           "description": "The time, as a combined date-time value (formatted according to RFC3339). A time zone offset is required unless a time zone is explicitly specified in timeZone"
         },
         "timeZone": {

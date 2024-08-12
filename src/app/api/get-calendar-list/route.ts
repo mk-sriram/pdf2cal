@@ -35,12 +35,12 @@ export async function GET(request: NextRequest) {
     try {
       const calendar = google.calendar({ version: "v3", auth: oauth2Client });
       const calendarList = await calendar.calendarList.list();
-      const calendars = calendarList.data?.items?.map((calendar, index) => ({
-        id: index + 1,
+      const calendars = calendarList.data?.items?.map((calendar) => ({
+        id: calendar.id,
         color: calendar.backgroundColor,
         name: calendar.summary,
       }));
-      console.log("calendars: ", calendars);
+      //console.log("calendars: ", calendars);
       return NextResponse.json({ calendars });
     } catch (error) {
       if (error instanceof Error) {

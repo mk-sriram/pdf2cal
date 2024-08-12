@@ -1,11 +1,9 @@
 "use client";
 import Image from "next/image";
 import { assets } from "../../public/assets";
-
 import Link from "next/link";
 import useAuth from "@/utils/supabase/useAuth";
 import { createClient } from "@/utils/supabase/client";
-import { useState } from "react";
 
 const Navbar = () => {
   const { user, loading } = useAuth();

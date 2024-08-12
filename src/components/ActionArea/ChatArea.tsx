@@ -29,7 +29,7 @@ interface Event {
   description: string;
 }
 interface Calendar {
-  id: number;
+  id: string;
   color: string;
   name: string;
 }
@@ -59,7 +59,9 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
   //loading states
   const [pageloading, setPageLoading] = useState<boolean>(true);
   const [loadingModal, setloadModal] = useState<boolean>(false);
-  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean | null>(false);
+  const [isSuccessModalOpen, setIsSuccessModalOpen] = useState<boolean | null>(
+    false
+  );
   //state variables for SelectedItems
   const [selectedTask, setSelectedTask] = useState<TaskList | null>(null);
   const [selectedEvent, setSelectedEvent] = useState<Calendar | null>(null);
@@ -85,7 +87,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
 
   const initializeChat = async () => {
     const chatPrompt = isEvent ? getChatEventPrompt() : getChatTaskPrompt();
-    console.log("chatPrompt :", chatPrompt)
+    //console.log("chatPrompt :", chatPrompt);
     const initialMessage: MsgItem = {
       role: "user",
       parts: [
@@ -187,17 +189,17 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
   };
 
   //Sending to Calendar functions
-  const sendtoCalendar = async (jsonData: Event[], calendarid: number) => {
+  const sendtoCalendar = async () => {
     setloadModal(true);
     try {
       // Create the request payload
       const payload = {
         calendarListId: selectedEvent?.id, // ID of the task list where the task should be inserted
-        taskData: currentJsonData, // JSON data representing the task to be inserted
+        calendarData: currentJsonData, // JSON data representing the task to be inserted
       };
       console.log(payload);
       // Send a POST request to the backend endpoint
-      const response = await fetch("/api/post-tasks", {
+      const response = await fetch("/api/post-events", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -205,7 +207,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
         body: JSON.stringify(payload),
       });
 
-      console.log(response);
+      //console.log(response);
       if (response.ok) {
         const data = await response.json();
         console.log("Success:", data.message);
@@ -225,7 +227,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
       setloadModal(false);
     }
   };
- 
+
   const sendtoTasks = async () => {
     setloadModal(true);
     try {
@@ -341,7 +343,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
             ) : (
               <>
                 <CalendarDrop setSelectedEvent={setSelectedEvent} />
-                <button className="btn px-4 rounded-full bg-[#0b7dffd4] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01] mt-5">
+                <button
+                  className="btn px-4 rounded-full bg-[#0b7dffd4] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01] mt-5"
+                  onClick={sendtoCalendar}
+                >
+                  {loadingModal ? (
+                    <span className="loading loading-spinner loading-md"></span>
+                  ) : (
+                    ""
+                  )}
                   Send to Calendar!
                 </button>
               </>

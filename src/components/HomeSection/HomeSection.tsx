@@ -1,5 +1,4 @@
 "use client";
-import Droparea from "../ActionArea/Droparea";
 import Typewriter from "typewriter-effect";
 
 const HomeSection = () => {

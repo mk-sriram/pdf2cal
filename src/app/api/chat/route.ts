@@ -14,10 +14,10 @@ const initializeGenAI = () => {
   const apiKey = process.env.GEMINI_API_KEY;
   if (!apiKey) {
     throw new Error("GEMINI_API_KEY is not set in environment variables");
-    console.log("Gemini init didn't work ");
+    //console.log("Gemini init didn't work ");
   }
   return new GoogleGenerativeAI(apiKey);
-  console.log("Gemi init worked work ");
+  //console.log("Gemi init worked work ");
 };
 
 export async function POST(request: NextRequest) {
@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     const chat = model.startChat({
       history: chatHistory,
       generationConfig: {
-        maxOutputTokens: 2100,
+        maxOutputTokens: 4000,
       },
     });
 
