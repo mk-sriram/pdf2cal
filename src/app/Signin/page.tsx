@@ -16,7 +16,7 @@ const page = () => {
           access_type: "offline",
           prompt: "consent",
         },
-        redirectTo: `${location.origin}/api/auth/callback`,
+        redirectTo: `https://pdf2cal.vercel.app/api/auth/callback`,
       },
     });
   };
