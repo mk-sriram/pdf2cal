@@ -82,7 +82,7 @@ export async function POST(request: NextRequest) {
     }
 
     
-    //console.log(text);
+    console.log(text);
 
     return NextResponse.json({ text }, { status: 200 });
   } catch (error) {

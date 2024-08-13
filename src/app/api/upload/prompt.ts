@@ -139,6 +139,7 @@ Information Extraction:
 Contextual Understanding:
 - Understand the context of each task based on the surrounding text or details provided. If a task is ambiguous, infer the most likely category based on the content.
 - If a task is a recurring event (e.g., a weekly meeting or annual birthday), ensure the JSON reflects this by appropriately noting it in the "notes" or other relevant fields.
+-When a date is placed near multiple tasks (e.g., to the left or right of a list of assignments), assume that this date applies to all of those tasks unless otherwise specified
 Output:
 - For each task identified, output a JSON object following the schema provided. Ensure all fields are populated correctly based on the extracted information.
 - If any information is missing or unclear, leave that field empty or mark it as "unspecified" in the "notes" section.
