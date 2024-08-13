@@ -4,12 +4,13 @@ import React from "react";
 const page = () => {
   return (
     <div className="flex flex-col   items-center justify-center">
-      <Link
-        href="/private-policy"
+      <a
+        href="/"
         className="btn px-7 rounded-full bg-[#0b7dffd4] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01] mt-8"
       >
-        Sign in
-      </Link>
+        {" "}
+        Back{" "}
+      </a>
       <div className="flex flex-col bg-white text-gray-800 p-6 md:p-12 w-[80%] items-center justify-center">
         <h1 className="text-3xl font-bold mb-6 text-center">Privacy Policy</h1>
         <p className="text-sm text-gray-600 mb-4 text-center">

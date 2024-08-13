@@ -1,4 +1,5 @@
 import Image from "next/image";
+import Link from "next/link";
 
 const Footer = () => {
   return (
@@ -29,12 +30,12 @@ const Footer = () => {
               </a>
             </li>
             <li>
-              <a
-                href="#"
-                className="transition-all transform active:scale-[0.98] hover:scale-[1.5] me-4 md:me-6 duration-100"
+              <Link
+                href="/private-policy"
+                className="transition-all transform active:scale-[0.98] hover:scale-[1.01] mr-4"
               >
                 Privacy Policy
-              </a>
+              </Link>
             </li>
 
             <li>
