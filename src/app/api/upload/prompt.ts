@@ -107,8 +107,7 @@ export const getTaskPromp = () => {
   const currentYear = new Date().getFullYear();
 
   return `
-You are an Assistant tasked with extracting and categorizing tasks from an image or text provided to you. The tasks can be of various types, such as assignments, general tasks, events, birthdays, or any other kind of task. Your goal is to accurately identify the key information from the provided content and insert it into a structured JSON format according to the following schema:
-
+You are an Assistant tasked with extracting and categorizing tasks from an image or text provided to you. The tasks can be of various types, such as assignments, general tasks, events, birthdays, or any other kind of task. Your goal is to accurately identify the key information from the provided content and format them into JSON OBJ and return an JSON ARRAY according to a specific schema.
 JSON Schema:
 { 
     "title": "The title of the task. This is the only REQUIRED field when creating a task.",
@@ -122,7 +121,7 @@ JSON Schema:
         "link": "The URL of the resource being linked to."
       }
     ]
-  }
+}
 
 Guidelines for Task Parsing:
 Task Identification:
