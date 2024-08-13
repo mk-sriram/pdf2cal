@@ -321,6 +321,18 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
                 ))}
               </div>
             </div>
+            <div className="flex justify-start mb-4">
+              <button
+                className="btn px-4 rounded-full bg-[#0b7dffd4] text-white hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01]"
+                onClick={() =>
+                  setChatMessage(
+                    "<eventName> repeats <weekly> till <Until Date>"
+                  )
+                }
+              >
+                Recurring Events
+              </button>
+            </div>
 
             <div className="flex  bg-[#ffffff] rounded-full px-4 py-2 shadow">
               <input
