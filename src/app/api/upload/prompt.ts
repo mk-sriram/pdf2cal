@@ -6,12 +6,12 @@ export const getEventPrompt = async () => {
   return `You are tasked with extracting event information from content given. These schedules contain various events with details such as titles, descriptions, start times, and end times. Your goal is to accurately identify and extract these details and format them into JSON OBJ and return an JSON ARRAY according to a specific schema.
 Instructions:
 1. Identify and Extract Event Details:
-   - start.timeZone,end.timeZone: Use time zone ${timeZone} unless otherwise specified in the schedule.
+   - start.timeZone,end.timeZone: Use time zone ${timeZone} unless otherwise specified by user.
 2.Handle Events Divided Between Two Times:
    - For events that are split across two different times (e.g., lines between 8:00 and 8:30), calculate the average time and use this as the end time for the first event and the start time for the subsequent event.
    - Example: If an event is listed between 8:00 AM and 8:30 AM, the average time would be 8:15 AM. Thus, the first event would end at 8:15 AM, and the next event would start at 8:15 AM.
 3. Format the Information into JSON Objects ( ARRAY ):
-   - Ensure each event is represented as a JSON object following this schema:
+   - Ensure each event is represented as a JSON ARRAY object following this JSON schema:
      \`\`\`json
      {
   "type": "object",
@@ -82,7 +82,19 @@ Example Extraction:
       "timeZone": "America/Chicago"
     },
     "recurrence": []
-}]
+    },{
+    "summary": "Another Lecture",
+    "description": "Dr. , Lecture Hall 1",
+    "start": {
+      "dateTime": "2024-08-19T09:00:00-05:00",
+      "timeZone": "America/Chicago"
+    },
+    "end": {
+      "dateTime": "2024-08-19T10:00:00-05:00",
+      "timeZone": "America/Chicago"
+    },
+    "recurrence": []
+    }]
   \`\`\`
 Recurrence rule using the iCalendar format (RRULE). The RRULE should specify the frequency (FREQ), days of the week (BYDAY), intervals (INTERVAL), and any end conditions (UNTIL or COUNT) as described in the iCalendar standard.
 For example:

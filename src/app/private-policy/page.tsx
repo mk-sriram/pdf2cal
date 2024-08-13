@@ -58,6 +58,12 @@ const page = () => {
           their respective privacy policies.
         </p>
         <p className="leading-relaxed mb-4 text-center">
+          We do not knowingly collect any personal information from children
+          under the age of 13. If you are a parent or guardian and you are aware
+          that your child has provided us with personal information, please
+          contact us so that we can take necessary actions.
+        </p>
+        <p className="leading-relaxed mb-4 text-center">
           You are free to refuse our request for your personal information, with
           the understanding that we may be unable to provide you with some of
           your desired services.
