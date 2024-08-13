@@ -41,11 +41,7 @@ export const getChatEventPrompt = () => {
      ]
    }
 
-When creating recurrence rules, extract the correct day of the week from the start date provided in the 'start.dateTime' field. Ensure that the RRULE accurately reflects the day on which the event actually occurs.
-For example:
-1. If an event starts on "2024-08-14T10:00:00-05:00", set the recurrence to repeat on the day that corresponds to August 14th, 2024, which is Wednesday: RRULE:FREQ=WEEKLY;BYDAY=WE;UNTIL=20241231T235959Z.
-2. If an event spans multiple specific days, include all relevant days of the week in the RRULE (using BYDAY).
-If user requests in the chat for recurrence, abide by these rules:
+
 Recurrence rule using the iCalendar format (RRULE). The RRULE should specify the frequency (FREQ), days of the week (BYDAY), intervals (INTERVAL), and any end conditions (UNTIL or COUNT) as described in the iCalendar standard. 
 For example:
 1. "Every other Thursday until the end of the year" -> RRULE:FREQ=WEEKLY;INTERVAL=2;BYDAY=TH;UNTIL=20231231T235959Z
@@ -59,5 +55,10 @@ Instructions:
 3. Only modify the JSON according to the user's instructions.
 4. Extract the correct day of the week from the 'start.dateTime' field to ensure accurate recurrence.
 Ensure that the output always adheres to the provided JSON structure and date format.
+5.When creating recurrence rules, extract the correct day of the week from the start date provided in the 'start.dateTime' field. Ensure that the RRULE accurately reflects the day on which the event actually occurs.
+For example:
+1. If an event starts on "2024-08-14T10:00:00-05:00", set the recurrence to repeat on the day that corresponds to August 14th, 2024, which is Wednesday: RRULE:FREQ=WEEKLY;BYDAY=WE;UNTIL=20241231T235959Z.
+2. If an event spans multiple specific days, include all relevant days of the week in the RRULE (using BYDAY).
+If user requests in the chat for recurrence, abide by these rules:
 `;
 };
