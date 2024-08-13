@@ -27,16 +27,16 @@ const TaskCard: React.FC<TaskCardProps> = ({
   onDelete,
 }) => {
   return (
-    <div className="dropdown dropdown-hover relative w-full mb-3">
-      <div className="flex flex-row justify-between items-center w-full py-3 px-4 rounded-xl shadow-md space-x-2 hover:bg-gray-50 hover:scale-[1.009] transition-all ease-in-out duration-200 bg-white">
+    <div className="dropdown dropdown-hover w-full mb-3">
+      <div className="flex flex-row justify-between items-center py-3 px-4 rounded-xl shadow-md space-x-2 hover:bg-gray-50 transition-all ease-in-out duration-200 bg-white">
         <div
           tabIndex={0}
           role="button"
           className="flex flex-row justify-between items-center w-full"
         >
-          <div className="font-semibold text-lg">{`${taskNumber}. ${title}`}</div>
+          <div className="font-semibold text-lg flex-grow">{`${taskNumber}. ${title}`}</div>
           {due && (
-            <div className="flex items-center text-md text-gray-600">
+            <div className="flex-shrink-0 text-md text-gray-600">
               {new Date(due).toLocaleDateString()}
             </div>
           )}
@@ -46,7 +46,7 @@ const TaskCard: React.FC<TaskCardProps> = ({
             e.stopPropagation();
             onDelete();
           }}
-          className="flex p-1 w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200 justify-center items-center"
+          className="flex-shrink-0 p-1 w-6 h-6 rounded-full bg-gray-200 hover:bg-gray-300 transition-colors duration-200 flex justify-center items-center"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -58,11 +58,11 @@ const TaskCard: React.FC<TaskCardProps> = ({
           </svg>
         </button>
       </div>
+      {/* Dropdown content */}
       <div
         tabIndex={0}
         className="dropdown-content menu bg-white border border-gray-200 rounded-lg shadow-md w-full p-4 absolute top-full left-0 z-50 mt-1"
       >
-        {/* dropdown-content menu bg-[#0b7dff] backdrop-blur-md rounded-lg shadow-lg z-50 w-[25rem] p-4 left-8 */}
         <div className="flex flex-col w-full">
           {notes && <div className="text-gray-700 mb-2">{notes}</div>}
           {links && links.length > 0 && (

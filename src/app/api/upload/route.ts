@@ -71,7 +71,17 @@ export async function POST(request: NextRequest) {
     });
 
     const response = result.response;
-    const text = response.text();
+    let text = response.text();
+
+    if (!text) {
+      console.log("Warning: Generated text is empty or null.");
+      return NextResponse.json(
+        { error: "No content generated. Retry your request!" },
+        { status: 204 }
+      );
+    }
+
+    
     //console.log(text);
 
     return NextResponse.json({ text }, { status: 200 });

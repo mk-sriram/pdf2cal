@@ -291,7 +291,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
           setIsOpen={setIsSuccessModalOpen}
         />
       )}
-      <div className="flex xl:w-[120%] lg:w-[100%] sm:w-[95%] h-[80vh] mt-8 bg-white justify-center items-center space-x-5  border-2 border-gray-300 border-dashed px-4 rounded-2xl">
+      <div className="flex xl:w-[100%] lg:w-[100%] sm:w-[100%] h-[80vh] mt-8 bg-white justify-center items-center space-x-5  border-2 border-gray-300 border-dashed rounded-2xl px-4">
         {/* Left block for JSON data */}
 
         {!isEvent ? (
@@ -309,7 +309,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
         )}
 
         {/* Right block for chatbox */}
-        <div className="flex flex-col w-[50%] h-full mt-8  space-y-2 ">
+        <div className="flex flex-col xl:w-[30rem] lg:w-[25rem] md:w-[20rem]  sm:w-[15rem]  h-full mt-8 space-y-2 ">
           <div className="flex flex-col w-[100%] h-[74%] p-4 justify-center shadow-lg rounded-2xl bg-gray-100">
             <div
               className="overflow-scroll w-full h-full bg-transperant"
@@ -323,7 +323,6 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
             </div>
 
             <div className="flex  bg-[#ffffff] rounded-full px-4 py-2 shadow">
-            
               <input
                 type="text"
                 placeholder="Append the points to Event name"

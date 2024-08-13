@@ -5,25 +5,30 @@ import useAuth from "@/utils/supabase/useAuth";
 import { useRouter } from "next/navigation";
 import axios from "axios";
 
-interface EventData {
-  summary: string; // Title of the event
-  description?: string; // Optional description of the event
-
+interface Event {
+  summary: string;
+  description?: string;
   start: {
-    dateTime: string; // The start time in RFC3339 format
-    timeZone: string; // Optional time zone for the start time
+    dateTime: string;
+    timeZone?: string;
   };
-
   end: {
-    dateTime: string; // The end time in RFC3339 format
-    timeZone: string; // Optional time zone for the end time
+    dateTime: string;
+    timeZone?: string;
   };
-
-  recurrence?: string[]; // Optional array of recurrence rules in RRULE format
+  recurrence?: string[] | null;
 }
-interface MsgItem {
-  role: string;
-  content: string;
+
+interface Task {
+  title: string; // The title of the task. This is the only required field when creating a task.
+  due?: string; // The due date/time of the task in RFC 3339 format. This can be useful if you want to set a deadline for the task.
+  notes?: string; // Any additional notes or details about the task.
+  status?: "needsAction"; // The status of the task, e.g., 'needsAction' for pending tasks or 'completed' for finished tasks. Defaults to 'needsAction'.
+  links?: Array<{
+    type: string; // The type of the link, such as 'related' or 'attachment'.
+    description?: string; // A brief description of what the link is or why it's relevant.
+    link: string; // The URL of the resource being linked to.
+  }>;
 }
 
 const Droparea = () => {
@@ -32,9 +37,8 @@ const Droparea = () => {
   const [file, setFile] = useState<File | null>(null);
   const [isloading, setLoading] = useState<boolean>(false);
   const [filePreview, setFilePreview] = useState<string | null>(null);
-  const [isExpanded, setIsExpanded] = useState(false);
   const [fileProcessed, setFileProcessed] = useState(false);
-  const [jsonData, setJsonData] = useState<EventData | null>(null);
+  const [jsonData, setJsonData] = useState<Event[] | Task[] | null>(null);
   const [isEvent, setIsEvent] = useState(true);
   const [progress, setProgress] = useState<number>(0);
 
@@ -100,15 +104,26 @@ const Droparea = () => {
           }
         },
       });
-      //console.log(response);
+      console.log(response);
       if (response.status === 200) {
         const data = response.data;
-        const parsedData = JSON.parse(data.text);
-        setJsonData(parsedData);
+        if (typeof data.text === "string") {
+          // If the data is a string, parse it as JSON
+          //console.log(data.text);
+          try {
+            const parsedData = JSON.parse(data.text);
+            //console.log(parsedData);
+            setJsonData(parsedData);
+          } catch (err) {
+            console.log(err, "ERROR WITH THE JSON PARSING LOL ");
+          }
+        } else {
+          console.error("Unexpected response format:", data);
+        }
+
         setFileProcessed(true);
-        setIsExpanded(true);
       } else {
-        console.error("Failed to upload file");
+        console.error("Failed to upload file, status:", response.status);
       }
     } catch (error) {
       console.error("An error occurred while uploading the file", error);
@@ -152,12 +167,13 @@ const Droparea = () => {
     event.preventDefault();
   };
   //console.log(fileProcessed);
+  //console.log(jsonData);
   return (
-    <div className="flex flex-col justify-center items-center w-[90rem] h-fit bg-red-200">
+    <div className="flex flex-col justify-center items-center w-[90rem] h-fit">
       {!fileProcessed ? (
         <label
           className={`flex flex-col items-center justify-center transition-all duration-2000 ease-in-out ${
-            isExpanded ? "w-[100%] h-screen" : "w-[50%] h-64"
+            fileProcessed ? "w-[100%] h-screen" : "w-[50%] h-64"
           }  border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-[#fbfbfb] hover:shadow-[inset_0px_0px_20px_4px_#f3f3f3]`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
@@ -235,7 +251,7 @@ const Droparea = () => {
       ) : (
         <div
           className={`transition-opacity duration-2000 ease-in-out ${
-            isExpanded ? "opacity-100 max-h-full" : "opacity-0 max-h-0"
+            fileProcessed ? "opacity-100 max-h-full" : "opacity-0 max-h-0"
           }`}
         >
           {/* passing isEvent to Chatarea to conditionally render */}
@@ -245,8 +261,6 @@ const Droparea = () => {
       {!fileProcessed && (
         <>
           <div className="flex flex-col mt-4">
-            
-
             <label className="themeSwitcherTwo relative inline-flex cursor-pointer select-none items-center ">
               <input
                 type="checkbox"

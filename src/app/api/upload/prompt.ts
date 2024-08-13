@@ -3,14 +3,14 @@ import { getUserTimeZone } from "./helper";
 export const getEventPrompt = async () => {
   const timeZone = await getUserTimeZone();
   const currentYear = new Date().getFullYear();
-  return `You are tasked with extracting event information from content given. These schedules contain various events with details such as titles, descriptions, start times, and end times. Your goal is to accurately identify and extract these details and format them into JSON objects according to a specific schema.
+  return `You are tasked with extracting event information from content given. These schedules contain various events with details such as titles, descriptions, start times, and end times. Your goal is to accurately identify and extract these details and format them into JSON OBJ and return an JSON ARRAY according to a specific schema.
 Instructions:
 1. Identify and Extract Event Details:
    - start.timeZone,end.timeZone: Use time zone ${timeZone} unless otherwise specified in the schedule.
 2.Handle Events Divided Between Two Times:
    - For events that are split across two different times (e.g., lines between 8:00 and 8:30), calculate the average time and use this as the end time for the first event and the start time for the subsequent event.
    - Example: If an event is listed between 8:00 AM and 8:30 AM, the average time would be 8:15 AM. Thus, the first event would end at 8:15 AM, and the next event would start at 8:15 AM.
-3. Format the Information into JSON Objects:
+3. Format the Information into JSON Objects ( ARRAY ):
    - Ensure each event is represented as a JSON object following this schema:
      \`\`\`json
      {
@@ -63,12 +63,14 @@ Instructions:
     }
   },
   "required": ["summary", "start", "end"]
+}
+
      \`\`\`
 Example Extraction:
 - User Input: An image schedule where a "Pharmacology Lecture" is listed from 9:00 AM to 10:00 AM on August 19th.
 - LLM Output:
   \`\`\`json
-  {
+  [{
     "summary": "Pharmacology Lecture",
     "description": "Dr. Triggle, Lecture Hall 1",
     "start": {
@@ -80,7 +82,7 @@ Example Extraction:
       "timeZone": "America/Chicago"
     },
     "recurrence": []
-  }
+}]
   \`\`\`
 Recurrence rule using the iCalendar format (RRULE). The RRULE should specify the frequency (FREQ), days of the week (BYDAY), intervals (INTERVAL), and any end conditions (UNTIL or COUNT) as described in the iCalendar standard.
 For example:
@@ -97,6 +99,7 @@ Requirements:
 - Ensure accuracy in extracting and converting time information.
 - Generate \`RRULE\` values only if the event is recurring.
 - Calculate and average start and end times when necessary.
+- Ensure you return an ARRAY of JSON objects
 `;
 };
 
@@ -141,7 +144,7 @@ Output:
 - For each task identified, output a JSON object following the schema provided. Ensure all fields are populated correctly based on the extracted information.
 - If any information is missing or unclear, leave that field empty or mark it as "unspecified" in the "notes" section.
 Example Output:
-{
+[{
   "title": "John's Birthday",
   "due": "2024-12-15T00:00:00Z",
   "notes": "Buy a gift and send a birthday card.",
@@ -153,8 +156,8 @@ Example Output:
       "link": "http://example.com/gift-ideas"
     }
   ]
-}
+}]
 
-Please proceed by extracting and converting the tasks from the provided content according to these guidelines and return data ONLY in provided JSON format.
+Please proceed by extracting and converting the tasks from the provided content according to these guidelines and return data ONLY in provided JSON ARRAY FORMAT.
 `;
 };

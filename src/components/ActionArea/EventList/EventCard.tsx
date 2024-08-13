@@ -93,11 +93,11 @@ const EventCard: React.FC<EventCardProps> = ({
     })}`;
   }
   return (
-    <div className="dropdown dropdown-bottom dropdown-hover relative">
+    <div className="dropdown dropdown-bottom dropdown-hover relative  w-full ">
       <div
         tabIndex={0}
         role="button"
-        className="flex flex-col items-start w-[30rem] p-4 mb-2 bg-white rounded-xl shadow-md space-y-1 hover:bg-gray-50 hover:scale-[1.009] transition-all ease-in-out duration-200"
+        className="flex flex-col items-start  p-4 mb-2 bg-white rounded-xl shadow-md space-y-1 hover:bg-gray-50 hover:scale-[1.009] transition-all ease-in-out duration-200"
       >
         <div className="flex flex-row items-center justify-between font-semibold text-lg w-full">
           {summary}{" "}
@@ -139,9 +139,9 @@ const EventCard: React.FC<EventCardProps> = ({
       </div>
       <ul
         tabIndex={0}
-        className="dropdown-content menu bg-[#0b7dff] backdrop-blur-md rounded-lg shadow-lg z-50 w-[25rem] p-4 left-8"
+        className="dropdown-content menu bg-white border border-gray-200 rounded-lg shadow-md w-full p-4 absolute top-full left-0 z-50 mt-1"
       >
-        <div className="flex flex-col w-full text-white font-medium">
+        <div className="flex flex-col w-full text-gray-800 font-medium">
           {description && (
             <div className="mb-2">Description: {description}</div>
           )}

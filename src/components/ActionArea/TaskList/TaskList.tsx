@@ -19,22 +19,29 @@ interface TaskListProps {
   onDeleteTask: (index: number) => void;
 }
 
-const TaskList: React.FC<TaskListProps> = ({ jsonData, loading, onDeleteTask }) => {
+const TaskList: React.FC<TaskListProps> = ({
+  jsonData,
+  loading,
+  onDeleteTask,
+}) => {
   return (
-    <div className="flex flex-col w-[70%] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100 relative">
+    <div className="flex flex-col xl:w-[38rem] lg:w-[35rem] md:w-[30rem]  sm:w-[25rem]  h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100 relative">
       <div className="overflow-scroll w-full ">
         <div className="flex flex-col h-screen p-4 pb-36 ">
           {loading ? (
-            <div className="animate-pulse w-[25rem]">
+            <div className="animate-pulse ">
               {/* Add the number of skeleton loaders equal to the number of task cards you expect */}
               {[...Array(4)].map((_, index) => (
                 <div
                   key={index}
-                  role="button"
-                  className="flex flex-row justify-between w-[35rem] p-4 mb-4 bg-gray-200 rounded-xl shadow-md space-x-4 animate-pulse"
+                  className="flex flex-row justify-between items-center w-full py-3 px-4 rounded-xl shadow-md space-x-2 bg-white animate-pulse"
                 >
-                  <div className="font-semibold text-lg w-3/5 bg-gray-300 h-6 rounded-md"></div>
-                  <div className="flex items-center text-md text-gray-200 w-1/4 bg-gray-300 h-6 rounded-md"></div>
+                  <div className="flex-grow">
+                    <div className="h-6 bg-gray-200 rounded w-3/4"></div>
+                  </div>
+                  <div className="flex-shrink-0">
+                    <div className="h-6 bg-gray-200 rounded w-24"></div>
+                  </div>
                 </div>
               ))}
             </div>
