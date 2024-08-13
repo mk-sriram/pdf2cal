@@ -15,7 +15,7 @@ const page = () => {
           access_type: "offline",
           prompt: "consent",
         },
-        redirectTo: `https://pdf2cal.vercel.app/api/auth/callback`,
+        redirectTo: `https://www.pdf2calendar.com/api/auth/callback`,
       },
     });
   };
@@ -26,7 +26,6 @@ const page = () => {
           <h2 className="text-gray-800 text-center text-2xl font-bold">
             Sign in
           </h2>
-
 
           <div className="space-x-6 flex justify-center mt-8 ">
             <button
