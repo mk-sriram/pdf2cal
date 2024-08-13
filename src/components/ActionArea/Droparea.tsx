@@ -3,7 +3,6 @@ import React, { useState } from "react";
 import ChatArea from "./ChatArea"; // Import ChatArea component
 import useAuth from "@/utils/supabase/useAuth";
 import { useRouter } from "next/navigation";
-import axios from "axios";
 
 interface Event {
   summary: string;
@@ -40,8 +39,8 @@ const Droparea = () => {
   const [fileProcessed, setFileProcessed] = useState(false);
   const [jsonData, setJsonData] = useState<Event[] | Task[] | null>(null);
   const [isEvent, setIsEvent] = useState(true);
-  const [progress, setProgress] = useState<number>(0);
 
+  const [isLongPDF, setIsLongPDF] = useState(false);
   React.useEffect(() => {
     const handlePaste = (event: ClipboardEvent) => {
       const items = event.clipboardData?.items;
@@ -85,7 +84,7 @@ const Droparea = () => {
   const processFile = async () => {
     if (!file) return;
     setLoading(true);
-    setProgress(0); // Reset progress to 0 before starting
+    // Reset progress to 0 before starting
 
     const formData = new FormData();
     formData.append("file", file);
@@ -119,7 +118,7 @@ const Droparea = () => {
     } finally {
       setTimeout(() => {
         setLoading(false);
-        setProgress(100); // Ensure progress bar reaches 100% when done
+        // Ensure progress bar reaches 100% when done
         setFilePreview("");
         setFileProcessed(true);
       }, 1000);
@@ -131,9 +130,27 @@ const Droparea = () => {
     const selectedFile = event.dataTransfer.files[0];
     handleFileUpload(selectedFile);
   };
-
+  const estimatePDFPages = (fileSize: any) => {
+    // Assuming average page size is about 300KB
+    const averagePageSize = 300 * 1024; // 100KB in bytes
+    return Math.ceil(fileSize / averagePageSize);
+  };
   const handleFileUpload = (selectedFile: File) => {
+    if (selectedFile.type === "application/pdf") {
+      const estimatedPages = estimatePDFPages(selectedFile.size);
+      console.log(estimatedPages);
+      if (estimatedPages > 1) {
+        setIsLongPDF(true);
+        // You might want to show a modal or alert here
+        alert(
+          "This PDF appears to be more than 2 pages long. Please reduce the number of pages."
+        );
+        return; // Don't set the file if it's too long
+      }
+    }
+
     setFile(selectedFile);
+    setIsLongPDF(false);
 
     if (selectedFile.type.startsWith("image/")) {
       setFilePreview(URL.createObjectURL(selectedFile));
@@ -158,7 +175,7 @@ const Droparea = () => {
     event.preventDefault();
   };
   //console.log(fileProcessed);
-  //console.log(jsonData);
+  console.log(jsonData);
   return (
     <div className="flex flex-col justify-center items-center w-[90rem] h-fit">
       {!fileProcessed ? (
@@ -242,7 +259,19 @@ const Droparea = () => {
           }`}
         >
           {/* passing isEvent to Chatarea to conditionally render */}
-          {jsonData && <ChatArea jsonData={jsonData} isEvent={isEvent} />}
+          {jsonData ? (
+            <ChatArea jsonData={jsonData} isEvent={isEvent} />
+          ) : (
+            <div className="flex flex-col justify-center items-center">
+              <div>The input size was too large and output was incorrect.</div>
+              <a
+                href="/"
+                className="btn px-7 rounded-full bg-[#0b7dffd4] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01] mt-5"
+              >
+                Try Again{" "}
+              </a>
+            </div>
+          )}
         </div>
       )}
       {!fileProcessed && (

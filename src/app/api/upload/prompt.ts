@@ -112,6 +112,8 @@ Requirements:
 - Generate \`RRULE\` values only if the event is recurring.
 - Calculate and average start and end times when necessary.
 - Ensure you return an ARRAY of JSON objects
+- NEVER return incomplete JSON Array, Make sure you have only JSON objects inside the array.
+- 
 `;
 };
 
