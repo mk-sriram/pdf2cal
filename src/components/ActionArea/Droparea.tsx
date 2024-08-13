@@ -92,48 +92,37 @@ const Droparea = () => {
     formData.append("isEvent", isEvent.toString());
 
     try {
-      const response = await axios.post("/api/upload", formData, {
-        onUploadProgress: (progressEvent) => {
-          if (progressEvent.total) {
-            const percentCompleted = Math.round(
-              (progressEvent.loaded * 100) / progressEvent.total
-            );
-            setProgress(percentCompleted);
-          } else {
-            setTimeout(() => {
-              setProgress((prevProgress) => Math.min(prevProgress + 10, 95));
-            }, 200);
-          }
-        },
+      const response = await fetch("/api/upload", {
+        method: "POST",
+        body: formData,
       });
-      console.log(response);
-      if (response.status === 200) {
-        const data = response.data;
-        if (typeof data.text === "string") {
-          // If the data is a string, parse it as JSON
-          //console.log(data.text);
-          try {
-            const parsedData = JSON.parse(data.text);
-            //console.log(parsedData);
-            setJsonData(parsedData);
-          } catch (err) {
-            console.log(err, "ERROR WITH THE JSON PARSING LOL ");
-          }
-        } else {
-          console.error("Unexpected response format:", data);
-        }
 
-        setFileProcessed(true);
-      } else {
-        console.error("Failed to upload file, status:", response.status);
+      if (!response.ok) {
+        throw new Error(`HTTP error! status: ${response.status}`);
       }
+
+      const data = await response.json();
+
+      if (typeof data.text === "string") {
+        try {
+          const parsedData = JSON.parse(data.text);
+          setJsonData(parsedData);
+        } catch (err) {
+          console.log(err, "ERROR WITH THE JSON PARSING LOL");
+        }
+      } else {
+        console.error("Unexpected response format:", data);
+      }
+      setFileProcessed(true);
     } catch (error) {
       console.error("An error occurred while uploading the file", error);
     } finally {
-      setLoading(false);
-      setProgress(100); // Ensure progress bar reaches 100% when done
-      setFilePreview("");
-      setFileProcessed(true);
+      setTimeout(() => {
+        setLoading(false);
+        setProgress(100); // Ensure progress bar reaches 100% when done
+        setFilePreview("");
+        setFileProcessed(true);
+      }, 1000);
     }
   };
 
@@ -183,11 +172,7 @@ const Droparea = () => {
           <div className="flex flex-col items-center justify-center pt-5 pb-6">
             {isloading ? (
               <div className="flex flex-col items-center space-x-2">
-                <progress
-                  className="progress progress-primary w-80  [&::-webkit-progress-value]:bg-[#0b7dffd4] [&::-moz-progress-bar]:bg-[#0b7dffd4]"
-                  value={progress}
-                  max="100"
-                ></progress>
+                <span className="loading loading-spinner loading-lg"></span>
               </div>
             ) : filePreview ? (
               <div className="flex flex-col items-center">
