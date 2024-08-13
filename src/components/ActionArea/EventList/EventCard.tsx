@@ -139,7 +139,7 @@ const EventCard: React.FC<EventCardProps> = ({
       </div>
       <ul
         tabIndex={0}
-        className="dropdown-content menu bg-white border border-gray-200 rounded-lg shadow-md w-full p-4 absolute top-full left-0 z-50 mt-1"
+        className="dropdown-content menu bg-gray-200 border border-gray-200 rounded-lg shadow-md w-full p-4 absolute top-full left-0 z-50 mt-0"
       >
         <div className="flex flex-col w-full text-gray-800 font-medium">
           {description && (
@@ -149,6 +149,12 @@ const EventCard: React.FC<EventCardProps> = ({
             <div className="mb-2">TimeZone: {start.timeZone}</div>
           )}
           {!recurrence?.[0] && <div className="mb-2">Non recurring Event</div>}
+          {recurrence?.[0] && (
+            <div className="mb-2">
+              Start Date: {displayDateTime(start.dateTime)} -{" "}
+              {displayTime(end.dateTime)}
+            </div>
+          )}
         </div>
       </ul>
     </div>

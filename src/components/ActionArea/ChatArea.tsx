@@ -321,34 +321,39 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
                 ))}
               </div>
             </div>
-            <div className="flex justify-start mb-4">
-              <button
-                className="btn px-4 rounded-full bg-[#0b7dffd4] text-white hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01]"
-                onClick={() =>
-                  setChatMessage(
-                    "<eventName> repeats <weekly> till <Until Date>"
-                  )
-                }
-              >
-                Recurring Events
-              </button>
-            </div>
+            {isEvent && (
+              <div className="flex justify-end mb-0 lg:w-[35%] md:w-[50%] sm:w-[75%]">
+                <button
+                  className=" xl:w-[140px] lg:w-[120px] md:w-[120px]  sm:w-[140px] h-7 rounded-t-xl rounded-b-none bg-[#0b7dffd4] text-white hover:bg-[#6dc1fc] transition-all text-[14px] "
+                  onClick={() =>
+                    setChatMessage(
+                      "<all events> repeat <weekly> till  <Until Date>"
+                    )
+                  }
+                >
+                  Recurring Events
+                </button>
+              </div>
+            )}
 
-            <div className="flex  bg-[#ffffff] rounded-full px-4 py-2 shadow">
-              <input
-                type="text"
+            <div className="flex bg-[#ffffff] rounded-xl px-3 py-2 shadow">
+              <textarea
+                rows={1} // Start with a single row
                 placeholder="Append the points to Event name"
                 value={chatMessage}
-                onChange={(e) => setChatMessage(e.target.value)}
-                className="flex-1 mx-4 bg-transparent text-gray-800 placeholder-gray-300 outline-none"
+                onChange={(e) => {
+                  setChatMessage(e.target.value);
+                  e.target.style.height = "auto"; // Reset the height to auto
+                  e.target.style.height = e.target.scrollHeight + "px"; // Set the height to the scrollHeight
+                }}
+                className="flex-1 mx-2 bg-transparent text-gray-800 placeholder-gray-300 outline-none resize-none overflow-hidden pt-1"
                 onKeyDown={(e) => {
                   if (e.key === "Enter") {
-                    //&& !isLoading
+                    e.preventDefault(); // Prevent the default newline on Enter
                     handleChatMessage();
                   }
                 }}
               />
-
               {/* Send Button */}
               <div
                 onClick={handleChatMessage}
