@@ -13,7 +13,7 @@ const Navbar = () => {
     <div className="container mx-auto flex justify-center navbar bg-inherit py-[29px] w-[70%]">
       <div className="navbar-start space-x-2">
         <div className="dropdown">
-          <div tabIndex={0} role="button" className="btn btn-ghost lg:hidden">
+          <div tabIndex={0} role="button" className="btn btn-ghost md:hidden">
             <svg
               xmlns="http://www.w3.org/2000/svg"
               className="h-5 w-5"
@@ -59,7 +59,7 @@ const Navbar = () => {
           PDF2Cal
         </Link>
       </div>
-      <div className="navbar-center hidden lg:flex sm:flex ">
+      <div className="navbar-center hidden  md:flex ">
         <ul className="menu menu-horizontal px-10 flex space-x-7 ">
           <li>
             <a href="#faq">FAQ</a>
