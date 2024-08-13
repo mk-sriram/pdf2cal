@@ -87,15 +87,15 @@ const FaqSection: React.FC = () => {
     },
     {
       q: "Will you delete my data?",
-      a: "Yes, you can delete your data at any time through your account dashboard. Once deleted, it cannot be recovered.",
+      a: "We do not store your personal data beyond email and username.",
     },
     {
       q: "Can I edit my schedule after uploading?",
       a: "Absolutely, you can make changes to your schedule at any time through the assistant.",
     },
     {
-      q: "How do I connect my Calendar?",
-      a: "You can connect your calendars directly through your dashboard by logging into your calendar account.",
+      q: "How do I connect my Google Calendar?",
+      a: "You can connect your Google Calendar directly by logging into your Google account.",
     },
     {
       q: "What file formats can I upload?",
@@ -104,7 +104,6 @@ const FaqSection: React.FC = () => {
   ];
 
   return (
-    
     <section
       id="faq"
       className=" leading-relaxed max-w-screen-xl mt-[10rem] mx-auto px-4 md:px-8 h-[90vh] justify-center "
