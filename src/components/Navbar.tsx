@@ -36,10 +36,6 @@ const Navbar = () => {
             <li>
               <a href="#faq">FAQ</a>
             </li>
-
-            <li>
-              <a href="#demo">Demo</a>
-            </li>
           </ul>
         </div>
         <Image

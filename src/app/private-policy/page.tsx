@@ -11,7 +11,7 @@ const page = () => {
         {" "}
         Back{" "}
       </a>
-      <div className="flex flex-col bg-white text-gray-800 p-6 md:p-12 w-[80%] items-center justify-center">
+      <div className="flex flex-col bg-white text-gray-800 p-6 md:p-12 md:w-[50rem] sm:w-[30rem] items-center justify-center">
         <h1 className="text-3xl font-bold mb-6 text-center">Privacy Policy</h1>
         <p className="text-sm text-gray-600 mb-4 text-center">
           Last updated: August 13, 2024
