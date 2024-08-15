@@ -101,10 +101,11 @@ const Droparea = () => {
       }
 
       const data = await response.json();
-      console.log(data.text);
+      console.log("responsedata: ", data.text);
       if (typeof data.text === "string") {
         try {
           const parsedData = JSON.parse(data.text);
+          console.log("parsedData: ", parsedData);
           setJsonData(parsedData);
         } catch (err) {
           console.log(err, "ERROR WITH THE JSON PARSING LOL");
@@ -175,7 +176,7 @@ const Droparea = () => {
     event.preventDefault();
   };
   //console.log(fileProcessed);
-  console.log(jsonData);
+
   return (
     <div className="flex flex-col justify-center items-center w-[90rem] h-fit">
       {!fileProcessed ? (
