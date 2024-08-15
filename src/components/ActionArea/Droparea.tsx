@@ -101,7 +101,7 @@ const Droparea = () => {
       }
 
       const data = await response.json();
-
+      console.log(data.text);
       if (typeof data.text === "string") {
         try {
           const parsedData = JSON.parse(data.text);
