@@ -46,3 +46,9 @@
 .float-in-action {
   animation-delay: 0.2s; /* ActionArea floats in slightly later */
 }
+
+@media (max-width: 390px) {
+  .hidden-below-390 {
+    display: none;
+  }
+}

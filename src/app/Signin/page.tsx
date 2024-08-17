@@ -15,7 +15,7 @@ const page = () => {
           access_type: "offline",
           prompt: "consent",
         },
-        redirectTo: `https://www.pdf2calendar.com/api/auth/callback`,
+        redirectTo: `/api/auth/callback`,
       },
     });
   };

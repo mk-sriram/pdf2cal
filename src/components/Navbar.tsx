@@ -3,12 +3,24 @@ import Image from "next/image";
 import { assets } from "../../public/assets";
 import Link from "next/link";
 import useAuth from "@/utils/supabase/useAuth";
-
+import React from "react";
 const Navbar = () => {
   const { user, loading, handleSignOut } = useAuth();
+  const [isMobile, setIsMobile] = React.useState(false);
   //console.log(user);
   //console.log( data.session?.user?.user_metadata )
+  React.useEffect(() => {
+    const handleResize = () => {
+      setIsMobile(window.innerWidth <= 470);
+    };
 
+    handleResize(); // Set the initial state
+    window.addEventListener("resize", handleResize);
+
+    return () => {
+      window.removeEventListener("resize", handleResize);
+    };
+  }, []);
   return (
     <div className="container mx-auto flex justify-center navbar bg-inherit py-[29px] w-[70%]">
       <div className="navbar-start space-x-2">
@@ -31,11 +43,21 @@ const Navbar = () => {
           </div>
           <ul
             tabIndex={0}
-            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 h-20 p-2 shadow justify-normal"
+            className="menu menu-sm dropdown-content bg-base-100 rounded-box z-[1] mt-3 w-52 p-2 shadow justify-normal"
           >
             <li>
               <a href="#faq">FAQ</a>
             </li>
+            {!user && isMobile && (
+              <li>
+                <Link
+                  href="/Signin"
+                  className=" w-[70%] px-4 rounded-full bg-[#0b7dffd4] text-white hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01]"
+                >
+                  Sign in
+                </Link>
+              </li>
+            )}
           </ul>
         </div>
         <Image
@@ -68,14 +90,15 @@ const Navbar = () => {
       </div>
 
       <div className="navbar-end ">
-        {!user ? (
+        {!user && !isMobile && (
           <Link
             href="/Signin"
             className="btn px-7 rounded-full bg-[#0b7dffd4] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01]"
           >
             Sign in
           </Link>
-        ) : (
+        )}
+        {user && (
           <div className="dropdown dropdown-hover dropdown-end">
             <div
               tabIndex={0}
@@ -110,5 +133,6 @@ const Navbar = () => {
     </div>
   );
 };
+
 
 export default Navbar;

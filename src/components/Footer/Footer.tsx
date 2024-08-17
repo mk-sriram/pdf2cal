@@ -4,11 +4,11 @@ import Link from "next/link";
 const Footer = () => {
   return (
     <footer className="bg-white rounded-lg ">
-      <div className="w-full max-w-screen-xl mx-auto p-4 md:py-8">
+      <div className="w-[95%] max-w-screen-xl mx-auto p-4 md:py-8">
         <div className="sm:flex sm:items-center sm:justify-between">
           <a
             href="/"
-            className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse"
+            className="flex items-center mb-4 sm:mb-0 space-x-3 rtl:space-x-reverse "
           >
             <Image
               src="/parsylllogotrans.png"
@@ -16,7 +16,7 @@ const Footer = () => {
               width={44}
               height={44}
             />
-            <span className="self-center  whitespace-nowrap text-xl text-gray-800 font-semibold">
+            <span className="self-center  whitespace-nowrap text-lg md:text-xl text-gray-800 font-semibold">
               PDF2Cal
             </span>
           </a>
