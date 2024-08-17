@@ -22,12 +22,12 @@ const Footer = () => {
           </a>
           <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-gray-600 sm:mb-0">
             <li>
-              <a
-                href="#"
-                className="transition-all transform active:scale-[0.98] hover:scale-[1.05] me-4 md:me-6"
+              <Link
+                href="https://www.pdf2calendar.com/about"
+                className="transition-all transform active:scale-[0.98] hover:scale-[1.01] mr-4"
               >
                 About
-              </a>
+              </Link>
             </li>
             <li>
               <Link
