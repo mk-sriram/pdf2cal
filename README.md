@@ -2,7 +2,7 @@
 
 ### Overview
 
-This project is designed to help users convert PDF schedules and images into calendar events and tasks effortlessly. By leveraging advanced technologies, including Gemini-1.5 Flash for parsing, Google Calendar and Google Tasks API to connect with the user's calendar, this tool automates task management and calendar integration, making life easier for busy individuals.
+This project is designed to help users convert PDF schedules and images into calendar events and tasks effortlessly. By leveraging Gemini-1.5 Flash for parsing, Google Calendar and Google Tasks API to connect with the user's calendar, this tool automates task management and calendar integration, making life easier for busy individuals.
 
 Live Demo: Visit [pdf2calendar.com](https://pdf2calendar.com) to see the project in action.
 
