@@ -29,7 +29,7 @@ const EventList: React.FC<EventListProps> = ({
   onDeleteTask,
 }) => {
   return (
-    <div className="flex xl:w-[38rem] lg:w-[35rem] md:w-[30rem]  sm:w-[25rem] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100">
+    <div className="flex xl:w-[38rem] lg:w-[35rem] md:w-[30rem]  sm:w-[25rem] h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-[#f3f4f69e]">
       <div className="overflow-scroll w-full ">
         <div className="flex flex-col h-screen p-4 pb-36 ">
           {/* fix this any type, you loser  */}

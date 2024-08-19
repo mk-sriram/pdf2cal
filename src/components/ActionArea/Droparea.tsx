@@ -178,12 +178,12 @@ const Droparea = () => {
   //console.log(fileProcessed);
 
   return (
-    <div className="flex flex-col justify-center items-center w-[90rem] h-fit">
+    <div className="flex flex-col justify-center items-center w-[90rem] h-fit ">
       {!fileProcessed ? (
         <label
           className={`flex flex-col items-center justify-center transition-all duration-2000 ease-in-out ${
             fileProcessed ? "w-[100%] h-screen" : " w-[80%] md:w-[50%] h-64"
-          }  border-2 border-gray-300 border-dashed rounded-lg cursor-pointer bg-[#fbfbfb] hover:shadow-[inset_0px_0px_20px_4px_#f3f3f3]`}
+          }  border-2 border-gray-400 border-dashed rounded-lg cursor-pointer  bg-transparent hover:shadow-[inset_0px_0px_20px_4px_#f3f3f3]`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
         >

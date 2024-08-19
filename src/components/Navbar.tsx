@@ -89,7 +89,7 @@ const Navbar = () => {
         </ul>
       </div>
 
-      <div className="navbar-end ">
+      <div className="navbar-end">
         {!user && !isMobile && (
           <Link
             href="/Signin"
@@ -110,8 +110,8 @@ const Navbar = () => {
                   <Image
                     src={user?.user_metadata.avatar_url ?? "/defaultpfp.png"}
                     alt={user?.user_metadata.name ?? "User avatar"}
-                    width={72}
-                    height={72}
+                    width={71}
+                    height={71}
                     className="rounded-full"
                   />
                 </div>

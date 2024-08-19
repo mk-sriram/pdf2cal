@@ -25,7 +25,7 @@ const TaskList: React.FC<TaskListProps> = ({
   onDeleteTask,
 }) => {
   return (
-    <div className="flex flex-col xl:w-[38rem] lg:w-[35rem] md:w-[30rem]  sm:w-[25rem]  h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-gray-100 relative">
+    <div className="flex flex-col xl:w-[38rem] lg:w-[35rem] md:w-[30rem]  sm:w-[25rem]  h-[95%] p-4 justify-center shadow-xl rounded-2xl bg-[#f3f4f69e] relative">
       <div className="overflow-scroll w-full ">
         <div className="flex flex-col h-screen p-4 pb-36 ">
           {loading ? (
