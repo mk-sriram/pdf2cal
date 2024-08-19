@@ -14,7 +14,6 @@ const page = () => {
         <ActionArea />
       </div>
       <FaqSection />
-     
     </>
   );
 };
