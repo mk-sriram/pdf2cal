@@ -1,4 +1,3 @@
-
 import ActionArea from "@/components/ActionArea/ActionArea";
 import FaqSection from "@/components/FaqSection/FaqSection";
 import PageIllustration from "@/components/page-illustration";
@@ -7,7 +6,7 @@ import Navbar from "@/components/Navbar";
 import DemoSection from "@/components/DemoSection/DemoSection";
 const page = () => {
   return (
-    <>
+    <div className="overflow-hidden">
       <PageIllustration />
       <Navbar />
       <div className="float-in  ">
@@ -21,7 +20,7 @@ const page = () => {
       </div>
 
       <FaqSection />
-    </>
+    </div>
   );
 };
 
