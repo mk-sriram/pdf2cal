@@ -21,7 +21,7 @@ export default async function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en" data-theme="cmyk">
+    <html lang="en" data-theme="cmyk" style={{ scrollBehavior: "smooth" }}>
       <body className={inter.className}>
         {/* //<Navbar /> */}
         {children}

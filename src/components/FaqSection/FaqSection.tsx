@@ -28,11 +28,11 @@ const FaqsCard: React.FC<FaqsCardProps> = ({ faqsList, idx }) => {
 
   return (
     <div
-      className="space-y-3 mt-5 overflow-hidden border-b"
+      className="space-y-3 mt-5 overflow-hidden border-b "
       key={idx}
       onClick={handleOpenAnswer}
     >
-      <h4 className="cursor-pointer pb-5 flex items-center justify-between text-lg text-gray-700 font-medium">
+      <h4 className="cursor-pointer pb-5 flex items-center justify-between text-lg text-gray-700 font-medium ">
         {faqsList.q}
         {state ? (
           <svg
@@ -106,7 +106,7 @@ const FaqSection: React.FC = () => {
   return (
     <section
       id="faq"
-      className="leading-relaxed w-[85%] md:max-w-screen-xl mt-[10rem] mx-auto px-4 md:px-8 h-[90vh] justify-center "
+      className="leading-relaxed w-[85%] md:max-w-screen-xl mt-[10rem] mx-auto px-4 md:px-8 h-[90vh] justify-center pt-14"
     >
       <div className="space-y-3 text-center">
         <h1 className="text-3xl text-gray-800 font-semibold">

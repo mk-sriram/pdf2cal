@@ -48,6 +48,9 @@ const Navbar = () => {
             <li>
               <a href="#faq">FAQ</a>
             </li>
+            <li>
+              <a href="#demo">Demo</a>
+            </li>
             {!user && isMobile && (
               <li>
                 <Link
@@ -133,6 +136,5 @@ const Navbar = () => {
     </div>
   );
 };
-
 
 export default Navbar;
