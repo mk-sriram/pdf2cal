@@ -291,23 +291,23 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
           setIsOpen={setIsSuccessModalOpen}
         />
       )}
-      <div className="flex xl:w-[100%] lg:w-[100%] sm:w-[100%] h-[80vh] mt-8 bg-transparent justify-center items-center space-x-5  border-2 border-gray-300 border-dashed rounded-2xl px-4">
+      <div className="flex flex-col w-[90%] sm:flex-row sm:w-[100%] sm:h-[80vh] mt-8 bg-transparent justify-center items-center space-x-5  border-2 border-gray-300 border-dashed rounded-2xl px-4">
         {/* Left block for JSON data */}
-
-        {!isEvent ? (
-          <TaskList
-            jsonData={currentJsonData}
-            loading={pageloading}
-            onDeleteTask={handleDeleteItem}
-          />
-        ) : (
-          <EventList
-            jsonData={currentJsonData}
-            loading={pageloading}
-            onDeleteTask={handleDeleteItem}
-          />
-        )}
-
+        <div className="h-[30rem] sm:h-[80vh] sm:mt-8">
+          {!isEvent ? (
+            <TaskList
+              jsonData={currentJsonData}
+              loading={pageloading}
+              onDeleteTask={handleDeleteItem}
+            />
+          ) : (
+            <EventList
+              jsonData={currentJsonData}
+              loading={pageloading}
+              onDeleteTask={handleDeleteItem}
+            />
+          )}
+        </div>
         {/* Right block for chatbox */}
         <div className="flex flex-col xl:w-[30rem] lg:w-[25rem] md:w-[20rem]  sm:w-[15rem]  h-full mt-8 space-y-2 ">
           <div className="flex flex-col w-[100%] h-[74%] p-4 justify-center shadow-lg rounded-2xl bg-[#f3f4f69e]">
@@ -369,7 +369,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
               <>
                 <TasksListDrop setSelectedTask={setSelectedTask} />
                 <button
-                  className="btn px-4  rounded-full w-[15rem] bg-[#0b7dffd4] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01] mt-5 pr-8 space-x-1"
+                  className="btn px-4  rounded-full w-[15rem] bg-[#0b7dffd4] text-white  hover:bg-[#6dc1fc] transition-all transform active:scale-[0.98] hover:scale-[1.01] mt-5 mb-5 pr-8 space-x-1"
                   onClick={sendtoTasks}
                 >
                   {loadingModal ? (
