@@ -39,6 +39,7 @@ const Droparea = () => {
   const [fileProcessed, setFileProcessed] = useState(false);
   const [jsonData, setJsonData] = useState<Event[] | Task[] | null>(null);
   const [isEvent, setIsEvent] = useState(true);
+  const [showAlert, setShowAlert] = useState(false);
 
   const [isLongPDF, setIsLongPDF] = useState(false);
   React.useEffect(() => {
@@ -68,6 +69,14 @@ const Droparea = () => {
     console.log(!isEvent);
   };
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    // console.log(user);
+    // console.log(borderColor);
+    if (!user) {
+      alert("Need to log in!");
+      event.target.value = "";
+      return;
+    }
+
     const selectedFile = event.target.files?.[0];
     if (selectedFile) {
       handleFileUpload(selectedFile);
@@ -128,6 +137,7 @@ const Droparea = () => {
 
   const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
+
     const selectedFile = event.dataTransfer.files[0];
     handleFileUpload(selectedFile);
   };
@@ -183,7 +193,7 @@ const Droparea = () => {
         <label
           className={`flex flex-col items-center justify-center transition-all duration-2000 ease-in-out ${
             fileProcessed ? "w-[100%] h-screen" : " w-[80%] md:w-[50%] h-64"
-          }  border-2 border-gray-300 border-dashed rounded-lg cursor-pointer  bg-transparent hover:shadow-[inset_0px_0px_20px_4px_#f3f3f3]`}
+          } border-2 border-gray-300 border-dashed rounded-lg cursor-pointer  bg-transparent hover:shadow-[inset_0px_0px_20px_4px_#f3f3f3]`}
           onDrop={handleDrop}
           onDragOver={handleDragOver}
         >
