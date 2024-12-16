@@ -162,15 +162,15 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
           // Update the message list with the bot's reply
           setMessageList((prevMessages) => [
             ...prevMessages,
-            { role: "model", content:  botReply  },
+            { role: "system", content: botReply },
           ]);
         } else {
           // If no JSON data is found, treat the entire text as the bot's reply
           setMessageList((prevMessages) => [
             ...prevMessages,
             {
-              role: "model",
-              content: "NO JSON DATA FOUND, TRY AGAIN" ,
+              role: "system",
+              content: "NO JSON DATA FOUND, TRY AGAIN",
             },
           ]);
           console.log("No JSON data found in the response.");
@@ -197,7 +197,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
     if (chatMessage.trim()) {
       const newMessage: MsgItem = {
         role: "user",
-        content: chatMessage ,
+        content: chatMessage,
       };
       //console.log(chatMessage);
       setMessageList((oldChatHistory) => [...oldChatHistory, newMessage]);
