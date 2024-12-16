@@ -1,0 +1,8 @@
+
+
+1. fix the chat features and move to cerebras 
+2. init upload -> ocr -> text completion ? 
+
+3. limit the input token size -> use mardown conversion -> text completetion => chat feature ? 
+
+convert to markdown and just find the length before showing the preview ? 
