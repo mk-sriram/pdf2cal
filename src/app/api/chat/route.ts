@@ -32,6 +32,7 @@ export async function POST(request: NextRequest) {
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const chatHistory = messages.length === 1 ? [] : messages.slice(0, -1);
+
     //console.log("chat History Message", chatHistory);
     const lastMessage = messages[messages.length - 1].parts[0].text;
     //console.log("last Message", lastMessage);

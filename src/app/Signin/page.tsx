@@ -13,13 +13,12 @@ const page = () => {
           "https://www.googleapis.com/auth/calendar https://www.googleapis.com/auth/tasks",
         queryParams: {
           access_type: "offline",
-          prompt: "consent", // could remove this 
+          prompt: "consent",
         },
         redirectTo: `https://www.pdf2calendar.com/api/auth/callback`,
       },
     });
   };
-
   return (
     <div className="min-h-screen flex flex-col items-center justify-center py-6 px-4 bg-white w-[100%] ">
       <div className="max-w-md ">

@@ -87,7 +87,8 @@ const Droparea = () => {
   1. drop area process button makes function call to gemini 
   2. pass response to chat are component ( json data )
   3. append the json data to the chat component, continue to make calls 
-  */
+
+   */
 
   const processFile = async () => {
     if (!file) return;
@@ -136,6 +137,7 @@ const Droparea = () => {
 
   const handleDrop = (event: React.DragEvent<HTMLLabelElement>) => {
     event.preventDefault();
+
     const selectedFile = event.dataTransfer.files[0];
     handleFileUpload(selectedFile);
   };
@@ -157,6 +159,7 @@ const Droparea = () => {
         return; // Don't set the file if it's too long
       }
     }
+
     setFile(selectedFile);
     setIsLongPDF(false);
 
