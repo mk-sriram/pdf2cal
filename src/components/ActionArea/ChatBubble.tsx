@@ -4,11 +4,11 @@ interface Part {
 
 interface MsgItem {
   role: string;
-  parts: Part[];
+  content: string;
 }
 
 const ChatBubble: React.FC<{ msgItem: MsgItem }> = ({ msgItem }) => {
-  const { role, parts } = msgItem;
+  const { role, content } = msgItem;
 
   // Determine if the message is from the user
   const isUser = role === "user";
@@ -31,7 +31,7 @@ const ChatBubble: React.FC<{ msgItem: MsgItem }> = ({ msgItem }) => {
       <div
         className={` flex max-w-96 p-3 gap-3 shadow rounded-3xl px-4 ${bubbleClass}`}
       >
-        {parts[0].text}
+        {content}
       </div>
     </div>
   );
