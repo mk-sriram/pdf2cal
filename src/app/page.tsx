@@ -7,9 +7,11 @@ import DemoSection from "@/components/DemoSection/DemoSection";
 const page = () => {
   return (
     <div className="overflow-hidden">
-      <PageIllustration />
+      {/* background image  */}
+      <PageIllustration /> 
+
       <Navbar />
-      <div className="float-in  ">
+      <div className="float-in ">
         <HomeSection />
       </div>
       <div className="float-in float-in-action">

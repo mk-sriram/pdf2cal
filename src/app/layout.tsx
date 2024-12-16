@@ -4,6 +4,8 @@ import "./globals.css";
 import { Analytics } from "@vercel/analytics/react";
 import Footer from "@/components/Footer/Footer";
 const inter = Inter({ subsets: ["latin"] });
+
+
 export const metadata: Metadata = {
   title: "Convert Schedules to Calendar Events and Tasks | Pdf2Calendar",
   description:
