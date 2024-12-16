@@ -16,7 +16,7 @@ interface Part {
 }
 interface MsgItem {
   role: string;
-  parts: Part[];
+  content: string;
 }
 interface ChatAreaProps {
   jsonData: any; // Raw JSON data to display
@@ -95,26 +95,26 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
 
   const initializeChat = async () => {
     const chatPrompt = isEvent ? getChatEventPrompt() : getChatTaskPrompt();
+    const content = `
+          I have a JSON object representing ${
+            isEvent ? "Google Calendar Events" : "Google Tasks"
+          } that I need help editing. Here's the current JSON Data:
+
+          ${JSON.stringify(jsonData, null, 2)}
+
+          ${chatPrompt}
+
+          I'm going to give instructions on editing this. For the first message, reply: "Make changes by talking to the bot!". 
+          The user will give further editing instructions, and for the rest, reply: "Made the requested Changes!". 
+
+          Finally, after every bot reply, add the updated JSON enclosed in triple backticks like this:
+
+          \`\`\`json ... \`\`\`
+          `;
     //console.log("chatPrompt :", chatPrompt);
     const initialMessage: MsgItem = {
       role: "user",
-      parts: [
-        {
-          text: `
-        I have a JSON object representing ${
-          isEvent ? "Google Calendar Events" : "Google Tasks"
-        } that I need help editing. Here's the current JSON Data ${JSON.stringify(
-            jsonData,
-            null,
-            2
-          )}
-        ${chatPrompt}
-
-        I'm going to give instructions on editing this. For the first message reply "Make changes by talking to the bot!", the user will give further editing instructions
-        and for the rest say "Made the requested Changes!". Finally, after every bot reply, add the updated JSON enclosed in triple backticks like this: \`\`\`json ... \`\`\`.
-        `,
-        },
-      ],
+      content: content,
     };
     setMessageList([initialMessage]);
     isInitializedRef.current = true;
@@ -162,13 +162,16 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
           // Update the message list with the bot's reply
           setMessageList((prevMessages) => [
             ...prevMessages,
-            { role: "model", parts: [{ text: botReply }] },
+            { role: "system", content: botReply },
           ]);
         } else {
           // If no JSON data is found, treat the entire text as the bot's reply
           setMessageList((prevMessages) => [
             ...prevMessages,
-            { role: "model", parts: [{ text: text }] },
+            {
+              role: "system",
+              content: "NO JSON DATA FOUND, TRY AGAIN",
+            },
           ]);
           console.log("No JSON data found in the response.");
         }
@@ -194,7 +197,7 @@ const ChatArea: React.FC<ChatAreaProps> = ({ jsonData, isEvent }) => {
     if (chatMessage.trim()) {
       const newMessage: MsgItem = {
         role: "user",
-        parts: [{ text: chatMessage }],
+        content: chatMessage,
       };
       //console.log(chatMessage);
       setMessageList((oldChatHistory) => [...oldChatHistory, newMessage]);

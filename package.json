@@ -9,6 +9,7 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@cerebras/cerebras_cloud_sdk": "^1.14.0",
     "@google/generative-ai": "^0.16.0",
     "@headlessui/react": "^2.1.2",
     "@heroicons/react": "^2.1.5",

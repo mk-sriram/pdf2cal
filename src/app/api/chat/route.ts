@@ -1,7 +1,7 @@
 export const maxDuration = 60;
 export const dynamic = "force-dynamic";
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Cerebras from "@cerebras/cerebras_cloud_sdk";
 
 interface Part {
   text: string;
@@ -9,47 +9,59 @@ interface Part {
 
 interface MsgItem {
   role: string;
-  parts: Part[];
+  content: string;
 }
-// Initialize the Google Generative AI client
-const initializeGenAI = () => {
-  const apiKey = process.env.GEMINI_API_KEY;
-  if (!apiKey) {
-    throw new Error("GEMINI_API_KEY is not set in environment variables");
-    //console.log("Gemini init didn't work ");
-  }
-  return new GoogleGenerativeAI(apiKey);
-  //console.log("Gemi init worked work ");
-};
 
+const client = new Cerebras({
+  apiKey: process.env["CEREBRAS_API_KEY"], 
+});
+
+interface ChatChoice {
+  finish_reason: string;
+  index: number;
+  message: {
+    content?: string;
+  };
+}
+
+interface ChatCompletion {
+  id: string;
+  choices: ChatChoice[];
+}
 export async function POST(request: NextRequest) {
   //console.log("API called");
   try {
     //console.log("API called");
     const { messages } = await request.json();
 
-    const genAI = initializeGenAI();
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    //const chatHistory = messages.length === 1 ? [] : messages.slice(0, -1);
 
-    const chatHistory = messages.length === 1 ? [] : messages.slice(0, -1);
-    //console.log("chat History Message", chatHistory);
-    const lastMessage = messages[messages.length - 1].parts[0].text;
-    //console.log("last Message", lastMessage);
+    //console.log("Message", messages);
+    // const lastMessage = messages[messages.length - 1].parts[0].text;
+    // console.log("last Message", lastMessage);
 
-    const chat = model.startChat({
-      history: chatHistory,
-      generationConfig: {
-        maxOutputTokens: 4000,
-      },
-    });
-
-    try {
-      const result = await chat.sendMessage(lastMessage);
-      const text = result.response.text();
-      return NextResponse.json({ reply: text }, { status: 200 });
-    } catch (err) {
-      console.log("couldnt start chat, ", err);
+    const params: Cerebras.Chat.ChatCompletionCreateParams = {
+      messages: messages,
+      model: "llama3.1-8b", // Specify the Cerebras model
+    };
+    if (!messages || messages.length === 0) {
+      throw new Error("The 'messages' array is undefined or empty.");
     }
+    const chatCompletion = (await client.chat.completions.create(
+      params
+    )) as ChatCompletion;
+
+    // Extract the assistant's response from the API result
+    const reply = chatCompletion.choices?.[0]?.message?.content;
+
+    //console.log("Chat Completion Response:", reply);
+
+    if (!reply) {
+      throw new Error("No content received from Cerebras API.");
+    }
+
+    // Return the response
+    return NextResponse.json({ reply }, { status: 200 });
   } catch (error) {
     console.error("Error in chat API:", error);
     return new Response(JSON.stringify({ error: "Internal Server Error" }), {
